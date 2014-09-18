@@ -1,0 +1,152 @@
+/*
+ * Import nib
+ */
+//@import 'nib'
+
+/*
+ * Grab a custom font from Google
+ */
+//@import url('http://fonts.googleapis.com/css?family=Quicksand')
+
+/*
+ * Nib provides a CSS reset
+ */
+//global-reset()
+
+/*
+ * Store the main color and
+ * background color as variables
+ */
+main-color = #fa5b4d
+background-color = #faf9f0
+
+html
+  height 100%
+
+body
+  //font-family 'Georgia'
+  //background-color background-color
+  color #444
+  height 100%
+
+header
+  //font-family 'Quicksand'
+  //padding 10px 10px
+  //color #fff
+  //font-size medium
+  //text-align center
+  //height 20px
+  
+  /*
+   * Note the use of the `main-color`
+   * variable and the `darken` function
+   */
+/*  background-color main-color
+  border-bottom 1px solid darken(main-color, 30%)
+  text-shadow 0px -1px 0px darken(main-color, 30%)*/
+
+#parking_page
+	height 100%
+	//width 100%
+  
+#main_content
+	height calc(100% - 50px)
+	//width 100%
+  
+#container
+	height 100%
+	//width 100%
+	position relative
+	margin 0
+  
+#map-canvas
+	height 100%
+	width 100%
+	margin 0
+	position absolute
+	top 0px
+	left 0px
+
+footer
+  //height 20px
+  //width 500px
+  //margin 10px auto
+  //border-top 1px dotted #ccc
+  //padding-top 5px
+  //font-size small
+  //text-align center
+	
+//.legendHeading
+//	padding-bottom 10px
+	
+#legend_panel
+	font-size small
+
+#legend_panel h1
+	font-size medium
+	margin-bottom 0px
+	padding-bottom 0px
+	
+.ui-grid-a
+	margin-left 20px
+	
+.legendColorBox
+	float left
+	width 18px
+	height 18px
+	margin 5px
+	border-width 2px
+	border-style solid
+	border-color #f00
+	
+.legendImageBox
+	float left
+	width 20px
+	height 20px
+	margin-left 5px
+	margin-right 5px
+	border-width 1px
+	border-style solid
+	border-color rgba(0, 0, 0, .2)
+	
+.legendAreaSpan
+	display inline-block
+	vertical-align middle
+	margin-left 5px
+
+.legendAreaTypeForm
+	margin-top 3px
+	
+.custom-size-flipswitch.ui-flipswitch
+	margin-top 3px
+	margin-left 30px
+	margin-bottom 20px
+	position:relative
+	
+/* Custom indentations are needed because the length of custom labels differs from
+   the length of the standard labels */
+.custom-size-flipswitch.ui-flipswitch .ui-btn.ui-flipswitch-on {
+    text-indent: -5em;
+}
+.custom-size-flipswitch.ui-flipswitch .ui-flipswitch-off {
+    text-indent: 1em;
+	padding-top: 3px;
+}
+/* Custom widths are needed because the length of custom labels differs from
+   the length of the standard labels */
+.custom-size-flipswitch.ui-flipswitch {
+    width: 9.375em;
+	height: 2.30em;
+}
+.custom-size-flipswitch.ui-flipswitch.ui-flipswitch-active {
+    padding-left: 7em;
+    width: 2.375em;
+}
+@media (min-width: 28em) {
+    /*Repeated from rule .ui-flipswitch above*/
+    .ui-field-contain > label + .custom-size-flipswitch.ui-flipswitch {
+        width: 1.875em;
+    }
+}
+
+

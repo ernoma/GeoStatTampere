@@ -1,0 +1,171 @@
+doctype html
+html(lang='fi')
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title #{title}
+		link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
+		link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css')
+		link(rel='stylesheet', href='/stylesheets/geostat.css')
+	body(role='document')
+		#content(class='container theme-showcase', role='main')
+		
+			h1 #{title}
+		
+			ul(class="nav nav-tabs", role="tablist")
+				li(class='active')
+					a(href='#home', role='tab', data-toggle='tab') Kartta ja tilastot
+				li
+					a(href='#data_selections_div', role='tab', data-toggle='tab') Näytettävät kategoriat
+				li
+					a(href='#about', role='tab', data-toggle='tab') Sovelluksesta
+		
+			div(class='tab-content')
+				#home(class='tab-pane active')
+					div(class="panel panel-default")
+						div(class="panel-body")
+							
+							h2 Kartta ja tilastot
+						
+							button(type='button', class='btn btn-default', id='geolocate_button') Keskitä kartta sijaintiini
+							button(type='button', class='btn btn-primary', id='area_edit_button', disabled='disabled' data-toggle='modal' data-target='#area_edit_modal') Muokkaa aluetta
+							button(type='button', class='btn btn-primary', id='delete_button', disabled='disabled') Poista valitut alueet
+							button(type='button', class='btn btn-primary', id='delete_all_button', disabled='disabled') Poista kaikki alueet
+							div(class='btn-group' data-toggle='buttons' id='area_buttons_div')
+								span(id='area_buttons_label') Lisättävän alueen muoto:
+								a(href="#" id='area_circle_button')
+									img(id='area_circle_button_img' src='images/primary_box_button_active_circle.png' alt='ympyrä')
+								a(href="#" id='area_rectangle_button')
+									img(id='area_rectangle_button_img' src='images/primary_box_button_rectangle.png' alt='suorakulmio')
+							#map_canvas
+				
+							#chart_container
+					
+				#data_selections_div(class='tab-pane')
+					div(class="panel panel-default")
+						div(class="panel-body")
+							h2 Näytettävät kategoriat
+							
+							#data_selection_checkboxes
+								
+				#about(class='tab-pane')
+					div(class="panel panel-default")
+						div(class="panel-body")
+							h2 Sovelluksesta
+				
+							h3 Tarkoitus
+				
+							p Sovellus mahdollistaa kaupungin eri aluiden vertailun haluttujen tietojen osalta ilman, että täytyisi opetella vaativien GIS-ohjelmistojen käyttöä.
+							
+							p Kaupunkilaisten vaikutusmahdollisuudet kasvavat, kun he voivat tutkia kaupungin aluiden eroja. Sovelluksesta voi olla myös hyötyä vaikkapa asunnon ostoa harkitsevalle, kun hän miettii mille alueelle tai mihin katuosoitteeseen kannattaisi muuttaa.
+					
+							h3 Sovellusksen lähdekoodi
+							
+							p Lähdekoodi löytyy...
+					
+							h3 Sovellus hyödyntää:
+							
+							ul
+								li Tampereen kaupungin aineistoa, 2014, 
+									a(href="http://data.tampere.fi/") data.tampere.fi, 
+									a(href="http://www.tampere.fi/tampereinfo/avoindata/avoindatalisenssi.html") lisenssi
+								li Maanmittauslaitoksen taustakartta-, peruskartta-, ja ortoilmakuva-aineistoa, 
+									a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501") lisenssi
+		#footer
+			ul
+				li
+					del useamman vertailtavan alueen valinta
+				li muokkaa valittua aluetta
+				ul
+					li väri
+					li koko
+					li muoto
+					li
+						del poista (onnistuu myös del ja backspace näppäimillä)
+				li google analytics
+				li vertailun tallennus - vaatinee käyttäjätunnuksen
+				li julkinen / kavereille jaettava vertailu
+				li älä hukkaa tietoja pois siirtyessä tai vähintäänkin varoita tietojen häviämisestä
+				li
+					del käytä leaflettia tai openlayersia
+				li
+					del bootstrap
+				li
+					del vaihda keskikohtaa
+				li vaihda matkaa
+				li vaihda matkan yksiköitä
+				li valitse ympyrän sijaan laatikko tai mielivaltainen alue
+				li
+					del valitse näytettävät asiat
+				li näytettäville asioille jaottelu
+				ul
+					li jaottelu kaupungin yksikön mukaan
+					li jaottelu teeman mukaan, esim. liikenne, luonto tai vapaa-aika
+				li kartan visualisoinnit järkeviksi
+				ul
+					li heatmap, polygoni, pin, yms. sopiviin kohtiin oletuksena
+					li anna käyttäjän valita visualisointi
+				li download kartta ja tilastot pdf-muodossa
+				li
+					del tarkista, että filterin distance-unitit on metrejä
+				li valittavissa haluaako vanhan valinnan jäädä yhdessä uuden kanssa tai vieläkin vanhempien
+				li matemaattiset joukko-operaatiot: cut, yms.
+				li näytä kaikki asiat tietystä tai kaikista kategorioista ilman etäisyys, tms. rajoitusta
+				li voi sisältää myös Suomen tai muiden kuin Tampereen tietoja, jos tamperelaiselle hyödyllisiä
+				li seurausmahdollisuus käyttäjän paikalle
+				li näytä kartta maximoituna halutessa
+				li osoitehaku
+				li käsittele virhetilanteet, esim. palvelimelta tai navici-palvelimelta ei saada dataa
+				li zoomaa ilmakuva-taso, kun käyttäjä valitsee sen, jos sen hetkisellä zoomauksella ei voi näyttää
+				li jonkinlainen walkthrough
+				ul
+					li miten voi lisätä ensimmäisen alueen
+					li miten voi lisätä toisen alueen
+					li alueen liikuttaminen
+					li aluiden muokkaus
+					li näytettävien tietojen muokkaus
+				li 3d-kartta
+				li corolepth-kartta (highmaps?)
+				li näytä tilastot suuralueittain, suunnittelualueittain, jne.
+				li alueen nimeämismahdollisuus
+				li alueen poistossa varoitus, että ei voi perua tai aina parempi, jos undo
+				li drill-in chart
+				li tampereen opaskartta ja kantakartta
+				li alueen lat ja lon vähintäänkin näkyviin, jos ei olisikaan muokattavissa dialogissa
+		
+		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")
+			div(class="modal-dialog modal-sm")
+				div(class="modal-content")
+					div(class="modal-header")
+						button(type="button" class="close" data-dismiss="modal")
+							span(aria-hidden="true") &times;
+							span(class="sr-only") Sulje
+						h4(class="modal-title" id="area_edit_label") Muokkaa valittua aluetta
+					div(class="modal-body")
+						form(class="form-horizontal" role="form")
+							div(class="form-group")
+								label(for="area_edit_name" class="col-sm-4 control-label") Nimi
+								div(class="col-sm-8")
+									input(type="text" class="form-control" id="area_edit_name" placeholder="")
+							div(class="form-group")
+								label(for="area_edit_radius" class="col-sm-4 control-label") Säde
+								div(class="col-sm-8")
+									div(class="form-group row")
+										div(class="col-sm-8")
+											input(type="number" class="form-control" min="1" id="area_edit_radius" placeholder="")
+										div(class="col-sm-2")
+											label(class="col-sm-12 control-label area_edit_radius_label") metriä
+					div(class="modal-footer")
+						button(type="button" class="btn btn-default" data-dismiss="modal") Sulje
+						button(type="button" class="btn btn-primary" id="area_edit_save_button" data-dismiss="modal") Tallenna muutokset
+						
+		script(type='text/javascript', src='js/jquery-2.1.1.min.js')
+		script(type='text/javascript', src='js/bootstrap.min.js')
+		script(type='text/javascript', src='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js')
+		script(type='text/javascript', src='http://code.highcharts.com/highcharts.js')
+		script(type='text/javascript', src='http://code.highcharts.com/modules/no-data-to-display.js')
+		//script(type='text/javascript', src='http://code.highcharts.com/modules/exporting.js')
+		script(type='text/javascript', src='js/geostat/geochart.js')
+		script(type='text/javascript', src='js/geostat/geostat.js')

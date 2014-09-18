@@ -1,0 +1,29 @@
+doctype html
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title #{title} - Tampereen keskustan maksulliset pys&auml;k&ouml;intialueet
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css')
+		script(type='text/javascript', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAJs9nNKiJwSWXWRSdhcUZYf-Vx3RTwvKo')
+		script(type='text/javascript', src='js/jquery-2.1.1.min.js')
+		script(type='text/javascript', src='http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js')
+		script(type='text/javascript').
+			var parkingWFSFeatures = !{parkingWFSFeatures}
+		script(type='text/javascript', src='js/index.js')
+	body
+		#parking_page(data-role='page')
+			#header(data-role='header')
+				h1 Maksulliset ja kiekkopys&auml;k&ouml;intialueet
+				a(href='#legend_panel', data-role='button', class='ui-btn-right').
+					Karttamerkinn&auml;t
+				//p Tampereen keskustan maksulliset ja kiekkopys&auml;k&ouml;intialueet
+			#main_content(data-role='content')
+				#container
+					#map-canvas
+			#footer(data-role='footer')
+				p Sisältää Tampereen kaupungin "Tampereen keskustan maksulliset pysäköintialueet"-aineistoa, 2014, 
+					a(href="http://data.tampere.fi/") data.tampere.fi.
+			#legend_panel(data-role='panel', data-position='left', data-display='overlay')
+				h1 Karttamerkinn&auml;t
+				
