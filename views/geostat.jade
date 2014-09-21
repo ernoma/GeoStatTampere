@@ -29,7 +29,7 @@ html(lang='fi')
 							
 							h2 Kartta ja tilastot
 						
-							button(type='button', class='btn btn-default', id='geolocate_button') Keskitä kartta sijaintiini
+							button(type='button', class='btn btn-primary', id='geolocate_button') Keskitä kartta sijaintiini
 							button(type='button', class='btn btn-primary', id='area_edit_button', disabled='disabled' data-toggle='modal' data-target='#area_edit_modal') Muokkaa aluetta
 							button(type='button', class='btn btn-primary', id='delete_button', disabled='disabled') Poista valitut alueet
 							button(type='button', class='btn btn-primary', id='delete_all_button', disabled='disabled') Poista kaikki alueet
@@ -134,6 +134,7 @@ html(lang='fi')
 				li drill-in chart
 				li tampereen opaskartta ja kantakartta
 				li alueen lat ja lon vähintäänkin näkyviin, jos ei olisikaan muokattavissa dialogissa
+				li del nappula edit-dialogissa ja yleensäkin muualla kuin karttanäkymässä ei poista valittuja alueita
 		
 		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")
 			div(class="modal-dialog modal-sm")
@@ -149,12 +150,27 @@ html(lang='fi')
 								label(for="area_edit_name" class="col-sm-4 control-label") Nimi
 								div(class="col-sm-8")
 									input(type="text" class="form-control" id="area_edit_name" placeholder="")
-							div(class="form-group")
+							#area_edit_circle_size_div(class="form-group")
 								label(for="area_edit_radius" class="col-sm-4 control-label") Säde
 								div(class="col-sm-8")
 									div(class="form-group row")
 										div(class="col-sm-8")
 											input(type="number" class="form-control" min="1" id="area_edit_radius" placeholder="")
+										div(class="col-sm-2")
+											label(class="col-sm-12 control-label area_edit_radius_label") metriä
+							#area_edit_rectangle_size_div(class="form-group")
+								label(for="area_edit_width" class="col-sm-4 control-label") Leveys
+								div(class="col-sm-8")
+									div(class="form-group row")
+										div(class="col-sm-8")
+											input(type="number" class="form-control" min="1" id="area_edit_width" placeholder="")
+										div(class="col-sm-2")
+											label(class="col-sm-12 control-label area_edit_radius_label") metriä
+								label(for="area_edit_height" class="col-sm-4 control-label") Korkeus
+								div(class="col-sm-8")
+									div(class="form-group row")
+										div(class="col-sm-8")
+											input(type="number" class="form-control" min="1" id="area_edit_height" placeholder="")
 										div(class="col-sm-2")
 											label(class="col-sm-12 control-label area_edit_radius_label") metriä
 					div(class="modal-footer")
@@ -167,5 +183,6 @@ html(lang='fi')
 		script(type='text/javascript', src='http://code.highcharts.com/highcharts.js')
 		script(type='text/javascript', src='http://code.highcharts.com/modules/no-data-to-display.js')
 		//script(type='text/javascript', src='http://code.highcharts.com/modules/exporting.js')
+		script(type='text/javascript', src='js/proj4.js')
 		script(type='text/javascript', src='js/geostat/geochart.js')
 		script(type='text/javascript', src='js/geostat/geostat.js')

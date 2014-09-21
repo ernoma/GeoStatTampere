@@ -1,8 +1,18 @@
 
-var INITIAL_LAT = 61.5016
-var INITIAL_LON = 23.7737
+var INITIAL_LAT = 61.5
+var INITIAL_LON = 23.766667
 
 var INITIAL_AREA_RADIUS = 500;
+
+var wgs84Proj4 = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs';
+var etrsgk24Proj4 = '+proj=tmerc +lat_0=0 +lon_0=24 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs';
+
+// var test = proj4(wgs84Proj4, etrsgk24Proj4, [INITIAL_LON, INITIAL_LAT]);
+// console.log(test);
+
+// console.log(proj4(etrsgk24Proj4, wgs84Proj4, test));
+// var test2 = [487573.8889, 6821232.4117];
+// console.log(proj4(etrsgk24Proj4, wgs84Proj4, test2));
 
 var center_icon = L.icon({
   iconUrl: '/images/center_icon.png',
@@ -19,6 +29,30 @@ var parking_icon = L.icon({
 var area_circle_tool_selected = true;
 var area_rectangle_tool_selected = false;
 
+function StatArea(path, type, marker, selected, name, radius) {
+	this.path = path;
+	this.type = type;
+	this.marker = marker;
+	this.selected = selected;
+	this.name = name;
+	if (type == "circle") {
+		this.radius = radius;
+	}
+	else {
+		this.latRadius = radius;
+		this.lngRadius = radius;
+	}
+}
+
+StatArea.prototype.isLatLngInsidePath = function(latlng) {
+	if (this.type == "circle") {
+		return is_inside_circle(latlng, this.path);
+	}
+	else {
+		return is_inside_rectangle(latlng, this.path);
+	}
+}
+
 var statAreas = []
 
 var statAreaColors = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', 
@@ -28,7 +62,7 @@ var statAreaCount = 0;
 
 var categories = [
 	{
-		name: "Pysäköintikohteet",
+		name: "Keskustan maksulliset tai muuten rajoitetut pysäköintikohteet",
 		internalName: "car_parking"
 	},
 	{
@@ -77,6 +111,16 @@ var mmlOrtoLayer = L.tileLayer('http://tiles.kartat.kapsi.fi/ortokuva/{z}/{x}/{y
     maxZoom: 18,
 	minZoom: 13
 })
+var treGuideLayer = L.tileLayer.wms('http://opendata.navici.com/tampere/ows?service=wms', {
+	attribution: 'Sisältää Tampereen kaupungin <a href="http://palvelut2.tampere.fi/tietovaranto/tietovaranto.php?id=136&alasivu=1&vapaasana=">"Tampereen opaskartta"</a>-aineistoa, <a href="http://www.tampere.fi/avoindata/lisenssi">lisenssi</a>',
+	layers: 'opendata:tampere_okartta_gk24',
+	version: '1.3.0'
+})
+var treBaseLayer = L.tileLayer.wms('http://opendata.navici.com/tampere/ows?service=wms', {
+	attribution: 'Sisältää Tampereen kaupungin <a href="http://palvelut2.tampere.fi/tietovaranto/tietovaranto.php?id=137&alasivu=1&vapaasana=">"Tampereen kantakartta ilman kiinteistörajoja"</a>-aineistoa, <a href="http://www.tampere.fi/avoindata/lisenssi">lisenssi</a>',
+	layers: 'opendata:tampere_kkartta_pohja_gk24',
+	version: '1.3.0'
+})
 
 var map = L.map('map_canvas', {layers: [osmLayer]}).setView([INITIAL_LAT, INITIAL_LON], 13)
 
@@ -86,12 +130,14 @@ map.on('zoomend', function(e) {
 
 var baseMaps = {
 	"Perinteinen, OpenStreetMap": osmLayer,
+	"Opaskartta, Tampere": treGuideLayer,
+	"Kantakartta, Tampere": treBaseLayer,
+	"Ilmakuva, Maanmittauslaitos": mmlOrtoLayer,
 	"Katu, MapBox": mapBoxLayer,
 	"Katu, MapQuest": mapQuestLayer,
 	"Pyöräily, Thunderforest": osmCycleLayer,
-	"Ilmakuva, Maanmittauslaitos": mmlOrtoLayer,
-	"Peruskartta, Maanmittauslaitos": mmlPerusLayer,
-	"Taustakartta, Maanmittauslaitos": mmlTaustaLayer,
+	// "Peruskartta, Maanmittauslaitos": mmlPerusLayer,
+	// "Taustakartta, Maanmittauslaitos": mmlTaustaLayer,
 	"Mustavalko, Stamen": stamenTonerLayer,
 	"Vesiväri, Stamen": stamenWatercolorLayer
 }
@@ -115,37 +161,35 @@ var layers = {
 		}).addTo(map)
 }
 
-function getDataOnArea(radius, lat, lon, statArea) {
+function getDataOnArea(lat, lon, statArea, sizeFilter) {
 
 	var valueArray = Array.apply(null, new Array(selectedCategories.length)).map(Number.prototype.valueOf,0); // array of zeros
 	
 	var series = geochart.addChartSeries(valueArray, statArea.name);
 
 	for (var i = 0; i < selectedCategories.length; i++) {
-		getDataOnCategory(selectedCategories[i], series.name, radius, lat, lon);
+		getDataOnCategory(selectedCategories[i], series.name, lat, lon, sizeFilter);
 	}
 }
 
-function updateDataOnArea(radius, lat, lon, statArea) {
+function updateDataOnArea(lat, lon, statArea, sizeFilter) {
 	
 	for (var i = 0; i < selectedCategories.length; i++) {
-		getDataOnCategory(selectedCategories[i], statArea.name, radius, lat, lon);
+		getDataOnCategory(selectedCategories[i], statArea.name, lat, lon, sizeFilter);
 	}
 }
 
-function getDataOnCategory(category, seriesName, radius, lat, lon) {
+function getDataOnCategory(category, seriesName, lat, lon, sizeFilter) {
 	
 	var n = Math.floor((Math.random() * 100) + 1);
-	
 	console.log("Alue: " + seriesName + ", kategoria: " + category.name + ", count: " + n);
-	
 	geochart.updateSeriesCategory(category.name, seriesName, n);
 	
-	// $.getJSON("/" +  category.internalName + ".json", { radius: radius, lat: lat, lon: lon }, function(response) {
+	// $.getJSON("/" +  category.internalName + ".json", { sizeFilter: JSON.stringify(sizeFilter), lat: lat, lon: lon }, function(response) {
 		// parsed_response = JSON.parse(response)
 		// console.log("N of features: " + parsed_response.totalFeatures)
 				
-		// geochart.updateSeriesCategory(category.name, series.name, parsed_response.totalFeatures);
+		// geochart.updateSeriesCategory(category.name, seriesName, parsed_response.totalFeatures);
 	// });
 }
 
@@ -182,7 +226,7 @@ function onMapClick(e) {
 	console.log("ctrlKeyPressed: " + ctrlKeyPressed);
 	
 	for(var i = 0; i < statAreas.length; i++) {
-		if (is_inside_circle(e.latlng, statAreas[i].path)) {
+		if (statAreas[i].isLatLngInsidePath(e.latlng)) {
 			found = true
 			// TODO
 			
@@ -203,28 +247,50 @@ function onMapClick(e) {
 	}
 	
 	if (!found) {
-		var circle = L.circle(e.latlng, INITIAL_AREA_RADIUS, {
-			color: statAreaColors[statAreaCount % statAreaColors.length],
-			weight: 5,
-			fillColor: statAreaColors[statAreaCount % statAreaColors.length],
-			fillOpacity: 0.5
-		}).addTo(map)
-
+		
+		var circle = null;
+		var rectangle = null;
+	
+		if (area_circle_tool_selected) {
+			circle = L.circle(e.latlng, INITIAL_AREA_RADIUS, {
+				color: statAreaColors[statAreaCount % statAreaColors.length],
+				weight: 5,
+				fillColor: statAreaColors[statAreaCount % statAreaColors.length],
+				fillOpacity: 0.5
+			}).addTo(map);
+		} else {
+			var latLngBounds = getlatLngBounds(e.latlng, INITIAL_AREA_RADIUS, INITIAL_AREA_RADIUS);
+			rectangle = L.rectangle(latLngBounds, {
+				color: statAreaColors[statAreaCount % statAreaColors.length],
+				weight: 5,
+				fillColor: statAreaColors[statAreaCount % statAreaColors.length],
+				fillOpacity: 0.5
+			}).addTo(map);
+		}
+		
 		statAreaCount++;
 		
 		var marker = L.marker(e.latlng, { icon: center_icon, draggable:'true' }).addTo(map)
 		//marker.bindPopup("leveys: " + INITIAL_LAT + ", pituus: " + INITIAL_LON);
 		marker.bindPopup("Alue " + statAreaCount);
-		marker.on('drag', function(event){
-			var position = event.target.getLatLng()
-			circle.setLatLng(position)
-		})
-		
-		var statArea = {
-			path: circle,
-			marker: marker,
-			selected: true,
-			name: "Alue " + statAreaCount
+		var statArea = new StatArea(area_circle_tool_selected ? circle : rectangle,
+			area_circle_tool_selected ? "circle" : "rectangle",
+			marker,
+			true,
+			"Alue " + statAreaCount, INITIAL_AREA_RADIUS);
+			
+		if (area_circle_tool_selected) {
+			marker.on('drag', function(event){
+				var position = event.target.getLatLng()
+				circle.setLatLng(position)
+			});
+		}
+		else {
+			marker.on('drag', function(event){
+				var position = event.target.getLatLng();
+				var latLngBounds = getlatLngBounds(position, statArea.latRadius, statArea.lngRadius);
+				rectangle.setBounds(latLngBounds);
+			});
 		}
 		
 		statAreas.push(statArea)
@@ -233,12 +299,10 @@ function onMapClick(e) {
 			for(var i = 0; i < statAreas.length; i++) {
 				if (statAreas[i].marker == this) {
 					found = true
-					
 					statAreas[i].path.setStyle({
 						weight: 5
 					})
 					statAreas[i].selected = true;
-					
 					$("#delete_button").removeAttr("disabled");
 				}
 				else {
@@ -250,26 +314,33 @@ function onMapClick(e) {
 					}
 				}
 			}
-			
 			checkSelectedAreas();
 		});
 	
 		marker.on('dragend', function(event){
-			var position = event.target.getLatLng()
-			//marker.setPopupContent("leveys: " + position.lat + ", pituus: " + position.lng)
-			circle.setLatLng(position)
-			
+			var position = event.target.getLatLng();
 			for(var i = 0; i < statAreas.length; i++) {
 				if (statAreas[i].marker == this) {
+				
+					if (statAreas[i].type == "circle") {
+						statAreas[i].path.setLatLng(position);
+					}
+					else {
+						var latLngBounds = getlatLngBounds(position, statAreas[i].latRadius, statAreas[i].lngRadius);
+						statAreas[i].path.setBounds(latLngBounds);
+					}
 					found = true
-					
 					statAreas[i].path.setStyle({
 						weight: 5
 					})
 					statAreas[i].selected = true;
-					
-					updateDataOnArea(statAreas[i].path.getRadius(), e.latlng.lat, e.latlng.lng, statArea);
-					
+					if (statAreas[i].type == "circle") {
+						updateDataOnArea(e.latlng.lat, e.latlng.lng, statArea, { radius: statAreas[i].path.getRadius() });
+					}
+					else {
+						var latLngBounds = statAreas[i].path.getBounds();
+						updateDataOnArea(e.latlng.lat, e.latlng.lng, statArea, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+					}
 					$("#delete_button").removeAttr("disabled");
 				}
 				else {
@@ -281,11 +352,16 @@ function onMapClick(e) {
 					}
 				}
 			}
-			
 			checkSelectedAreas();
 		})
 		
-		getDataOnArea(statArea.path.getRadius(), e.latlng.lat, e.latlng.lng, statArea)
+		if (statAreas[i].type == "circle") {
+			getDataOnArea(e.latlng.lat, e.latlng.lng, statArea, { radius: statArea.path.getRadius() });
+		}
+		else {
+			var latLngBounds = statAreas[i].path.getBounds();
+			getDataOnArea(e.latlng.lat, e.latlng.lng, statArea, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+		}
 	}
 	
 	checkSelectedAreas();
@@ -324,6 +400,49 @@ function is_inside_circle(latlng, circle) {
 	console.log(circle.getRadius())
 	
 	return dist <= circle.getRadius()
+}
+
+function is_inside_rectangle(latlng, rectangle) {
+	return rectangle.getBounds().contains(latlng);
+}
+
+//
+// Distance constant from http://gis.stackexchange.com/questions/19760/how-do-i-calculate-the-bounding-box-for-given-a-distance-and-latitude-longitude
+//
+function getlatLngBounds(latLng, latRadiusInMeters, lngRadiusInMeters) {
+	// console.log("latRadiusInMeters: " + latRadiusInMeters);
+	// console.log("lngRadiusInMeters: " + lngRadiusInMeters);
+	
+	var latLngInETRS = proj4(wgs84Proj4, etrsgk24Proj4, [latLng.lng, latLng.lat]);
+	// console.log("latLngInETRS: " + latLngInETRS);
+	
+	var minLatInETRS = latLngInETRS[1] - latRadiusInMeters;
+	var maxLatInETRS = latLngInETRS[1] + latRadiusInMeters;
+	var minLngInETRS = latLngInETRS[0] - lngRadiusInMeters;
+	var maxLngInETRS = latLngInETRS[0] + lngRadiusInMeters;
+	// console.log("minLatInETRS: " + minLatInETRS);
+	// console.log("maxLatInETRS: " + maxLatInETRS);
+	// console.log("minLngInETRS: " + minLngInETRS);
+	// console.log("maxLngInETRS: " + maxLngInETRS);
+	
+	var minLatLngInWGS84 = proj4(etrsgk24Proj4, wgs84Proj4, [minLngInETRS, minLatInETRS]);
+	var maxLatLngInWGS84 = proj4(etrsgk24Proj4, wgs84Proj4, [maxLngInETRS, maxLatInETRS]);
+	// console.log("minLatLngInWGS84: " + minLatLngInWGS84);
+	// console.log("maxLatLngInWGS84: " + maxLatLngInWGS84);
+
+	var minLat = minLatLngInWGS84[1];
+	var maxLat = maxLatLngInWGS84[1];
+	var minLng = minLatLngInWGS84[0];
+	var maxLng = maxLatLngInWGS84[0];
+	// console.log("minLat: " + minLat);
+	// console.log("maxLat: " + maxLat);
+	// console.log("minLng: " + minLng);
+	// console.log("maxLng: " + maxLng);
+	
+	console.log("dist lat: " + getDistanceFromLatLonInMeters(minLat, minLng, maxLat, minLng));
+	console.log("dist lng: " + getDistanceFromLatLonInMeters(minLat, minLng, minLat, maxLng));
+	
+	return L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng));
 }
 
 //
@@ -468,7 +587,13 @@ $( document ).ready(function() {
 				geochart.addCategory(event.data.name);
 				
 				for (var i = 0; i < statAreas.length; i++) {
-					getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].path.getRadius(), statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng);
+					if (statAreas[i].type == "circle") {
+						getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { radius: statAreas[i].path.getRadius() });
+					}
+					else {
+						var latLngBounds = statAreas[i].path.getBounds();
+						getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+					}
 				}
 			}
 			else {
@@ -483,9 +608,20 @@ $( document ).ready(function() {
 $('#area_edit_button').click(function(e) {
 	for (var i = 0; i < statAreas.length; i++) {
 		if (statAreas[i].selected) {
-			$('#area_edit_name').val(statAreas[i].name);
-			$('#area_edit_radius').val(statAreas[i].path.getRadius());
-			break;
+			if (statAreas[i].type == "circle") {
+				$('#area_edit_circle_size_div').removeClass('hidden');
+				$('#area_edit_rectangle_size_div').addClass('hidden');
+				$('#area_edit_name').val(statAreas[i].name);
+				$('#area_edit_radius').val(statAreas[i].path.getRadius());
+				break;
+			}
+			else {
+				$('#area_edit_circle_size_div').addClass('hidden');
+				$('#area_edit_rectangle_size_div').removeClass('hidden');
+				$('#area_edit_name').val(statAreas[i].name);
+				$('#area_edit_width').val(statAreas[i].lngRadius * 2);
+				$('#area_edit_height').val(statAreas[i].latRadius * 2);
+			}
 		}
 	}
 });
@@ -502,10 +638,33 @@ $('#area_edit_button').click(function(e) {
 				statAreas[i].marker.setPopupContent(newName);
 			}
 			
-			var newRadius = $('#area_edit_radius').val();
-			if (!isNaN(newRadius) && newRadius > 0 && newRadius != statAreas[i].path.getRadius()) {
-				statAreas[i].path.setRadius(newRadius);
-				updateDataOnArea(statAreas[i].path.getRadius(), statAreas[i].path.getLatLng().lat, statAreas[i].path.getLatLng().lng, statArea);
+			if (statAreas[i].type == "circle") {
+				var newRadius = parseInt($('#area_edit_radius').val());
+				if (!isNaN(newRadius) && newRadius > 0 && newRadius != statAreas[i].path.getRadius()) {
+					statAreas[i].path.setRadius(newRadius);
+					updateDataOnArea(statAreas[i].path.getLatLng().lat, statAreas[i].path.getLatLng().lng, statAreas[i], { radius: statAreas[i].path.getRadius() });
+				}
+				else {
+					// TODO
+				}
+			}
+			else { // rectangle
+				var newWidth =  parseInt($('#area_edit_width').val());
+				var newHeight =  parseInt($('#area_edit_height').val());
+				if (!isNaN(newWidth) && newWidth > 0 &&
+					!isNaN(newHeight) && newHeight > 0 &&
+					(newWidth != statAreas[i].lngRadius * 2 || newHeight != statAreas[i].latRadius * 2)) {
+					statAreas[i].lngRadius = newWidth / 2;
+					statAreas[i].latRadius = newHeight / 2;
+					var latLngBounds = getlatLngBounds(statAreas[i].marker.getLatLng(), statAreas[i].latRadius, statAreas[i].lngRadius);
+					console.log("marker.getLatLng(): " + statAreas[i].marker.getLatLng());
+					console.log("latLngBounds: " + latLngBounds.getSouthWest() + ', ' + latLngBounds.getNorthEast());
+					statAreas[i].path.setBounds(latLngBounds);
+					updateDataOnArea(statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, statAreas[i], { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+				}
+				else {
+					// TODO
+				}
 			}
 			break;
 		}
