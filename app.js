@@ -1,15 +1,15 @@
 
-var express = require('express')
-var stylus = require('stylus')
-var nib = require('nib')
-var morgan  = require('morgan')
+var express = require('express');
+var stylus = require('stylus');
+var nib = require('nib');
+var morgan  = require('morgan');
 var parking = require('./parking.js');
 var tampere = require('./tampere.js');
 
 function compile(str, path) {
   return stylus(str)
     .set('filename', path)
-    .use(nib())
+    .use(nib());
 }
 
 var app = express();
@@ -18,55 +18,64 @@ if (app.get('env') === 'development') {
   app.locals.pretty = true;
 }
 
-app.set('views', __dirname + '/views')
-app.set('view engine', 'jade')
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 app.use(stylus.middleware(
   { src: __dirname + '/public'
   , compile: compile
   }
-))
-app.use(express.static(__dirname + '/public'))
+));
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
 
-	parking.showParkingMap(req, res)
-})
+	parking.showParkingMap(req, res);
+});
 
 app.get('/charts', function (req, res) {
 
-	parking.showParkingCharts(req, res)
-})
+	parking.showParkingCharts(req, res);
+});
 
 app.get('/3d', function (req, res) {
 
 	res.render('3dmap',
-		{title: 'Tampereen korkeusmalli'})
-})
+		{title: 'Tampereen korkeusmalli'});
+});
 
 app.get('/geostat', function (req, res) {
 
 	res.render('geostat',
-		{title: 'Tamperelaisen paikkatieto'})
-})
+		{title: 'Tamperelaisen paikkatieto'});
+});
 
 app.get('/about', function (req, res) {
 
 	res.render('about',
-		{title: 'Tamperelaisen paikkatieto'})
-})
+		{title: 'Tamperelaisen paikkatieto'});
+});
 
 
 app.get('/car_parking.json', function (req, res) {
 	
-	tampere.getCarParkingJSONData(req, res)
-})
+	tampere.getCarParkingJSONData(req, res);
+});
 
 app.get('/bike_parking.json', function (req, res) {
 	
-	tampere.getBikeParkingJSONData(req, res)
-})
+	tampere.getBikeParkingJSONData(req, res);
+});
 
+app.get('/autocomplete.json', function (req, res) {
+	
+	tampere.getSearchAutocompleteJSONData(req, res);
+});
 
-app.listen(3000)
+app.get('/geocoder.json', function (req, res) {
+	
+	tampere.getSearchGeocoderJSONData(req, res);
+});
+
+app.listen(3000);

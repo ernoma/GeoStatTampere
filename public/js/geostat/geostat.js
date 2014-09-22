@@ -1,6 +1,6 @@
 
-var INITIAL_LAT = 61.5
-var INITIAL_LON = 23.766667
+var INITIAL_LAT = 61.5;
+var INITIAL_LON = 23.766667;
 
 var INITIAL_AREA_RADIUS = 500;
 
@@ -18,13 +18,13 @@ var center_icon = L.icon({
   iconUrl: '/images/center_icon.png',
   iconSize: [20, 20],
   iconAnchor: [9, 9]
-})
+});
 
 var parking_icon = L.icon({
   iconUrl: '/images/parking_garage_22x22.png',
   iconSize: [22, 22],
   iconAnchor: [10, 10]
-})
+});
 
 var area_circle_tool_selected = true;
 var area_rectangle_tool_selected = false;
@@ -53,7 +53,7 @@ StatArea.prototype.isLatLngInsidePath = function(latlng) {
 	}
 }
 
-var statAreas = []
+var statAreas = [];
 
 var statAreaColors = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', 
    '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'];
@@ -76,57 +76,53 @@ var selectedCategories = [];
 var osmLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
     maxZoom: 18
-})
+});
 var osmCycleLayer = L.tileLayer('http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Maps &copy; <a href="http://thunderforest.com/">Thunderforest</a>',
     maxZoom: 18
-})
-var mapBoxLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/ernoma.i04d787e/{z}/{x}/{y}.png', {
+});
+var mapBoxLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/' + api_keys.mapbox + '/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18
-})
+});
 var mapQuestLayer = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
 	subdomains: '1234',
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">',
     maxZoom: 18
-})
+});
 var stamenTonerLayer = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>. Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>',
     maxZoom: 18
-})
-var stamenWatercolorLayer = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>. Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>',
-    maxZoom: 18
-})
+});
 var mmlPerusLayer = L.tileLayer('http://tiles.kartat.kapsi.fi/peruskartta/{z}/{x}/{y}.jpg', {
     attribution: 'Sisältää Maanmittauslaitoksen peruskartta-aineistoa, <a href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501">lisenssi</a>, TMS: <a href="http://kartat.kapsi.fi/">kartat.kapsi.fi</a>',
     maxZoom: 18
-})
+});
 var mmlTaustaLayer = L.tileLayer('http://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg', {
     attribution: 'Sisältää Maanmittauslaitoksen taustakartta-aineistoa, <a href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501">lisenssi</a>, TMS: <a href="http://kartat.kapsi.fi/">kartat.kapsi.fi</a>',
     maxZoom: 18
-})
+});
 var mmlOrtoLayer = L.tileLayer('http://tiles.kartat.kapsi.fi/ortokuva/{z}/{x}/{y}.jpg', {
     attribution: 'Sisältää Maanmittauslaitoksen ortoilmakuva-aineistoa, <a href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501">lisenssi</a>, TMS: <a href="http://kartat.kapsi.fi/">kartat.kapsi.fi</a>',
     maxZoom: 18,
 	minZoom: 13
-})
+});
 var treGuideLayer = L.tileLayer.wms('http://opendata.navici.com/tampere/ows?service=wms', {
 	attribution: 'Sisältää Tampereen kaupungin <a href="http://palvelut2.tampere.fi/tietovaranto/tietovaranto.php?id=136&alasivu=1&vapaasana=">"Tampereen opaskartta"</a>-aineistoa, <a href="http://www.tampere.fi/avoindata/lisenssi">lisenssi</a>',
 	layers: 'opendata:tampere_okartta_gk24',
 	version: '1.3.0'
-})
+});
 var treBaseLayer = L.tileLayer.wms('http://opendata.navici.com/tampere/ows?service=wms', {
 	attribution: 'Sisältää Tampereen kaupungin <a href="http://palvelut2.tampere.fi/tietovaranto/tietovaranto.php?id=137&alasivu=1&vapaasana=">"Tampereen kantakartta ilman kiinteistörajoja"</a>-aineistoa, <a href="http://www.tampere.fi/avoindata/lisenssi">lisenssi</a>',
 	layers: 'opendata:tampere_kkartta_pohja_gk24',
 	version: '1.3.0'
-})
+});
 
-var map = L.map('map_canvas', {layers: [osmLayer]}).setView([INITIAL_LAT, INITIAL_LON], 13)
+var map = L.map('map_canvas', {layers: [osmLayer]}).setView([INITIAL_LAT, INITIAL_LON], 13);
 
 map.on('zoomend', function(e) {
 	console.log("zoom: " + map.getZoom());
-})
+});
 
 var baseMaps = {
 	"Perinteinen, OpenStreetMap": osmLayer,
@@ -138,10 +134,9 @@ var baseMaps = {
 	"Pyöräily, Thunderforest": osmCycleLayer,
 	// "Peruskartta, Maanmittauslaitos": mmlPerusLayer,
 	// "Taustakartta, Maanmittauslaitos": mmlTaustaLayer,
-	"Mustavalko, Stamen": stamenTonerLayer,
-	"Vesiväri, Stamen": stamenWatercolorLayer
+	"Mustavalko, Stamen": stamenTonerLayer
 }
-L.control.layers(baseMaps).addTo(map)
+L.control.layers(baseMaps).addTo(map);
 
 L.control.scale({
 	imperial: false
@@ -156,7 +151,7 @@ var layers = {
 	parkingLayer: L.geoJson(null,
 		{
 			pointToLayer : function (feature, latlng) {
-				return L.marker(latlng, { icon: parking_icon })
+				return L.marker(latlng, { icon: parking_icon });
 			}
 		}).addTo(map)
 }
@@ -197,7 +192,7 @@ function getDataOnCategory(category, seriesName, lat, lon, sizeFilter) {
 //$(document).ready(getDataOnArea(500, INITIAL_LAT, INITIAL_LON ))
 
 function geoLocate() {
-	map.locate({setView: true, maxZoom: 16, enableHighAccuracy: true})
+	map.locate({setView: true, maxZoom: 16, enableHighAccuracy: true});
 }
 
 // function onLocationFound(e) {
@@ -210,14 +205,14 @@ function geoLocate() {
 // }
 
 function onLocationError(e) {
-    alert(e.message)
+    alert(e.message);
 	// TODO better message
 }
 
 $("#geolocate_button").click(geoLocate)
 
 //map.on('locationfound', onLocationFound);
-map.on('locationerror', onLocationError)
+map.on('locationerror', onLocationError);
 
 function onMapClick(e) {
 
@@ -227,20 +222,20 @@ function onMapClick(e) {
 	
 	for(var i = 0; i < statAreas.length; i++) {
 		if (statAreas[i].isLatLngInsidePath(e.latlng)) {
-			found = true
+			found = true;
 			// TODO
 			
 			statAreas[i].path.setStyle({
 				weight: 5
-			})
-			statAreas[i].selected = true
+			});
+			statAreas[i].selected = true;
 		
 		}
 		else {
 			if (!ctrlKeyPressed && statAreas[i].selected) {
 				statAreas[i].path.setStyle({
 					weight: 2
-				})
+				});
 				statAreas[i].selected = false;
 			}
 		}
@@ -270,7 +265,7 @@ function onMapClick(e) {
 		
 		statAreaCount++;
 		
-		var marker = L.marker(e.latlng, { icon: center_icon, draggable:'true' }).addTo(map)
+		var marker = L.marker(e.latlng, { icon: center_icon, draggable:'true' }).addTo(map);
 		//marker.bindPopup("leveys: " + INITIAL_LAT + ", pituus: " + INITIAL_LON);
 		marker.bindPopup("Alue " + statAreaCount);
 		var statArea = new StatArea(area_circle_tool_selected ? circle : rectangle,
@@ -281,8 +276,8 @@ function onMapClick(e) {
 			
 		if (area_circle_tool_selected) {
 			marker.on('drag', function(event){
-				var position = event.target.getLatLng()
-				circle.setLatLng(position)
+				var position = event.target.getLatLng();
+				circle.setLatLng(position);
 			});
 		}
 		else {
@@ -293,12 +288,12 @@ function onMapClick(e) {
 			});
 		}
 		
-		statAreas.push(statArea)
+		statAreas.push(statArea);
 	
 		marker.on('click', function(event){
 			for(var i = 0; i < statAreas.length; i++) {
 				if (statAreas[i].marker == this) {
-					found = true
+					found = true;
 					statAreas[i].path.setStyle({
 						weight: 5
 					})
@@ -365,8 +360,8 @@ function onMapClick(e) {
 	}
 	
 	checkSelectedAreas();
-	$("#delete_button").removeAttr("disabled")
-	$("#delete_all_button").removeAttr("disabled")
+	$("#delete_button").removeAttr("disabled");
+	$("#delete_all_button").removeAttr("disabled");
 }
 
 function checkSelectedAreas() {
@@ -374,7 +369,7 @@ function checkSelectedAreas() {
 	
 	for(var i = 0; i < statAreas.length; i++) {
 		if (statAreas[i].selected == true) {
-			selectedCount++;
+			selectedCount++;;
 		}
 	}
 	if (selectedCount == 1) {
@@ -389,17 +384,17 @@ map.on('click', onMapClick);
 
 function is_inside_circle(latlng, circle) {
 
-	var lat1 = latlng.lat
-	var lat2 = circle.getLatLng().lat
-	var lng1 = latlng.lng
-	var lng2 = circle.getLatLng().lng
+	var lat1 = latlng.lat;
+	var lat2 = circle.getLatLng().lat;
+	var lng1 = latlng.lng;
+	var lng2 = circle.getLatLng().lng;
 
-	var dist = getDistanceFromLatLonInMeters(lat1, lng1, lat2, lng2)
+	var dist = getDistanceFromLatLonInMeters(lat1, lng1, lat2, lng2);
 	
-	console.log(dist)
-	console.log(circle.getRadius())
+	console.log(dist);
+	console.log(circle.getRadius());
 	
-	return dist <= circle.getRadius()
+	return dist <= circle.getRadius();
 }
 
 function is_inside_rectangle(latlng, rectangle) {
@@ -462,7 +457,7 @@ function getDistanceFromLatLonInMeters(lat1,lon1,lat2,lon2) {
   return d;
 }
 function deg2rad(deg) {
-  return deg * (Math.PI/180)
+  return deg * (Math.PI/180);
 }
 
 // $c = false; 
@@ -492,18 +487,18 @@ function deg2rad(deg) {
     // return $c;
 // }
 
-$("#delete_button").click(deleteSelectedAreas)
-$("#delete_all_button").click(deleteAllAreas)
+$("#delete_button").click(deleteSelectedAreas);
+$("#delete_all_button").click(deleteAllAreas);
 
 var ctrlKeyPressed = false;
 
-$('html').keydown(function(e) {
+$('#home').keydown(function(e) {
 	if (e.ctrlKey) {
 		ctrlKeyPressed = true;
 	}
 });
 
-$('html').keyup(function(e){
+$('#home').keyup(function(e){
     if (e.keyCode == 46) { // del key
 		deleteSelectedAreas();
 	}
@@ -515,58 +510,58 @@ $('html').keyup(function(e){
 
 function deleteSelectedAreas() {
 	
-	var updateStatAreas = []
-	var removedAreas = []
+	var updateStatAreas = [];
+	var removedAreas = [];
 	
 	for(var i = 0; i < statAreas.length; i++) {
 		console.log(statAreas);
 		if (statAreas[i].selected) {
-			map.removeLayer(statAreas[i].path)
-			map.removeLayer(statAreas[i].marker)
-			removedAreas.push(statAreas[i])
+			map.removeLayer(statAreas[i].path);
+			map.removeLayer(statAreas[i].marker);
+			removedAreas.push(statAreas[i]);
 		}
 		else {
-			updateStatAreas.push(statAreas[i])
+			updateStatAreas.push(statAreas[i]);
 		}
 	}
 	
 	geochart.removeChartSeries(removedAreas);
 	
-	statAreas = updateStatAreas
+	statAreas = updateStatAreas;
 	
-	$("#area_edit_button").attr("disabled", "disabled")
-	$("#delete_button").attr("disabled", "disabled")
+	$("#area_edit_button").attr("disabled", "disabled");
+	$("#delete_button").attr("disabled", "disabled");
 	if(updateStatAreas.length == 0) {
-		$("#delete_all_button").attr("disabled", "disabled")
+		$("#delete_all_button").attr("disabled", "disabled");
 	}
 }
 function deleteAllAreas() {
 
 	for(var i = 0; i < statAreas.length; i++) {
-		map.removeLayer(statAreas[i].path)
-		map.removeLayer(statAreas[i].marker)
+		map.removeLayer(statAreas[i].path);
+		map.removeLayer(statAreas[i].marker);
 	}
 	
 	geochart.removeChartSeries(statAreas);
 	
-	statAreas = []
+	statAreas = [];
 	
-	$("#area_edit_button").attr("disabled", "disabled")
-	$("#delete_button").attr("disabled", "disabled")
-	$("#delete_all_button").attr("disabled", "disabled")
+	$("#area_edit_button").attr("disabled", "disabled");
+	$("#delete_button").attr("disabled", "disabled");
+	$("#delete_all_button").attr("disabled", "disabled");
 }
 
 $('#home a').click(function (e) {
-  e.preventDefault()
-  $(this).tab('show')
+  e.preventDefault();
+  $(this).tab('show');
 })
 $('#data_selections_div a').click(function (e) {
-  e.preventDefault()
-  $(this).tab('show')
+  e.preventDefault();
+  $(this).tab('show');
 })
 $('#about a').click(function (e) {
-  e.preventDefault()
-  $(this).tab('show')
+  e.preventDefault();
+  $(this).tab('show');
 })
 
 $( document ).ready(function() {
@@ -602,7 +597,6 @@ $( document ).ready(function() {
 			}
 		});
 	}
-	
 });
 
 $('#area_edit_button').click(function(e) {
@@ -610,14 +604,18 @@ $('#area_edit_button').click(function(e) {
 		if (statAreas[i].selected) {
 			if (statAreas[i].type == "circle") {
 				$('#area_edit_circle_size_div').removeClass('hidden');
+				$('#area_edit_rectangle_size_div').removeClass('show');
 				$('#area_edit_rectangle_size_div').addClass('hidden');
+				$('#area_edit_circle_size_div').addClass('show');
 				$('#area_edit_name').val(statAreas[i].name);
 				$('#area_edit_radius').val(statAreas[i].path.getRadius());
 				break;
 			}
 			else {
-				$('#area_edit_circle_size_div').addClass('hidden');
+				$('#area_edit_circle_size_div').removeClass('show');
 				$('#area_edit_rectangle_size_div').removeClass('hidden');
+				$('#area_edit_circle_size_div').addClass('hidden');
+				$('#area_edit_rectangle_size_div').addClass('show');
 				$('#area_edit_name').val(statAreas[i].name);
 				$('#area_edit_width').val(statAreas[i].lngRadius * 2);
 				$('#area_edit_height').val(statAreas[i].latRadius * 2);
@@ -685,6 +683,30 @@ $('#area_circle_button').click(function(e) {
 		area_circle_tool_selected = true;
 		$('#area_rectangle_button_img').attr("src", 'images/primary_box_button_rectangle.png');
 		$('#area_circle_button_img').attr("src", 'images/primary_box_button_active_circle.png');
+	}
+});
+
+
+$('#address_lookup_input').keyup(function(e) {
+	console.log("Hakukentän sisältö: " + $(this).val());
+	if($(this).data("lastval") != $(this).val()) {
+		$(this).data("lastval", $(this).val());
+		
+		if ($(this).val().length >= 3) {
+			$.getJSON("/autocomplete.json", { search_string: $(this).val() }, function(response) {
+				parsed_response = JSON.parse(response);
+				console.log(parsed_response);
+			});
+		}
+	}
+});
+
+$('#address_lookup_button').click(function(e) {
+	if ($(this).val().length > 0) {
+		$.getJSON("/geocoder.json", { search_string: $(this).val() }, function(response) {
+			parsed_response = JSON.parse(response);
+			console.log(parsed_response);
+		});
 	}
 });
 

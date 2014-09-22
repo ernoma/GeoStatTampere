@@ -1,6 +1,6 @@
 
-var gdal = require('gdal')
-var request = require('request')
+var gdal = require('gdal');
+var request = require('request');
 
 // child_process.spawn('gdaltransform') -s
 
@@ -45,7 +45,7 @@ function getJSONData(req, res, typeName) {
 			}
 			else if (!error && response.statusCode == 200) {
 				//console.log(body)
-				res.json(body)
+				res.json(body);
 			}
 			else {
 				// TODO
@@ -71,10 +71,10 @@ function getJSONData(req, res, typeName) {
 			}
 			else if (!error && response.statusCode == 200) {
 				//console.log(body)
-				res.json(body)
+				res.json(body);
 			}
 			else {
-				console.log("response.statusCode: " + response.statusCode)
+				console.log("response.statusCode: " + response.statusCode);
 				// TODO
 			}
 		});
@@ -82,4 +82,26 @@ function getJSONData(req, res, typeName) {
 	else { // no filter
 		// TODO
 	}
+}
+
+exports.getSearchAutocompleteJSONData = function getSearchAutocompleteJSONData(req, res) {
+	request('http://api.okf.fi/gis/1/autocomplete.json?address=' + req.search_string + '&language=fin', function (error, response, body) {
+		if (error) {
+			return console.log('ERROR: ', error);
+			// TODO better
+		}
+		else if (!error && response.statusCode == 200) {
+			console.log(body);
+			// TODO: preprocess here
+			res.json(body);
+		}
+		else {
+			console.log("response.statusCode: " + response.statusCode);
+			// TODO
+		}
+	});
+}
+
+exports.getSearchGeocoderJSONData = function getSearchGeocoderJSONData(req, res) {
+	
 }

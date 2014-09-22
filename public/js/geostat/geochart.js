@@ -6,7 +6,7 @@ var geochart = {
 		for(var i = 0; i < chart.series.length; i++) {
 			for(var j = 0; j < statAreas.length; j++) {
 				if (chart.series[i].name == statAreas[j].name) {
-					series.push(chart.series[i])
+					series.push(chart.series[i]);
 					break;
 				}
 			}
@@ -17,16 +17,16 @@ var geochart = {
 		chart.redraw(true);
 	},
 	addChartSeries: function(counts, name) {
-		var chart = $("#chart_container").highcharts()
+		var chart = $("#chart_container").highcharts();
 		
-		console.log("series length: " + chart.series.length)
+		//console.log("series length: " + chart.series.length)
 		
 		var series = chart.addSeries({
 			name: name,
 			data: counts
 		})
 		
-		console.log(chart.series)
+		//console.log(chart.series)
 		
 		return series;
 	},
@@ -78,11 +78,11 @@ var geochart = {
 		var chart = $("#chart_container").highcharts();
 		for (var i = 0; i < chart.series.length; i++) {
 			if (chart.series[i].name == seriesName) {
-				console.log("found series")
+				//console.log("found series")
 				for (var j = 0; j < chart.series[i].data.length; j++) {
 					//console.log(chart.series[i].data[j].category);
 					if (chart.series[i].data[j].category == categoryName) {
-						console.log("updating")
+						//console.log("updating")
 						chart.series[i].data[j].update(count);
 						return;
 					}
@@ -113,4 +113,4 @@ $(function() {
             }
         }
 	})
-})
+});
