@@ -83,25 +83,3 @@ function getJSONData(req, res, typeName) {
 		// TODO
 	}
 }
-
-exports.getSearchAutocompleteJSONData = function getSearchAutocompleteJSONData(req, res) {
-	request('http://api.okf.fi/gis/1/autocomplete.json?address=' + req.search_string + '&language=fin', function (error, response, body) {
-		if (error) {
-			return console.log('ERROR: ', error);
-			// TODO better
-		}
-		else if (!error && response.statusCode == 200) {
-			console.log(body);
-			// TODO: preprocess here
-			res.json(body);
-		}
-		else {
-			console.log("response.statusCode: " + response.statusCode);
-			// TODO
-		}
-	});
-}
-
-exports.getSearchGeocoderJSONData = function getSearchGeocoderJSONData(req, res) {
-	
-}

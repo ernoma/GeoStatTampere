@@ -68,14 +68,4 @@ app.get('/bike_parking.json', function (req, res) {
 	tampere.getBikeParkingJSONData(req, res);
 });
 
-app.get('/autocomplete.json', function (req, res) {
-	
-	tampere.getSearchAutocompleteJSONData(req, res);
-});
-
-app.get('/geocoder.json', function (req, res) {
-	
-	tampere.getSearchGeocoderJSONData(req, res);
-});
-
 app.listen(3000);

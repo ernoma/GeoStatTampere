@@ -686,27 +686,124 @@ $('#area_circle_button').click(function(e) {
 	}
 });
 
+function okffiGeocoding(text, callOnResponse) {
+	
+	console.log(text);
 
-$('#address_lookup_input').keyup(function(e) {
-	console.log("Hakukentän sisältö: " + $(this).val());
-	if($(this).data("lastval") != $(this).val()) {
-		$(this).data("lastval", $(this).val());
+	if (text.length < 3) {
+		callOnResponse([]);
+	} else {
+		$.getJSON('http://api.okf.fi/gis/1/autocomplete.json?address=' + encodeURI(text) + '&language=fin', function(response) {
 		
-		if ($(this).val().length >= 3) {
-			$.getJSON("/autocomplete.json", { search_string: $(this).val() }, function(response) {
-				parsed_response = JSON.parse(response);
-				console.log(parsed_response);
-			});
-		}
-	}
-});
-
-$('#address_lookup_button').click(function(e) {
-	if ($(this).val().length > 0) {
-		$.getJSON("/geocoder.json", { search_string: $(this).val() }, function(response) {
-			parsed_response = JSON.parse(response);
-			console.log(parsed_response);
+			var descriptions = [];
+		
+			for( var i = 0; i < response.predictions.length; i++) {
+				for (var j = 0; j < response.predictions[i].address_components.length; j++) {
+					if (response.predictions[i].address_components[j].types[0] == 'administrative_area_level_3') {
+						if (response.predictions[i].address_components[j].long_name == 'Tampere') {
+							descriptions.push(response.predictions[i].description.replace(/, /g, ',').replace(/ /g, '+'));
+						}
+						break;
+					}
+				}
+			}
+			
+			var expectedResponseCount = descriptions.length;
+			var responses = [];
+			
+			if (expectedResponseCount > 0) {
+				for( var i = 0; i < descriptions.length; i++) {
+					$.getJSON('http://api.okf.fi/gis/1/geocode.json?address=' + encodeURI(descriptions[i]) + '&lat=&lng=&language=fin', function(response) {
+						//console.log(response);
+						responses.push(response);
+						if (responses.length == expectedResponseCount) {
+							callOnResponse(responses);
+						}
+					});
+				}
+			}
+			else {
+				callOnResponse([]);
+			}
 		});
 	}
-});
+}
 
+function filterGeocodingResult(rawJson) {
+
+	console.log(rawJson);
+
+	var json = {},
+	key, loc, disp = [];
+
+	for(var i = 0; i < rawJson.length; i++) {
+		if (rawJson[i].status == "OK") {
+			for (var j = 0; j < rawJson[i].results.length; j++) {
+				for (var k = 0; k < rawJson[i].results[j].address_components.length; k++) {
+					if (rawJson[i].results[j].address_components[k].types[0] == 'administrative_area_level_3') {
+						if (rawJson[i].results[j].address_components[k].long_name == 'Tampere') {
+							key = rawJson[i].results[j].formatted_address;
+							loc = L.latLng( rawJson[i].results[j].geometry.location.lat, rawJson[i].results[j].geometry.location.lng );
+							json[ key ] = loc;	//key,value format
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	return json;
+}
+
+map.addControl( new L.Control.Search({
+	callData: okffiGeocoding,
+	filterJSON: filterGeocodingResult,
+	markerLocation: true,
+	autoType: false,
+	autoCollapse: true,
+	minLength: 2,
+	zoom: 10,
+	text: "Osoite...",
+	textCancel: "Peru",
+	textErr: "Osoitetta ei löytynyt",
+	zoom: {
+		animate: true		
+	},
+	circleLocation: false
+}) );
+
+
+// var geocoder = new google.maps.Geocoder();
+
+// function googleGeocoding(text, callResponse)
+// {
+	// geocoder.geocode({address: text, location: new google.maps.LatLng(61.5, 23.766667), bounds: new google.maps.LatLngBounds(new google.maps.LatLng(61.222, 22.795), new google.maps.LatLng(61.762, 24.719)), region: "fi"}, callResponse);
+// }
+
+// function filterJSONCall(rawjson)
+// {
+	// var json = {},
+		// key, loc, disp = [];
+
+	// for(var i in rawjson)
+	// {
+		// key = rawjson[i].formatted_address;
+		
+		// loc = L.latLng( rawjson[i].geometry.location.lat(), rawjson[i].geometry.location.lng() );
+		
+		// json[ key ]= loc;	//key,value format
+	// }
+
+	// return json;
+// }
+
+// map.addControl( new L.Control.Search({
+	// callData: googleGeocoding,
+	// filterJSON: filterJSONCall,
+	// markerLocation: true,
+	// autoType: false,
+	// autoCollapse: true,
+	// minLength: 2,
+	// zoom: 10
+// }) );

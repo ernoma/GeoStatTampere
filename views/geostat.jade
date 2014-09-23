@@ -9,6 +9,7 @@ html(lang='fi')
 		link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
 		link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css')
 		link(rel='stylesheet', href='/stylesheets/geostat.css')
+		link(rel='stylesheet', href='/stylesheets/leaflet-search.min.css')
 	body(role='document')
 		#content(class='container-fluid theme-showcase', role='main')
 		
@@ -30,14 +31,6 @@ html(lang='fi')
 							h2 Kartta ja tilastot
 							
 							button(type='button', class='btn btn-primary', id='geolocate_button') Keskitä kartta sijaintiini
-							
-							div(class='top-buffer')
-							form(class="form-inline" role="form")
-								div(class="form-group")
-									span(class='normal_label') Hae osoite:
-									input(type="text" class="form-control" id="address_lookup_input" placeholder="Kirjoita osoite")
-								div(class="form-group")
-									button(type="submit" class="btn btn-primary" id="address_lookup_button") Hae
 									
 							div(class='top-buffer')
 							button(type='button', class='btn btn-primary', id='area_edit_button', disabled='disabled' data-toggle='modal' data-target='#area_edit_modal') Muokkaa aluetta
@@ -149,6 +142,7 @@ html(lang='fi')
 				li
 					del del-nappula edit-dialogissa ja yleensäkin muualla kuin karttanäkymässä ei poista valittuja alueita
 					span  mutta poistaa aina karttasivulla
+				li muutkin kunnat läheltä kuin Tampere geocoding-kutsuihin
 		
 		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")
 			div(class="modal-dialog modal-sm")
@@ -198,6 +192,8 @@ html(lang='fi')
 		script(type='text/javascript', src='http://code.highcharts.com/modules/no-data-to-display.js')
 		//script(type='text/javascript', src='http://code.highcharts.com/modules/exporting.js')
 		script(type='text/javascript', src='js/proj4.js')
+		script(type='text/javascript', src='https://maps.googleapis.com/maps/api/js?v=3&sensor=false')
+		script(type='text/javascript', src='js/leaflet-search.min.js')
 		script(type='text/javascript', src='js/api_keys.js')
 		script(type='text/javascript', src='js/geostat/geochart.js')
 		script(type='text/javascript', src='js/geostat/geostat.js')
