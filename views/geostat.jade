@@ -30,7 +30,7 @@ html(lang='fi')
 							
 							h2 Kartta ja tilastot
 							
-							button(type='button', class='btn btn-primary', id='geolocate_button') Keskitä kartta sijaintiini
+							//button(type='button', class='btn btn-primary', id='geolocate_button') Keskitä kartta sijaintiini
 									
 							div(class='top-buffer')
 							button(type='button', class='btn btn-primary', id='area_edit_button', disabled='disabled' data-toggle='modal' data-target='#area_edit_modal') Muokkaa aluetta
@@ -68,7 +68,7 @@ html(lang='fi')
 					
 							h3 Sovellusksen lähdekoodi
 							
-							p Lähdekoodi löytyy...
+							p Lähdekoodi on julkaistu <a href="https://github.com/ernoma/GeoStatTampere">GitHubissa</a>.
 					
 							h3 Sovellus hyödyntää:
 							
@@ -101,7 +101,9 @@ html(lang='fi')
 					del vaihda keskikohtaa
 				li vaihda matkaa
 				li vaihda matkan yksiköitä
-				li valitse ympyrän sijaan laatikko tai mielivaltainen alue
+				li valitse
+					del ympyrän sijaan laatikko tai
+					span mielivaltainen alue
 				li
 					del valitse näytettävät asiat
 				li näytettäville asioille jaottelu
@@ -121,7 +123,8 @@ html(lang='fi')
 				li voi sisältää myös Suomen tai muiden kuin Tampereen tietoja, jos tamperelaiselle hyödyllisiä
 				li seurausmahdollisuus käyttäjän paikalle
 				li näytä kartta maximoituna halutessa
-				li osoitehaku
+				li
+					del osoitehaku
 				li käsittele virhetilanteet, esim. palvelimelta tai navici-palvelimelta ei saada dataa
 				li zoomaa ilmakuva-taso, kun käyttäjä valitsee sen, jos sen hetkisellä zoomauksella ei voi näyttää
 				li jonkinlainen walkthrough
@@ -134,14 +137,16 @@ html(lang='fi')
 				li 3d-kartta
 				li corolepth-kartta (highmaps?)
 				li näytä tilastot suuralueittain, suunnittelualueittain, jne.
-				li alueen nimeämismahdollisuus
+				li
+					del alueen nimeämismahdollisuus
 				li alueen poistossa varoitus, että ei voi perua tai aina parempi, jos undo
 				li drill-in chart
-				li tampereen opaskartta ja kantakartta
-				li alueen lat ja lon vähintäänkin näkyviin, jos ei olisikaan muokattavissa dialogissa
 				li
-					del del-nappula edit-dialogissa ja yleensäkin muualla kuin karttanäkymässä ei poista valittuja alueita
-					span  mutta poistaa aina karttasivulla
+					del tampereen opaskartta ja kantakartta
+				li alueen lat ja lon vähintäänkin näkyviin, jos ei olisikaan muokattavissa dialogissa
+				li del-nappula 
+					del edit-dialogissa ja yleensäkin muualla kuin karttanäkymässä ei poista valittuja alueita
+					span  poistaa aina karttasivulla
 				li muutkin kunnat läheltä kuin Tampere geocoding-kutsuihin
 		
 		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")

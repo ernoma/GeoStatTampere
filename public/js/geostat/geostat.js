@@ -191,29 +191,6 @@ function getDataOnCategory(category, seriesName, lat, lon, sizeFilter) {
 
 //$(document).ready(getDataOnArea(500, INITIAL_LAT, INITIAL_LON ))
 
-function geoLocate() {
-	map.locate({setView: true, maxZoom: 16, enableHighAccuracy: true});
-}
-
-// function onLocationFound(e) {
-    // var radius = e.accuracy / 2;
-
-    // L.marker(e.latlng).addTo(map)
-        // .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-    // L.circle(e.latlng, radius).addTo(map);
-// }
-
-function onLocationError(e) {
-    alert(e.message);
-	// TODO better message
-}
-
-$("#geolocate_button").click(geoLocate)
-
-//map.on('locationfound', onLocationFound);
-map.on('locationerror', onLocationError);
-
 function onMapClick(e) {
 
 	var found = false;
@@ -807,3 +784,45 @@ map.addControl( new L.Control.Search({
 	// minLength: 2,
 	// zoom: 10
 // }) );
+
+var locateMeControl = L.Control.extend({
+	options: {
+		position: 'topleft'
+	},
+	onAdd: function(map) {
+		
+		var container = L.DomUtil.create('div', 'map_box_control');
+		var button = L.DomUtil.create('a', 'map_box_control_locate_button', container);
+		button.href = '#';
+		button.title = 'Keskitä kartta sijaintiini';
+		L.DomEvent
+			.on(button, 'click', L.DomEvent.stop, this)
+			.on(button, 'click', geoLocate, this);
+		//$(container).append($('<span>hello</span>'));
+		return container;
+	}
+});
+map.addControl(new locateMeControl());
+
+function geoLocate() {
+	map.locate({setView: true, maxZoom: 16, enableHighAccuracy: true});
+}
+
+// function onLocationFound(e) {
+    // var radius = e.accuracy / 2;
+
+    // L.marker(e.latlng).addTo(map)
+        // .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    // L.circle(e.latlng, radius).addTo(map);
+// }
+
+function onLocationError(e) {
+    alert(e.message);
+	// TODO better message
+}
+
+$("#geolocate_button").click(geoLocate);
+
+//map.on('locationfound', onLocationFound);
+map.on('locationerror', onLocationError);
