@@ -7,6 +7,7 @@ html(lang='fi')
 		title #{title}
 		link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
+		link(rel='stylesheet', href='/stylesheets/bootstrap-table.min.css')
 		link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css')
 		link(rel='stylesheet', href='/stylesheets/geostat.css')
 		link(rel='stylesheet', href='/stylesheets/leaflet-search.min.css')
@@ -19,7 +20,7 @@ html(lang='fi')
 				li(class='active')
 					a(href='#home', role='tab', data-toggle='tab') Kartta ja tilastot
 				li
-					a(href='#data_selections_div', role='tab', data-toggle='tab') Näytettävät kategoriat
+					a(href='#data_selections_div', role='tab', data-toggle='tab') Näytettävät aineistot
 				li
 					a(href='#about', role='tab', data-toggle='tab') Sovelluksesta
 		
@@ -51,7 +52,9 @@ html(lang='fi')
 				#data_selections_div(class='tab-pane')
 					div(class="panel panel-default")
 						div(class="panel-body")
-							h2 Näytettävät kategoriat
+							h2 Näytettävät aineistot
+							
+							#data_selections_table(data-click-to-select="true")
 							
 							#data_selection_checkboxes
 								
@@ -62,11 +65,11 @@ html(lang='fi')
 				
 							h3 Tarkoitus
 				
-							p Sovellus mahdollistaa kaupungin eri aluiden vertailun haluttujen tietojen osalta ilman, että täytyisi opetella vaativien GIS-ohjelmistojen käyttöä.
+							p Sovellus mahdollistaa kaupunkilaisille Tampereen eri aluiden vertailun hyödyllisesti joskin hyvässä ja pahassa melko kevyesti. Sovellus ei yritä olla GIS-ammattilaisille suunnattu työkalu tai tieteellinen tilastoanaysointiväline eikä sitä tulisi sellaisiin verrata.
 							
 							p Kaupunkilaisten vaikutusmahdollisuudet kasvavat, kun he voivat tutkia kaupungin aluiden eroja. Sovelluksesta voi olla myös hyötyä vaikkapa asunnon ostoa harkitsevalle, kun hän miettii mille alueelle tai mihin katuosoitteeseen kannattaisi muuttaa.
 					
-							h3 Sovellusksen lähdekoodi
+							h3 Sovelluksen lähdekoodi
 							
 							p Lähdekoodi on julkaistu <a href="https://github.com/ernoma/GeoStatTampere">GitHubissa</a>.
 					
@@ -76,7 +79,7 @@ html(lang='fi')
 								li Tampereen kaupungin aineistoa, 2014, 
 									a(href="http://data.tampere.fi/") data.tampere.fi, 
 									a(href="http://www.tampere.fi/tampereinfo/avoindata/avoindatalisenssi.html") lisenssi
-								li Maanmittauslaitoksen taustakartta-, peruskartta-, ja ortoilmakuva-aineistoa, 
+								li Maanmittauslaitoksen ortoilmakuva-aineistoa, 
 									a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501") lisenssi
 		#footer
 			ul
@@ -148,6 +151,8 @@ html(lang='fi')
 					del edit-dialogissa ja yleensäkin muualla kuin karttanäkymässä ei poista valittuja alueita
 					span  poistaa aina karttasivulla
 				li muutkin kunnat läheltä kuin Tampere geocoding-kutsuihin
+				li cacheta data
+				li korjaa taulukon päivitys
 		
 		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")
 			div(class="modal-dialog modal-sm")
@@ -192,6 +197,7 @@ html(lang='fi')
 						
 		script(type='text/javascript', src='js/jquery-2.1.1.min.js')
 		script(type='text/javascript', src='js/bootstrap.min.js')
+		script(type='text/javascript', src='js/bootstrap-table.min.js')
 		script(type='text/javascript', src='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js')
 		script(type='text/javascript', src='http://code.highcharts.com/highcharts.js')
 		script(type='text/javascript', src='http://code.highcharts.com/modules/no-data-to-display.js')

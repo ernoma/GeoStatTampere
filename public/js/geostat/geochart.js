@@ -44,7 +44,9 @@ var geochart = {
 		var chart = $("#chart_container").highcharts()
 		var categories = chart.xAxis[0].categories;
         categories.push(name);
+		console.log("categories", categories);
         chart.xAxis[0].setCategories(categories);
+		console.log("chart.xAxis[0].categories", chart.xAxis[0].categories);
 		for(var i = 0; i < chart.series.length; i++) {
 			chart.series[i].addPoint(0);
 		}
@@ -54,7 +56,7 @@ var geochart = {
 		for(var i = 0; i < chart.series.length; i++) {
 			for (var j = 0; j < chart.series[i].data.length; j++) {
 				if (chart.series[i].data[j].category == name) {
-					chart.series[i].data[j].remove();
+					chart.series[i].data[j].remove(false);
 					chart.series[i].xIncrement --;
 					break;
 				}
@@ -69,7 +71,7 @@ var geochart = {
 		
 		var categories = chart.xAxis[0].categories;
         categories.splice( $.inArray(name, categories), 1 );
-		console.log(categories);
+		console.log("categories", categories);
 		console.log(chart.xAxis.length);
         chart.xAxis[0].setCategories(categories);
 		chart.redraw();

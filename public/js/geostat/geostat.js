@@ -60,15 +60,30 @@ var statAreaColors = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
    
 var statAreaCount = 0;
 
+var dataTableColumns = [
+	{field: 'state', checkbox: true},
+	{field: 'name', title: 'Aineisto', sortable: true},
+	{field: 'producer', title: 'Tuottaja', sortable: true},
+	{field: 'keyword1', title: 'Avainsana 1', sortable: true},
+	{field: 'keyword2', title: 'Avainsana 2', sortable: true}
+];
+
 var categories = [
 	{
+		internalName: "car_parking",
 		name: "Keskustan maksulliset tai muuten rajoitetut pysäköintikohteet",
-		internalName: "car_parking"
+		producer: "Suunnittelupalvelut / Kaupunkiympäristön kehittäminen",
+		keyword1: "Liikenne",
+		keyword2: "Pysäköinti",
 	},
 	{
+		internalName: "bike_parking",
 		name: "Pyöräparkit",
-		internalName: "bike_parking"
+		producer: "Suunnittelupalvelut / Kaupunkiympäristön kehittäminen",
+		keyword1: "Liikenne",
+		keyword2: "Pysäköinti"
 	}
+	
 ];
 
 var selectedCategories = [];
@@ -543,37 +558,107 @@ $('#about a').click(function (e) {
 
 $( document ).ready(function() {
 	
-	for (var i = 0; i < categories.length; i++) {
+	var cardView = false;
+
+	// if ($(window).width() < 640) {
+		// cardView = true;
+	// }
 	
-		selectedCategories.push({name: categories[i].name, internalName: categories[i].internalName});
-	
-		geochart.addCategory(categories[i].name);
-	
-		var $html = $("<div class='checkbox'><label><input type='checkbox' value='' checked id='checkbox_" + categories[i].internalName + "'>" +
-			categories[i].name + "</label></div>");
-		$('#data_selection_checkboxes').append($html);
-		
-		$('#checkbox_' + categories[i].internalName).on('change', { name: categories[i].name, internalName: categories[i].internalName }, function(event) {
-			if(this.checked) {
-				selectedCategories.push({name: event.data.name, internalName: event.data.internalName});
-				geochart.addCategory(event.data.name);
+	$('#data_selections_table').bootstrapTable({
+		cardView: cardView,
+		columns: dataTableColumns,
+		data: categories,
+		sortName: "name",
+		onCheck: function(row) {
+			console.log('onCheck', row);
+			selectedCategories.push({name: row.name, internalName: row.internalName});
+			geochart.addCategory(row.name);
+			
+			for (var i = 0; i < statAreas.length; i++) {
+				if (statAreas[i].type == "circle") {
+					getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { radius: statAreas[i].path.getRadius() });
+				}
+				else {
+					var latLngBounds = statAreas[i].path.getBounds();
+					getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+				}
+			}
+		},
+		onUncheck: function(row) {
+			console.log('onUncheck', row);
+			selectedCategories.splice( $.inArray(row.name, selectedCategories.name), 1 );
+			geochart.removeCategory(row.name);
+		},
+		onCheckAll: function() {
+			console.log('onCheckAll');
+			
+			for (var i = 0; i < categories.length; i++) {
 				
-				for (var i = 0; i < statAreas.length; i++) {
-					if (statAreas[i].type == "circle") {
-						getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { radius: statAreas[i].path.getRadius() });
+				var found = false;
+				
+				for (var j = 0; j < selectedCategories.length; j++) {
+					if (selectedCategories[j].name == categories[i].name) {
+						found = true;
+						break;
 					}
-					else {
-						var latLngBounds = statAreas[i].path.getBounds();
-						getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+				}
+				if (!found) {
+					selectedCategories.push({name: categories[i].name, internalName: categories[i].internalName});
+					geochart.addCategory(categories[i].name);
+					
+					for (var j = 0; j < statAreas.length; j++) {
+						if (statAreas[j].type == "circle") {
+							getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[j].name, statAreas[j].marker.getLatLng().lat, statAreas[j].marker.getLatLng().lng, { radius: statAreas[j].path.getRadius() });
+						}
+						else {
+							var latLngBounds = statAreas[j].path.getBounds();
+							getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[j].name, statAreas[j].marker.getLatLng().lat, statAreas[j].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+						}
 					}
 				}
 			}
-			else {
-				selectedCategories.splice( $.inArray(event.data.name, selectedCategories.name), 1 );
-				geochart.removeCategory(event.data.name);
+		},
+		onUncheckAll: function() {
+			console.log('onUncheckAll');
+			for (var i = 0; i < selectedCategories.length; i++) {
+				geochart.removeCategory(selectedCategories[i].name);
 			}
-		});
-	}
+			selectedCategories = [];
+		}
+	});
+	
+	$('#data_selections_table').bootstrapTable('checkAll');
+	
+	// for (var i = 0; i < categories.length; i++) {
+	
+		// selectedCategories.push({name: categories[i].name, internalName: categories[i].internalName});
+		// geochart.addCategory(categories[i].name);
+
+		// var $html = $("<div class='checkbox'><label><input type='checkbox' value='' checked id='checkbox_" + categories[i].internalName + "'>" +
+			// categories[i].name + "</label></div>");
+		// $('#data_selection_checkboxes').append($html);
+		
+		// $('#checkbox_' + categories[i].internalName).on('change', { name: categories[i].name, internalName: categories[i].internalName }, function(event) {
+			// if(this.checked) {
+				// selectedCategories.push({name: event.data.name, internalName: event.data.internalName});
+				// geochart.addCategory(event.data.name);
+				
+				// for (var i = 0; i < statAreas.length; i++) {
+					// if (statAreas[i].type == "circle") {
+						// getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { radius: statAreas[i].path.getRadius() });
+					// }
+					// else {
+						// var latLngBounds = statAreas[i].path.getBounds();
+						// getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+					// }
+				// }
+			// }
+			// else {
+				// selectedCategories.splice( $.inArray(event.data.name, selectedCategories.name), 1 );
+				// geochart.removeCategory(event.data.name);
+			// }
+		// });
+	// }
 });
 
 $('#area_edit_button').click(function(e) {
