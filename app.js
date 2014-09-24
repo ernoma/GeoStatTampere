@@ -48,13 +48,13 @@ app.get('/3d', function (req, res) {
 app.get('/geostat', function (req, res) {
 
 	res.render('geostat',
-		{title: 'Tamperelaisen paikkatieto'});
+		{title: 'Tamperelaisen paikkatilasto'});
 });
 
 app.get('/about', function (req, res) {
 
 	res.render('about',
-		{title: 'Tamperelaisen paikkatieto'});
+		{title: 'Tamperelaisen paikkatilasto'});
 });
 
 
