@@ -80,7 +80,9 @@ html(lang='fi')
 									a(href="http://data.tampere.fi/") data.tampere.fi, 
 									a(href="http://www.tampere.fi/tampereinfo/avoindata/avoindatalisenssi.html") lisenssi
 								li Maanmittauslaitoksen ortoilmakuva-aineistoa, 
-									a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501") lisenssi
+									a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501") lisenssi, 
+									span TMS-palvelin: 
+									a(href="(http://kartat.kapsi.fi/") kartat.kapsi.fi.
 		#footer
 			ul
 				li
@@ -153,6 +155,7 @@ html(lang='fi')
 				li muutkin kunnat läheltä kuin Tampere geocoding-kutsuihin
 				li cacheta data
 				li korjaa taulukon päivitys
+				li korjaa toistuvan getjson-pyynnön cachesta vastaaminen vaikka olisi eri parametrit
 		
 		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")
 			div(class="modal-dialog modal-sm")
@@ -206,4 +209,5 @@ html(lang='fi')
 		script(type='text/javascript', src='js/leaflet-search.min.js')
 		script(type='text/javascript', src='js/api_keys.js')
 		script(type='text/javascript', src='js/geostat/geochart.js')
+		//script(type='text/javascript', src='js/geostat/tredata.js')
 		script(type='text/javascript', src='js/geostat/geostat.js')
