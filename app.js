@@ -31,7 +31,8 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
 
-	parking.showParkingMap(req, res);
+	res.render('geostat',
+		{title: 'Tamperelaisen paikkatilasto'});
 });
 
 app.get('/charts', function (req, res) {
@@ -45,10 +46,10 @@ app.get('/3d', function (req, res) {
 		{title: 'Tampereen korkeusmalli'});
 });
 
-app.get('/geostat', function (req, res) {
+app.get('/parkki', function (req, res) {
 
-	res.render('geostat',
-		{title: 'Tamperelaisen paikkatilasto'});
+	parking.showParkingMap(req, res);
+	
 });
 
 app.get('/about', function (req, res) {
@@ -57,6 +58,11 @@ app.get('/about', function (req, res) {
 		{title: 'Tamperelaisen paikkatilasto'});
 });
 
+
+app.get('/heat', function (req, res) {
+	res.render('heat',
+		{title: 'Heatmap kokeilu'});
+});
 
 app.get('/car_parking.json', function (req, res) {
 	
@@ -67,5 +73,7 @@ app.get('/bike_parking.json', function (req, res) {
 	
 	tampere.getBikeParkingJSONData(req, res);
 });
+
+
 
 app.listen(3000);
