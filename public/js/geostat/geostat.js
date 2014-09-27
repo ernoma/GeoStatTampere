@@ -82,7 +82,14 @@ var categories = [
 		producer: "Suunnittelupalvelut / Kaupunkiympäristön kehittäminen",
 		keyword1: "Liikenne",
 		keyword2: "Pysäköinti"
-	}
+	},
+	{
+		internalName: "dog_parking",
+		name: "Koirapuistot",
+		producer: "Yleisten alueiden suunnittelu",
+		keyword1: "Viheralueet",
+		keyword2: "Puistot"
+	},
 	
 ];
 
@@ -143,7 +150,7 @@ var baseMaps = {
 	"Perinteinen, OpenStreetMap": osmLayer,
 	"Opaskartta, Tampere": treGuideLayer,
 	"Kantakartta, Tampere": treBaseLayer,
-	"Ilmakuva, Maanmittauslaitos": mmlOrtoLayer,
+	"Ilmakuva, MML / kartat.kapsi.fi": mmlOrtoLayer,
 	"Katu, MapBox": mapBoxLayer,
 	"Katu, MapQuest": mapQuestLayer,
 	"Pyöräily, Thunderforest": osmCycleLayer,
@@ -628,37 +635,6 @@ $( document ).ready(function() {
 	});
 	
 	$('#data_selections_table').bootstrapTable('checkAll');
-	
-	// for (var i = 0; i < categories.length; i++) {
-	
-		// selectedCategories.push({name: categories[i].name, internalName: categories[i].internalName});
-		// geochart.addCategory(categories[i].name);
-
-		// var $html = $("<div class='checkbox'><label><input type='checkbox' value='' checked id='checkbox_" + categories[i].internalName + "'>" +
-			// categories[i].name + "</label></div>");
-		// $('#data_selection_checkboxes').append($html);
-		
-		// $('#checkbox_' + categories[i].internalName).on('change', { name: categories[i].name, internalName: categories[i].internalName }, function(event) {
-			// if(this.checked) {
-				// selectedCategories.push({name: event.data.name, internalName: event.data.internalName});
-				// geochart.addCategory(event.data.name);
-				
-				// for (var i = 0; i < statAreas.length; i++) {
-					// if (statAreas[i].type == "circle") {
-						// getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { radius: statAreas[i].path.getRadius() });
-					// }
-					// else {
-						// var latLngBounds = statAreas[i].path.getBounds();
-						// getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
-					// }
-				// }
-			// }
-			// else {
-				// selectedCategories.splice( $.inArray(event.data.name, selectedCategories.name), 1 );
-				// geochart.removeCategory(event.data.name);
-			// }
-		// });
-	// }
 });
 
 $('#area_edit_button').click(function(e) {

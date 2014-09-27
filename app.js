@@ -74,6 +74,10 @@ app.get('/bike_parking.json', function (req, res) {
 	tampere.getBikeParkingJSONData(req, res);
 });
 
+app.get('/dog_parking.json', function (req, res) {
+	
+	tampere.getDogParksJSONData(req, res);
+});
 
 
 app.listen(3000);

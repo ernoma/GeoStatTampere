@@ -6,7 +6,8 @@ var request = require('request');
 
 var tampere_data_names = {
 	car_parking: "opendata:KESKUSTAN_PYSAKOINTI_VIEW",
-	bike_parking: "opendata:PYORAPARKIT_VIEW"
+	bike_parking: "opendata:PYORAPARKIT_VIEW",
+	dog_parking: "opendata:WFS_KOIRAPUISTO_MVIEW"
 }
 
 var wgs84 = gdal.SpatialReference.fromEPSG(4326);
@@ -19,6 +20,10 @@ exports.getCarParkingJSONData = function getCarParkingJSONData(req, res) {
 
 exports.getBikeParkingJSONData = function getBikeParkingJSONData(req, res) {
 	getJSONData(req, res, tampere_data_names.bike_parking);
+}
+
+exports.getDogParksJSONData = function getDogParksJSONData(req, res) {
+	getJSONData(req, res, tampere_data_names.dog_parking);
 }
 
 function getJSONData(req, res, typeName) {
