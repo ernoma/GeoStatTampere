@@ -64,20 +64,8 @@ app.get('/heat', function (req, res) {
 		{title: 'Heatmap kokeilu'});
 });
 
-app.get('/car_parking.json', function (req, res) {
-	
-	tampere.getCarParkingJSONData(req, res);
+app.get('/tredata.json', function (req, res) {
+	tampere.getTreJSONData(req, res);
 });
-
-app.get('/bike_parking.json', function (req, res) {
-	
-	tampere.getBikeParkingJSONData(req, res);
-});
-
-app.get('/dog_parking.json', function (req, res) {
-	
-	tampere.getDogParksJSONData(req, res);
-});
-
 
 app.listen(3000);
