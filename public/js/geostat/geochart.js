@@ -53,28 +53,30 @@ var geochart = {
 	},
 	removeCategory: function(name) {
 		var chart = $("#chart_container").highcharts();
+				
 		for(var i = 0; i < chart.series.length; i++) {
+		
+			var seriesData = [];
+			
 			for (var j = 0; j < chart.series[i].data.length; j++) {
-				if (chart.series[i].data[j].category == name) {
-					chart.series[i].data[j].remove(false);
-					chart.series[i].xIncrement --;
-					break;
+				if (chart.series[i].data[j].category != name) {
+					seriesData.push(chart.series[i].data[j].y);
 				}
 			}
 			
-			// $.each(chart.series[i].data, function(k,v){
-                    // v.update({
-                        // x: k
-                    // });
-               // });
+			chart.series[i].setData(seriesData, false);
 		}
 		
 		var categories = chart.xAxis[0].categories;
         categories.splice( $.inArray(name, categories), 1 );
-		console.log("categories", categories);
-		console.log(chart.xAxis.length);
-        chart.xAxis[0].setCategories(categories);
+		//console.log("categories", categories);
+		//console.log(chart.xAxis.length);
+        chart.xAxis[0].setCategories(categories, false);
+		//console.log("setCategories called");
+		
+		//console.log("calling chart.redraw();");
 		chart.redraw();
+		//console.log("called chart.redraw();");
 	},
 	updateSeriesCategory: function(categoryName, seriesName, count) {
 		var chart = $("#chart_container").highcharts();
