@@ -18,11 +18,11 @@ html(lang='fi')
 		
 			ul(class="nav nav-tabs", role="tablist")
 				li(class='active')
-					a(href='#home', role='tab', data-toggle='tab') Kartta ja tilastot
+					a(href='#home', role='tab', data-toggle='tab', class='tab_switch_a') Kartta ja tilastot
 				li
-					a(href='#data_selections_div', role='tab', data-toggle='tab') Näytettävät aineistot
+					a(href='#data_selections_div', role='tab', data-toggle='tab', class='tab_switch_a') Näytettävät aineistot
 				li
-					a(href='#about', role='tab', data-toggle='tab') Sovelluksesta
+					a(href='#about', role='tab', data-toggle='tab', class='tab_switch_a') Sovelluksesta
 		
 			div(class='tab-content')
 				#home(class='tab-pane active')
@@ -65,24 +65,25 @@ html(lang='fi')
 				
 							h3 Tarkoitus
 				
-							p Sovellus mahdollistaa kaupunkilaisille Tampereen eri aluiden vertailun hyödyllisesti joskin hyvässä ja pahassa melko kevyesti. Sovellus ei yritä olla GIS-ammattilaisille suunnattu työkalu tai tieteellinen tilastoanaysointiväline eikä sitä tulisi sellaisiin verrata.
+							p Sovellus mahdollistaa kaupunkilaisille Tampereen eri aluiden vertailun hyödyllisesti joskin sekä hyvässä että pahassa mielessä melko kevyesti. Sovellus ei yritä olla GIS-ammattilaisille suunnattu työkalu tai tieteellinen tilastoanaysointiväline eikä sitä tulisi sellaisiin verrata.
 							
 							p Kaupunkilaisten vaikutusmahdollisuudet kasvavat, kun he voivat tutkia kaupungin aluiden eroja. Sovelluksesta voi olla myös hyötyä vaikkapa asunnon ostoa harkitsevalle, kun hän miettii mille alueelle tai mihin katuosoitteeseen kannattaisi muuttaa.
 					
 							h3 Sovelluksen lähdekoodi
 							
-							p Lähdekoodi on julkaistu <a href="https://github.com/ernoma/GeoStatTampere">GitHubissa</a>.
+							p Lähdekoodi on julkaistu 
+								a(href="https://github.com/ernoma/GeoStatTampere" target="_blank") GitHubissa.
 					
 							h3 Sovellus hyödyntää:
 							
 							ul
 								li Tampereen kaupungin aineistoa, 2014, 
-									a(href="http://data.tampere.fi/") data.tampere.fi, 
-									a(href="http://www.tampere.fi/tampereinfo/avoindata/avoindatalisenssi.html") lisenssi
+									a(href="http://data.tampere.fi/" target="_blank") data.tampere.fi, 
+									a(href="http://www.tampere.fi/tampereinfo/avoindata/avoindatalisenssi.html" target="_blank") lisenssi
 								li Maanmittauslaitoksen ortoilmakuva-aineistoa, 
-									a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501") lisenssi, 
+									a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501" target="_blank") lisenssi, 
 									span TMS-palvelin: 
-									a(href="(http://kartat.kapsi.fi/") kartat.kapsi.fi.
+									a(href="http://kartat.kapsi.fi/" target="_blank") kartat.kapsi.fi.
 		#footer
 			ul
 				li
@@ -111,10 +112,13 @@ html(lang='fi')
 					span mielivaltainen alue
 				li
 					del valitse näytettävät asiat
-				li näytettäville asioille jaottelu
+				li 
+					del näytettäville asioille jaottelu
 				ul
-					li jaottelu kaupungin yksikön mukaan
-					li jaottelu teeman mukaan, esim. liikenne, luonto tai vapaa-aika
+					li
+						del jaottelu kaupungin yksikön mukaan
+					li
+						del jaottelu teeman mukaan, esim. liikenne, luonto tai vapaa-aika
 				li kartan visualisoinnit järkeviksi
 				ul
 					li heatmap, polygoni, pin, yms. sopiviin kohtiin oletuksena
@@ -156,7 +160,8 @@ html(lang='fi')
 				li cacheta data
 				li
 					del korjaa taulukon päivitys
-				li korjaa toistuvan getjson-pyynnön cachesta vastaaminen vaikka olisi eri parametrit
+				li
+					del korjaa getjson-pyynnön teko drag-end eventillä
 		
 		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")
 			div(class="modal-dialog modal-sm")

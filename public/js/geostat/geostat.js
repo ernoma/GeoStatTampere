@@ -53,6 +53,10 @@ StatArea.prototype.isLatLngInsidePath = function(latlng) {
 	}
 }
 
+StatArea.prototype.rename = function(newName) {
+	name = newName;
+}
+
 var statAreas = [];
 
 var statAreaColors = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', 
@@ -77,20 +81,29 @@ var categories = [
 		keyword2: "Pysäköinti",
 	},
 	{
+		internalName: "bus_stops",
+		name: "Bussipysäkit",
+		producer: "Joukkoliikenne",
+		keyword1: "Liikenne",
+		keyword2: "Pysäkit",
+		keyword3: "Joukkoliikenne"
+	},
+	{
 		internalName: "bike_parking",
 		name: "Pyöräparkit",
 		producer: "Suunnittelupalvelut / Kaupunkiympäristön kehittäminen",
 		keyword1: "Liikenne",
-		keyword2: "Pysäköinti"
+		keyword2: "Pysäköinti",
+		keyword3: "Pyöräily"
 	},
 	{
 		internalName: "dog_parking",
 		name: "Koirapuistot",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Viheralueet",
-		keyword2: "Puistot"
-	},
-	
+		keyword2: "Puistot",
+		keyword3: "Lemmikit"
+	}
 ];
 
 var selectedCategories = [];
@@ -185,29 +198,29 @@ function getDataOnArea(lat, lon, statArea, sizeFilter) {
 	var series = geochart.addChartSeries(valueArray, statArea.name);
 
 	for (var i = 0; i < selectedCategories.length; i++) {
-		getDataOnCategory(selectedCategories[i], series.name, lat, lon, sizeFilter);
+		getDataOnCategory(selectedCategories[i], statArea, lat, lon, sizeFilter);
 	}
 }
 
 function updateDataOnArea(lat, lon, statArea, sizeFilter) {
 	
 	for (var i = 0; i < selectedCategories.length; i++) {
-		getDataOnCategory(selectedCategories[i], statArea.name, lat, lon, sizeFilter);
+		getDataOnCategory(selectedCategories[i], statArea, lat, lon, sizeFilter);
 	}
 }
 
-function getDataOnCategory(category, seriesName, lat, lon, sizeFilter) {
+function getDataOnCategory(category, statArea, lat, lon, sizeFilter) {
 	
-	var n = Math.floor((Math.random() * 100) + 1);
-	console.log("Alue: " + seriesName + ", kategoria: " + category.name + ", count: " + n);
-	geochart.updateSeriesCategory(category.name, seriesName, n);
+	// var n = Math.floor((Math.random() * 100) + 1);
+	// console.log("Alue: " + statArea.name + ", kategoria: " + category.name + ", count: " + n);
+	// geochart.updateSeriesCategory(category.name, statArea.name, n);
 	
-	// $.getJSON("/" +  category.internalName + ".json", { sizeFilter: JSON.stringify(sizeFilter), lat: lat, lon: lon }, function(response) {
-		// parsed_response = JSON.parse(response)
-		// console.log("N of features: " + parsed_response.totalFeatures)
-				
-		// geochart.updateSeriesCategory(category.name, seriesName, parsed_response.totalFeatures);
-	// });
+	$.getJSON("/tredata.json", { dataSetName: category.internalName, sizeFilter: JSON.stringify(sizeFilter), lat: lat, lon: lon }, function(response) {
+		parsed_response = JSON.parse(response)
+		console.log("N of features: " + parsed_response.totalFeatures)
+		
+		geochart.updateSeriesCategory(category.name, statArea.name, parsed_response.totalFeatures);
+	});
 }
 
 
@@ -329,11 +342,12 @@ function onMapClick(e) {
 					})
 					statAreas[i].selected = true;
 					if (statAreas[i].type == "circle") {
-						updateDataOnArea(e.latlng.lat, e.latlng.lng, statArea, { radius: statAreas[i].path.getRadius() });
+						console.log("updateDataOnArea", position.lat, position.lng);
+						updateDataOnArea(position.lat, position.lng, statArea, { radius: statAreas[i].path.getRadius() });
 					}
 					else {
 						var latLngBounds = statAreas[i].path.getBounds();
-						updateDataOnArea(e.latlng.lat, e.latlng.lng, statArea, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+						updateDataOnArea(position.lat, position.lng, statArea, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
 					}
 					$("#delete_button").removeAttr("disabled");
 				}
@@ -550,15 +564,15 @@ function deleteAllAreas() {
 	$("#delete_all_button").attr("disabled", "disabled");
 }
 
-$('#home a').click(function (e) {
+$('#home .tab_switch_a a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
 })
-$('#data_selections_div a').click(function (e) {
+$('#data_selections_div .tab_switch_a a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
 })
-$('#about a').click(function (e) {
+$('#about .tab_switch_a a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
 })
@@ -583,17 +597,23 @@ $( document ).ready(function() {
 			
 			for (var i = 0; i < statAreas.length; i++) {
 				if (statAreas[i].type == "circle") {
-					getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { radius: statAreas[i].path.getRadius() });
+					getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i], statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { radius: statAreas[i].path.getRadius() });
 				}
 				else {
 					var latLngBounds = statAreas[i].path.getBounds();
-					getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i].name, statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+					getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[i], statAreas[i].marker.getLatLng().lat, statAreas[i].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
 				}
 			}
 		},
 		onUncheck: function(row) {
 			console.log('onUncheck', row);
-			selectedCategories.splice( $.inArray(row.name, selectedCategories.name), 1 );
+			for (var i = 0; i < selectedCategories.length; i++) {
+				if (selectedCategories[i].name == row.name) {
+					selectedCategories.splice(i, 1);
+					break;
+				}
+			}
+			console.log('selectedCategories', selectedCategories);
 			geochart.removeCategory(row.name);
 		},
 		onCheckAll: function() {
@@ -615,11 +635,11 @@ $( document ).ready(function() {
 					
 					for (var j = 0; j < statAreas.length; j++) {
 						if (statAreas[j].type == "circle") {
-							getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[j].name, statAreas[j].marker.getLatLng().lat, statAreas[j].marker.getLatLng().lng, { radius: statAreas[j].path.getRadius() });
+							getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[j], statAreas[j].marker.getLatLng().lat, statAreas[j].marker.getLatLng().lng, { radius: statAreas[j].path.getRadius() });
 						}
 						else {
 							var latLngBounds = statAreas[j].path.getBounds();
-							getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[j].name, statAreas[j].marker.getLatLng().lat, statAreas[j].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+							getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[j], statAreas[j].marker.getLatLng().lat, statAreas[j].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
 						}
 					}
 				}
@@ -670,7 +690,7 @@ $('#area_edit_button').click(function(e) {
 			var newName = $('#area_edit_name').val();
 			if (statAreas[i].name != newName) {
 				geochart.renameChartSeries(statAreas[i].name, newName);
-				statAreas[i].name = newName;
+				statAreas[i].rename(newName);
 				statAreas[i].marker.setPopupContent(newName);
 			}
 			
