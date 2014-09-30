@@ -147,7 +147,7 @@ var categories = [
 	},
 	{
 		internalName: "playing_fields",
-		name: "Rullalautailualueet",
+		name: "Peli- ja palloilukentät",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Vapaa-aika",
 		keyword2: "Virkistysalueet",
@@ -158,7 +158,7 @@ var categories = [
 	},
 	{
 		internalName: "skateboarding_areas",
-		name: "Peli- ja palloilukentät",
+		name: "Rullalautailualueet",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Vapaa-aika",
 		keyword2: "Virkistysalueet",
@@ -321,7 +321,7 @@ function getDataOnCategory(category, statArea, lat, lon, sizeFilter) {
 	
 	$.getJSON("/tredata.json", { dataSetName: category.internalName, sizeFilter: JSON.stringify(sizeFilter), lat: lat, lon: lon }, function(response) {
 		parsed_response = JSON.parse(response)
-		console.log("N of features: " + parsed_response.totalFeatures)
+		console.log(category.internalName, "N of features: " + parsed_response.totalFeatures)
 		
 		geochart.updateSeriesCategory(category.name, statArea.name, parsed_response.totalFeatures);
 	});
