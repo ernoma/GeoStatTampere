@@ -32,21 +32,22 @@ html(lang='fi')
 					div(class="panel panel-default")
 						div(class="panel-body")
 							
-							//button(type='button', class='btn btn-primary', id='geolocate_button') Keskitä kartta sijaintiini
-									
-							div(class='top-buffer')
-							button(type='button', class='btn btn-primary', id='area_edit_button', disabled='disabled' data-toggle='modal' data-target='#area_edit_modal') Muokkaa aluetta
-							button(type='button', class='btn btn-primary', id='delete_button', disabled='disabled') Poista valitut alueet
-							button(type='button', class='btn btn-primary', id='delete_all_button', disabled='disabled') Poista kaikki alueet
-							div(class='btn-group' data-toggle='buttons' id='area_buttons_div')
-								span(id='area_buttons_label') Lisättävän alueen muoto:
-								a(href="#" id='area_circle_button')
-									img(id='area_circle_button_img' src='images/primary_box_button_active_circle.png' alt='ympyrä')
-								a(href="#" id='area_rectangle_button')
-									img(id='area_rectangle_button_img' src='images/primary_box_button_rectangle.png' alt='suorakulmio')
 							div(class='row')
-								#map_canvas
+								#map_wrapper
+									#map_canvas
 				
+									#button_wrapper
+										button(type='button', class='btn btn-primary', id='area_edit_button', disabled='disabled' data-toggle='modal' data-target='#area_edit_modal') Muokkaa aluetta
+										button(type='button', class='btn btn-primary', id='delete_button', disabled='disabled') Poista valitut alueet
+										button(type='button', class='btn btn-primary', id='delete_all_button', disabled='disabled') Poista kaikki alueet
+				
+										div(class='btn-group' data-toggle='buttons' id='area_buttons_div')
+											span(id='area_buttons_label') Lisättävän alueen muoto:
+											a(href="#" id='area_circle_button')
+												img(id='area_circle_button_img' src='images/primary_box_button_active_circle.png' alt='ympyrä')
+											a(href="#" id='area_rectangle_button')
+												img(id='area_rectangle_button_img' src='images/primary_box_button_rectangle.png' alt='suorakulmio')
+												
 							div(class='row')
 								#chart_container
 					
@@ -55,8 +56,6 @@ html(lang='fi')
 						div(class="panel-body")
 							
 							#data_selections_table(data-click-to-select="true")
-							
-							#data_selection_checkboxes
 								
 				#about(class='tab-pane')
 					div(class="panel panel-default")
