@@ -41,7 +41,8 @@ var dataTableColumns = [
 	{field: 'name', title: 'Aineisto', sortable: true},
 	{field: 'producer', title: 'Tuottaja', sortable: true},
 	{field: 'keyword1', title: 'Avainsana 1', sortable: true},
-	{field: 'keyword2', title: 'Avainsana 2', sortable: true}
+	{field: 'keyword2', title: 'Avainsana 2', sortable: true},
+	{field: 'note', title: 'Huomiot', sortable: false}
 ];
 
 var categories = [
