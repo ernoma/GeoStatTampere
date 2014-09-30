@@ -17,9 +17,9 @@ html(lang='fi')
 	body(role='document')
 		#content(class='container-fluid theme-showcase', role='main')
 		
-			h1 #{title}
-		
-			ul(class="nav nav-tabs", role="tablist")
+			ul(class="nav nav-tabs top-nav-tab", role="tablist")
+				li
+					span(class='top-nav-title-span') #{title}
 				li(class='active')
 					a(href='#home', role='tab', data-toggle='tab', class='tab_switch_a') Kartta ja tilastot
 				li
@@ -93,7 +93,8 @@ html(lang='fi')
 					li muoto
 					li
 						del poista (onnistuu myös del ja backspace näppäimillä)
-				li google analytics
+				li
+					del google analytics
 				li vertailun tallennus - vaatinee käyttäjätunnuksen
 				li julkinen / kavereille jaettava vertailu
 				li älä hukkaa tietoja pois siirtyessä tai vähintäänkin varoita tietojen häviämisestä
