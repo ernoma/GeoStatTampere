@@ -29,34 +29,6 @@ var parking_icon = L.icon({
 var area_circle_tool_selected = true;
 var area_rectangle_tool_selected = false;
 
-function StatArea(path, type, marker, selected, name, radius) {
-	this.path = path;
-	this.type = type;
-	this.marker = marker;
-	this.selected = selected;
-	this.name = name;
-	if (type == "circle") {
-		this.radius = radius;
-	}
-	else {
-		this.latRadius = radius;
-		this.lngRadius = radius;
-	}
-}
-
-StatArea.prototype.isLatLngInsidePath = function(latlng) {
-	if (this.type == "circle") {
-		return is_inside_circle(latlng, this.path);
-	}
-	else {
-		return is_inside_rectangle(latlng, this.path);
-	}
-}
-
-StatArea.prototype.rename = function(newName) {
-	name = newName;
-}
-
 var statAreas = [];
 
 var statAreaColors = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', 
@@ -84,7 +56,12 @@ var categories = [
 			lukumäärää. Kohteet sisältävät maksulliset tai muutoin rajoitetut\
 			kadunvarren pysäköintialueet, erilliset\
 			pysäköintialueet, yleiset pysäköintilaitokset, taksiasemat, sekä inva-,\
-			linja-autojen ja moottoripyörien pysäköintialueet."
+			linja-autojen ja moottoripyörien pysäköintialueet.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'car',
+			markerColor: 'blue',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "bus_stops",
@@ -93,7 +70,12 @@ var categories = [
 		keyword1: "Liikenne",
 		keyword2: "Pysäkit",
 		keyword3: "Joukkoliikenne",
-		note: ""
+		note: "",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bus',
+			markerColor: 'blue',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "bike_parking",
@@ -105,7 +87,12 @@ var categories = [
 		note: "Tilastossa näytetään kohteiden lukumäärä, eikä pysäköintipaikkojen\
 			lukumäärää. Kohteet sisältävät tavalliset pyöräpysäköintipaikat,\
 			kaupunkipyöräpaikat, jotka on vain kaupunkipyörien käytössä, sekä\
-			liityntäpysäköintipaikat, jotka on tarkoitettu ensisijaisesti joukkoliikenteen käyttäjille."
+			liityntäpysäköintipaikat, jotka on tarkoitettu ensisijaisesti joukkoliikenteen käyttäjille.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bicycle',
+			markerColor: 'blue',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "dog_parking",
@@ -114,7 +101,12 @@ var categories = [
 		keyword1: "Viheralueet",
 		keyword2: "Puistot",
 		keyword3: "Lemmikit",
-		note: "Koirapuistot ovat aidattuja alueita, jotka on tarkoitettu koirien vapaaseen ulkoiluttamiseen."
+		note: "Koirapuistot ovat aidattuja alueita, jotka on tarkoitettu koirien vapaaseen ulkoiluttamiseen.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bug',
+			markerColor: 'red',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "boat_docks",
@@ -124,7 +116,12 @@ var categories = [
 		keyword2: "Veneily",
 		keyword3: "Infraomaisuus",
 		note: "Tilastossa näytetään kohteiden lukumäärä, eikä laiturien tai venepaikkojen\
-			lukumäärää."
+			lukumäärää.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bug',
+			markerColor: 'red',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "rowing_boat_docks",
@@ -134,7 +131,12 @@ var categories = [
 		keyword2: "Veneily",
 		keyword3: "Soutu",
 		note: "Päivittäminen tapahtuu kausittain eikä kaikki kohteet ole sen\
-			vuoksi välttämättä ajantasalla. Muutokset vuosittain ovat kuitenkin suhteellisen pieniä."
+			vuoksi välttämättä ajantasalla. Muutokset vuosittain ovat kuitenkin suhteellisen pieniä.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bug',
+			markerColor: 'red',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "winter_slides",
@@ -143,7 +145,12 @@ var categories = [
 		keyword1: "Vapaa-aika",
 		keyword2: "Perheet",
 		keyword3: "Viheralueet",
-		note: "Talviliukumäet toteutetaan lumitilanteen mukaan."
+		note: "Talviliukumäet toteutetaan lumitilanteen mukaan.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bug',
+			markerColor: 'red',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "playing_fields",
@@ -154,7 +161,12 @@ var categories = [
 		keyword3: "Viheralueet",
 		note: "Kaupunkiympäristön kehittäminen –yksikön hallinnoimat asemakaavoitetuissa puistoissa\
 			tai muilla puistomaisesti rakennetuilla yleisillä alueilla sijaitsevat kentät.\
-			Sisältää myös osan Tilakeskuksen hallinnoimista koulujen pihojen kentistä."
+			Sisältää myös osan Tilakeskuksen hallinnoimista koulujen pihojen kentistä.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bug',
+			markerColor: 'blue',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "skateboarding_areas",
@@ -164,7 +176,12 @@ var categories = [
 		keyword2: "Virkistysalueet",
 		keyword3: "Viheralueet",
 		note: "Tampereen kaupungin hallinnoimat puistoissa, koulupihoilla tai muilla yleisillä\
-			alueilla sijaitsevat rullalautailualueet."
+			alueilla sijaitsevat rullalautailualueet.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bug',
+			markerColor: 'red',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "playing_grounds",
@@ -179,7 +196,12 @@ var categories = [
 			joille on sijoitettu tähän tarkoitettuja välineitä tai rakenteita.\
 			Aineisto sisältää myös muiden hallintokuntien ylläpitämiä leikkipaikkoja mm. kiinteistöjen\
 			(kuten koulut ja päiväkodit). Aineisto ei ole niiden osalta kattava. Sisältää vain Tampereen\
-			Infran kunnossapitämien koulujen ja päiväkotien leikkipaikat."
+			Infran kunnossapitämien koulujen ja päiväkotien leikkipaikat.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'child',
+			markerColor: 'blue',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "elementary_schools",
@@ -188,7 +210,12 @@ var categories = [
 		keyword1: "Opetus",
 		keyword2: "Koulut",
 		keyword3: "Perheet",
-		note: "Tampereen kaupungin, valtion ja yksityiset peruskoulut."
+		note: "Tampereen kaupungin, valtion ja yksityiset peruskoulut.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'book',
+			markerColor: 'blue',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "daycare_centers",
@@ -197,7 +224,12 @@ var categories = [
 		keyword1: "Päivähoito",
 		keyword2: "Varhaiskasvatus",
 		keyword3: "Perheet",
-		note: "Kaupungin omat, ostopalvelu-, palveluseteli- ja yksityiset päiväkotipisteet."
+		note: "Kaupungin omat, ostopalvelu-, palveluseteli- ja yksityiset päiväkotipisteet.",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bug',
+			markerColor: 'red',
+			prefix: 'fa'
+		})
 	},
 	{
 		internalName: "trashcans",
@@ -206,7 +238,12 @@ var categories = [
 		keyword1: "Siisteys",
 		keyword2: "Puhtaanapito",
 		keyword3: "Viihtyvyys",
-		note: ""
+		note: "",
+		icon: L.AwesomeMarkers.icon({
+			icon: 'bug',
+			markerColor: 'red',
+			prefix: 'fa'
+		})
 	}
 ];
 
@@ -286,14 +323,6 @@ var popup = L.popup()
     .setContent("Klikkaa karttaa lisätäksesi alueen.")
     .openOn(map);
 
-var layers = {
-	parkingLayer: L.geoJson(null,
-		{
-			pointToLayer : function (feature, latlng) {
-				return L.marker(latlng, { icon: parking_icon });
-			}
-		}).addTo(map)
-}
 
 function getDataOnArea(lat, lon, statArea, sizeFilter) {
 
@@ -308,6 +337,8 @@ function getDataOnArea(lat, lon, statArea, sizeFilter) {
 
 function updateDataOnArea(lat, lon, statArea, sizeFilter) {
 	
+	statArea.removeMapLayers(map);
+	
 	for (var i = 0; i < selectedCategories.length; i++) {
 		getDataOnCategory(selectedCategories[i], statArea, lat, lon, sizeFilter);
 	}
@@ -320,10 +351,12 @@ function getDataOnCategory(category, statArea, lat, lon, sizeFilter) {
 	// geochart.updateSeriesCategory(category.name, statArea.name, n);
 	
 	$.getJSON("/tredata.json", { dataSetName: category.internalName, sizeFilter: JSON.stringify(sizeFilter), lat: lat, lon: lon }, function(response) {
-		parsed_response = JSON.parse(response)
-		console.log(category.internalName, "N of features: " + parsed_response.totalFeatures)
+		parsed_response = JSON.parse(response);
+		console.log(category.internalName, "N of features: " + parsed_response.totalFeatures);
 		
 		geochart.updateSeriesCategory(category.name, statArea.name, parsed_response.totalFeatures);
+		
+		statArea.createMapLayer(map, category, parsed_response);
 	});
 }
 
@@ -432,7 +465,6 @@ function onMapClick(e) {
 			var position = event.target.getLatLng();
 			for(var i = 0; i < statAreas.length; i++) {
 				if (statAreas[i].marker == this) {
-				
 					if (statAreas[i].type == "circle") {
 						statAreas[i].path.setLatLng(position);
 					}
@@ -633,6 +665,7 @@ function deleteSelectedAreas() {
 	for(var i = 0; i < statAreas.length; i++) {
 		console.log(statAreas);
 		if (statAreas[i].selected) {
+			statAreas[i].removeMapLayers(map);
 			map.removeLayer(statAreas[i].path);
 			map.removeLayer(statAreas[i].marker);
 			removedAreas.push(statAreas[i]);
@@ -655,6 +688,7 @@ function deleteSelectedAreas() {
 function deleteAllAreas() {
 
 	for(var i = 0; i < statAreas.length; i++) {
+		statAreas[i].removeMapLayers(map);
 		map.removeLayer(statAreas[i].path);
 		map.removeLayer(statAreas[i].marker);
 	}
@@ -696,7 +730,12 @@ $( document ).ready(function() {
 		sortName: "name",
 		onCheck: function(row) {
 			console.log('onCheck', row);
-			selectedCategories.push({name: row.name, internalName: row.internalName});
+			for (var i = 0; i < categories.length; i++) {
+				if (categories[i].name == row.name) {
+					selectedCategories.push(categories[i]);
+					break;
+				}
+			}
 			geochart.addCategory(row.name);
 			
 			for (var i = 0; i < statAreas.length; i++) {
@@ -718,6 +757,9 @@ $( document ).ready(function() {
 				}
 			}
 			console.log('selectedCategories', selectedCategories);
+			for (var i = 0; i < statAreas.length; i++) {
+				statAreas[i].removeMapLayer(map, row.name);
+			}
 			geochart.removeCategory(row.name);
 		},
 		onCheckAll: function() {
@@ -734,7 +776,7 @@ $( document ).ready(function() {
 					}
 				}
 				if (!found) {
-					selectedCategories.push({name: categories[i].name, internalName: categories[i].internalName});
+					selectedCategories.push(categories[i]);
 					geochart.addCategory(categories[i].name);
 					
 					for (var j = 0; j < statAreas.length; j++) {
@@ -751,6 +793,9 @@ $( document ).ready(function() {
 		},
 		onUncheckAll: function() {
 			console.log('onUncheckAll');
+			for (var i = 0; i < statAreas.length; i++) {
+				statAreas[i].removeMapLayers(map);
+			}
 			for (var i = 0; i < selectedCategories.length; i++) {
 				geochart.removeCategory(selectedCategories[i].name);
 			}
@@ -934,41 +979,6 @@ map.addControl( new L.Control.Search({
 	},
 	circleLocation: false
 }) );
-
-
-// var geocoder = new google.maps.Geocoder();
-
-// function googleGeocoding(text, callResponse)
-// {
-	// geocoder.geocode({address: text, location: new google.maps.LatLng(61.5, 23.766667), bounds: new google.maps.LatLngBounds(new google.maps.LatLng(61.222, 22.795), new google.maps.LatLng(61.762, 24.719)), region: "fi"}, callResponse);
-// }
-
-// function filterJSONCall(rawjson)
-// {
-	// var json = {},
-		// key, loc, disp = [];
-
-	// for(var i in rawjson)
-	// {
-		// key = rawjson[i].formatted_address;
-		
-		// loc = L.latLng( rawjson[i].geometry.location.lat(), rawjson[i].geometry.location.lng() );
-		
-		// json[ key ]= loc;	//key,value format
-	// }
-
-	// return json;
-// }
-
-// map.addControl( new L.Control.Search({
-	// callData: googleGeocoding,
-	// filterJSON: filterJSONCall,
-	// markerLocation: true,
-	// autoType: false,
-	// autoCollapse: true,
-	// minLength: 2,
-	// zoom: 10
-// }) );
 
 var locateMeControl = L.Control.extend({
 	options: {
