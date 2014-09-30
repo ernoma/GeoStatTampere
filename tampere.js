@@ -4,15 +4,73 @@ var request = require('request');
 
 // child_process.spawn('gdaltransform') -s
 
-var tampereOpenDataSetNames = {
-	car_parking: "opendata:KESKUSTAN_PYSAKOINTI_VIEW",
-	bike_parking: "opendata:PYORAPARKIT_VIEW",
-	dog_parking: "opendata:WFS_KOIRAPUISTO_MVIEW"
-}
-
-var tampereOraDataSetNames = {
-	bus_stops: "tampere_ora:BUSSIPYSAKIT"
-}
+var tampereOpenDataSets = [
+	{
+		internal_name: "car_parking",
+		name: "opendata:KESKUSTAN_PYSAKOINTI_VIEW",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "bike_parking",
+		name: "opendata:PYORAPARKIT_VIEW",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "dog_parking",
+		name: "opendata:WFS_KOIRAPUISTO_MVIEW",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "bus_stops",
+		name: "tampere_ora:BUSSIPYSAKIT",
+		path: "tampere_wfs_geoserver/tampere_ora/ows"
+	},
+	{
+		internal_name: "boat_docks",
+		name: "tampere_iris:WFS_LAITURIPAIKKA",
+		path: "tampere_wfs_geoserver/tampere_iris/ows"
+	},
+	{
+		internal_name: "rowing_boat_docks",
+		name: "opendata:WFS_SOUTUVENERANTA",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "winter_slides",
+		name: "tampere_iris:WFS_TALVILIUKUPAIKKA",
+		path: "tampere_wfs_geoserver/tampere_iris/ows"
+	},
+	{
+		internal_name: "playing_fields",
+		name: "opendata:WFS_KENTTA_MVIEW",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "skateboarding_areas",
+		name: "opendata:WFS_RULLALAUTAILUALUE_MVIEW",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "playing_grounds",
+		name: "opendata:WFS_LEIKKIPAIKKA_MVIEW",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "elementary_schools",
+		name: "opendata:KOULUT",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "daycare_centers",
+		name: "opendata:PAIVAKODIT",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "trashcans",
+		name: "opendata:WFS_ROSKIS",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	}
+];
 
 var wgs84 = gdal.SpatialReference.fromEPSG(4326);
 var gk24 = gdal.SpatialReference.fromEPSG(3878);
@@ -23,15 +81,16 @@ exports.getTreJSONData = function getTreJSONData(req, res) {
 	var typeName = undefined;
 	var path = undefined;
 	
-	if (req.query.dataSetName in tampereOpenDataSetNames) {
-		typeName = tampereOpenDataSetNames[req.query.dataSetName];
-		path = "tampere_wfs_geoserver/opendata/ows";
+	for (var i = 0; i < tampereOpenDataSets.length; i++) {
+		if (req.query.dataSetName == tampereOpenDataSets[i].internal_name) {
+			typeName = tampereOpenDataSets[i].name;
+			path = tampereOpenDataSets[i].path;
+			break;
+		}
 	}
-	else if (req.query.dataSetName in tampereOraDataSetNames) {
-		typeName = tampereOraDataSetNames[req.query.dataSetName];
-		path = "tampere_wfs_geoserver/tampere_ora/ows";
-	}
+	
 	if (typeName != undefined) {
+	
 		var point_orig = {
 			x: parseFloat(req.query.lon),
 			y: parseFloat(req.query.lat)

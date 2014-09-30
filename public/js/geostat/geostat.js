@@ -75,10 +75,16 @@ var dataTableColumns = [
 var categories = [
 	{
 		internalName: "car_parking",
-		name: "Keskustan maksulliset tai muuten rajoitetut pysäköintikohteet",
+		name: "Keskustan pysäköintikohteet",
 		producer: "Suunnittelupalvelut / Kaupunkiympäristön kehittäminen",
 		keyword1: "Liikenne",
 		keyword2: "Pysäköinti",
+		keyword3: "Autoilu",
+		note: "Tilastossa näytetään kohteiden lukumäärä, eikä pysäköintipaikkojen\
+			lukumäärää. Kohteet sisältävät maksulliset tai muutoin rajoitetut\
+			kadunvarren pysäköintialueet, erilliset\
+			pysäköintialueet, yleiset pysäköintilaitokset, taksiasemat, sekä inva-,\
+			linja-autojen ja moottoripyörien pysäköintialueet."
 	},
 	{
 		internalName: "bus_stops",
@@ -86,7 +92,8 @@ var categories = [
 		producer: "Joukkoliikenne",
 		keyword1: "Liikenne",
 		keyword2: "Pysäkit",
-		keyword3: "Joukkoliikenne"
+		keyword3: "Joukkoliikenne",
+		note: ""
 	},
 	{
 		internalName: "bike_parking",
@@ -94,7 +101,11 @@ var categories = [
 		producer: "Suunnittelupalvelut / Kaupunkiympäristön kehittäminen",
 		keyword1: "Liikenne",
 		keyword2: "Pysäköinti",
-		keyword3: "Pyöräily"
+		keyword3: "Pyöräily",
+		note: "Tilastossa näytetään kohteiden lukumäärä, eikä pysäköintipaikkojen\
+			lukumäärää. Kohteet sisältävät tavalliset pyöräpysäköintipaikat,\
+			kaupunkipyöräpaikat, jotka on vain kaupunkipyörien käytössä, sekä\
+			liityntäpysäköintipaikat, jotka on tarkoitettu ensisijaisesti joukkoliikenteen käyttäjille."
 	},
 	{
 		internalName: "dog_parking",
@@ -102,7 +113,100 @@ var categories = [
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Viheralueet",
 		keyword2: "Puistot",
-		keyword3: "Lemmikit"
+		keyword3: "Lemmikit",
+		note: "Koirapuistot ovat aidattuja alueita, jotka on tarkoitettu koirien vapaaseen ulkoiluttamiseen."
+	},
+	{
+		internalName: "boat_docks",
+		name: "Laituripaikat",
+		producer: "Rakennuttaminen ja kunnossapito",
+		keyword1: "Vapaa-aika",
+		keyword2: "Veneily",
+		keyword3: "Infraomaisuus",
+		note: "Tilastossa näytetään kohteiden lukumäärä, eikä laiturien tai venepaikkojen\
+			lukumäärää."
+	},
+	{
+		internalName: "rowing_boat_docks",
+		name: "Soutuvenerannat",
+		producer: "Kaupunkiympäristön kehittäminen / Tilaajaryhmä",
+		keyword1: "Vapaa-aika",
+		keyword2: "Veneily",
+		keyword3: "Soutu",
+		note: "Päivittäminen tapahtuu kausittain eikä kaikki kohteet ole sen\
+			vuoksi välttämättä ajantasalla. Muutokset vuosittain ovat kuitenkin suhteellisen pieniä."
+	},
+	{
+		internalName: "winter_slides",
+		name: "Talviliukumäet",
+		producer: "Yleisten alueiden suunnittelu",
+		keyword1: "Vapaa-aika",
+		keyword2: "Perheet",
+		keyword3: "Viheralueet",
+		note: "Talviliukumäet toteutetaan lumitilanteen mukaan."
+	},
+	{
+		internalName: "playing_fields",
+		name: "Rullalautailualueet",
+		producer: "Yleisten alueiden suunnittelu",
+		keyword1: "Vapaa-aika",
+		keyword2: "Virkistysalueet",
+		keyword3: "Viheralueet",
+		note: "Kaupunkiympäristön kehittäminen –yksikön hallinnoimat asemakaavoitetuissa puistoissa\
+			tai muilla puistomaisesti rakennetuilla yleisillä alueilla sijaitsevat kentät.\
+			Sisältää myös osan Tilakeskuksen hallinnoimista koulujen pihojen kentistä."
+	},
+	{
+		internalName: "skateboarding_areas",
+		name: "Peli- ja palloilukentät",
+		producer: "Yleisten alueiden suunnittelu",
+		keyword1: "Vapaa-aika",
+		keyword2: "Virkistysalueet",
+		keyword3: "Viheralueet",
+		note: "Tampereen kaupungin hallinnoimat puistoissa, koulupihoilla tai muilla yleisillä\
+			alueilla sijaitsevat rullalautailualueet."
+	},
+	{
+		internalName: "playing_grounds",
+		name: "Leikkipaikat",
+		producer: "Yleisten alueiden suunnittelu",
+		keyword1: "Vapaa-aika",
+		keyword2: "Perheet",
+		keyword3: "Viheralueet",
+		note: "Kaupunkiympäristön kehittäminen –yksikön hallinnoimat asemakaavoitetuissa puistoissa\
+			tai muilla puistomaisesti rakennetuilla yleisillä alueilla sijaitsevat leikkipaikat.\
+			Pääsiassa viheralueilla sijaitsevia pelaamiseen ja leikkitarkoitukseen varattuja kohteita,\
+			joille on sijoitettu tähän tarkoitettuja välineitä tai rakenteita.\
+			Aineisto sisältää myös muiden hallintokuntien ylläpitämiä leikkipaikkoja mm. kiinteistöjen\
+			(kuten koulut ja päiväkodit). Aineisto ei ole niiden osalta kattava. Sisältää vain Tampereen\
+			Infran kunnossapitämien koulujen ja päiväkotien leikkipaikat."
+	},
+	{
+		internalName: "elementary_schools",
+		name: "Peruskoulut",
+		producer: "Tilaajaryhmä / Lasten ja nuorten kasvun tukeminen",
+		keyword1: "Opetus",
+		keyword2: "Koulut",
+		keyword3: "Perheet",
+		note: "Tampereen kaupungin, valtion ja yksityiset peruskoulut."
+	},
+	{
+		internalName: "daycare_centers",
+		name: "Päiväkodit",
+		producer: "Tilaajaryhmä / Lasten ja nuorten kasvun tukeminen",
+		keyword1: "Päivähoito",
+		keyword2: "Varhaiskasvatus",
+		keyword3: "Perheet",
+		note: "Kaupungin omat, ostopalvelu-, palveluseteli- ja yksityiset päiväkotipisteet."
+	},
+	{
+		internalName: "trashcans",
+		name: "Roskakorit",
+		producer: "Kaupunkiympäristön kehittäminen / Tilaajaryhmä",
+		keyword1: "Siisteys",
+		keyword2: "Puhtaanapito",
+		keyword3: "Viihtyvyys",
+		note: ""
 	}
 ];
 
