@@ -297,7 +297,7 @@ var categories = [
 		keyword1: "Liikenne",
 		keyword2: "Valaistus",
 		keyword3: "Turvallisuus",
-		note: "Lamppuja on erittäin suuri määrä, joten niiden näyttäminen kartalla voi kestää.",
+		note: "Katuvaloja on erittäin suuri määrä, joten niiden näyttäminen kartalla voi kestää.",
 		icon:  L.icon({
 			iconUrl: '/images/map_data_icon_888800.png',
 			iconSize: [5, 5],

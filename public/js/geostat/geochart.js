@@ -100,7 +100,10 @@ $(function() {
 	$("#chart_container").highcharts({
         chart: {
             type: 'column',
-			borderWidth: 1
+			borderWidth: 1,
+			style: {
+				'-webkit-backface-visibility': 'hidden' // due to chrome 37 "Layer squashing issues"
+			}
         },
         title: {
             text: 'Alueiden tilastot'
