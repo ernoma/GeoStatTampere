@@ -289,6 +289,83 @@ var categories = [
 		getInfoText: function(feature) {
 			return "Roskakori";
 		}
+	},
+	{
+		internalName: "street_lighting",
+		name: "Katuvalot",
+		producer: "Kaupunkiympäristön kehittäminen / Tilaajaryhmä",
+		keyword1: "Liikenne",
+		keyword2: "Valaistus",
+		keyword3: "Turvallisuus",
+		note: "Lamppuja on erittäin suuri määrä, joten niiden näyttäminen kartalla voi kestää.",
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_888800.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_888800.png' style='width: 10px; height: 10px'>",
+		getInfoText: function(feature) {
+			return "Katuvalo<br>" +
+				"Tyyppi: " + feature.properties.TYYPPI + (feature.properties.LAMPPU_TYYPPI != null ? ", " + feature.properties.LAMPPU_TYYPPI : "");
+		}
+	},
+	{
+		internalName: "traffic_light_sensors",
+		name: "Liikennevalojen ilmaisimet",
+		producer: "Yleisten alueiden suunnittelu",
+		keyword1: "Liikenne",
+		keyword2: "Liikenteen ohjaus",
+		keyword3: "Autoilu",
+		note: "",
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_00ff33.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_00ff33.png' style='width: 10px; height: 10px'>",
+		getInfoText: function(feature) {
+			return "Liikennevalojen ilmaisin<br>ID: " + feature.properties.ILMAISIN_ID;
+		}
+	},
+	{
+		internalName: "bridges",
+		name: "Sillat ja alikulkukäytävät",
+		producer: "Rakentaminen ja kunnossapito",
+		keyword1: "Liikenne",
+		keyword2: "Liikenteen infrastruktuuri",
+		keyword3: "Kaupunkiliikenne",
+		note: "Sisältää Tampereen eri tyyppiset sillat ja alikulkukäytävät.",
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_ff00ff.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_ff00ff.png' style='width: 10px; height: 10px'>",
+		getInfoText: function(feature) {
+			var name = feature.properties.NIMI.toLowerCase();
+			return name.charAt(0).toUpperCase() + name.slice(1) +
+				(feature.properties.PITUUS != undefined && feature.properties.PITUUS > 0 ? "<br>Pituus: " + feature.properties.PITUUS + " m" : "") +
+				(feature.properties.LEVEYS != undefined && feature.properties.LEVEYS > 0 ? "<br>Leveys: " + feature.properties.LEVEYS + " m" : "") +
+				(feature.properties.ALIKULKUKORKEUS != undefined && feature.properties.ALIKULKUKORKEUS > 0 ? "<br>Alikulkukorkeus: " + feature.properties.ALIKULKUKORKEUS + " m" : "");
+		}
+	},
+	{
+		internalName: "traffic_light_junction",
+		name: "Liikennevalo-ohjatut risteykset ja liittymät",
+		producer: "Yleisten alueiden suunnittelu",
+		keyword1: "Liikenne",
+		keyword2: "Liikenteen ohjaus",
+		keyword3: "Kaupunkiliikenne",
+		note: "",
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_ff0000.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_ff0000.png' style='width: 10px; height: 10px'>",
+		getInfoText: function(feature) {
+			return "Liikennevalo-ohjatut risteykset ja liittymät";
+		}
 	}
 ];
 

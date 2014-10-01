@@ -69,6 +69,26 @@ var tampereOpenDataSets = [
 		internal_name: "trashcans",
 		name: "opendata:WFS_ROSKIS",
 		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "street_lighting",
+		name: "opendata:WFS_KATUVALO",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "traffic_light_sensors",
+		name: "opendata:WFS_LIIKENNEVALO_ILMAISIN",
+		path: "tampere_wfs_geoserver/opendata/ows"
+	},
+	{
+		internal_name: "bridges",
+		name: "tampere_iris:WFS_SILTA",
+		path: "tampere_wfs_geoserver/tampere_iris/ows"
+	},
+	{
+		internal_name: "traffic_light_junction",
+		name: "opendata:WFS_LIIKENNEVALO_LIITTYMA",
+		path: "tampere_wfs_geoserver/opendata/ows"
 	}
 ];
 

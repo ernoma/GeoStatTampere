@@ -44,9 +44,9 @@ var geochart = {
 		var chart = $("#chart_container").highcharts()
 		var categories = chart.xAxis[0].categories;
         categories.push(name);
-		console.log("categories", categories);
+		//console.log("categories", categories);
         chart.xAxis[0].setCategories(categories);
-		console.log("chart.xAxis[0].categories", chart.xAxis[0].categories);
+		//console.log("chart.xAxis[0].categories", chart.xAxis[0].categories);
 		for(var i = 0; i < chart.series.length; i++) {
 			chart.series[i].addPoint(0);
 		}
