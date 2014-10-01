@@ -48,6 +48,15 @@ StatArea.prototype.createMapLayer = function(map, category, geoJsonObject) {
 			var marker = L.marker([geoJsonObject.features[i].geometry.coordinates[1], geoJsonObject.features[i].geometry.coordinates[0]],
 				{ icon: category.icon });
 			layerGroup.addLayer(marker);
+			(function(i) {
+				marker.on('mouseover', function(event) {
+					var text = category.getInfoText(geoJsonObject.features[i]);
+					featureInfoControl.update(text);
+				});
+				marker.on('mouseout', function(event) {
+					featureInfoControl.update();
+				});
+			})(i);
 		}
 		else if (geoJsonObject.features[i].geometry.type == "Polygon") {
 			// if (!polygonFound) {
@@ -69,6 +78,15 @@ StatArea.prototype.createMapLayer = function(map, category, geoJsonObject) {
 				fillOpacity: 0.2
 			});
 			layerGroup.addLayer(polygon);
+			(function(i) {
+				polygon.on('mouseover', function(event) {
+					var text = category.getInfoText(geoJsonObject.features[i]);
+					featureInfoControl.update(text);
+				});
+				polygon.on('mouseout', function(event) {
+					featureInfoControl.update();
+				});
+			})(i);
 			
 			//console.log("L.polygon(latLngArray).getBounds().getCenter()", L.polygon(latLngArray).getBounds().getCenter());
 			//var marker = L.marker(L.polygon(latLngArray).getBounds().getCenter(), { icon: category.icon });
