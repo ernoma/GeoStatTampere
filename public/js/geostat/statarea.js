@@ -33,25 +33,46 @@ StatArea.prototype.createMapLayer = function(map, category, geoJsonObject) {
 	
 	var layerGroup = L.layerGroup();
 	
-	console.log("createMapLayer", geoJsonObject);
-	console.log("category", category);
+	// var pointFound = false;
+	// var polygonFound = false;
+	
+	//console.log("createMapLayer", geoJsonObject);
+	//console.log("category", category);
 	
 	for (var i = 0; i < geoJsonObject.features.length; i++) {
 		if (geoJsonObject.features[i].geometry.type == "Point") {
+			// if (!pointFound) {
+				// pointFound = true;
+				// console.log(category.name + " has points");
+			// }
 			var marker = L.marker([geoJsonObject.features[i].geometry.coordinates[1], geoJsonObject.features[i].geometry.coordinates[0]],
 				{ icon: category.icon });
 			layerGroup.addLayer(marker);
 		}
 		else if (geoJsonObject.features[i].geometry.type == "Polygon") {
+			// if (!polygonFound) {
+				// polygonFound = true;
+				// console.log(category.name + " has polys");
+			// }
 			var latLngArray = [];
 			for (var j = 0; j < geoJsonObject.features[i].geometry.coordinates[0].length; j++) {
 				var latLng = L.latLng(geoJsonObject.features[i].geometry.coordinates[0][j][1], geoJsonObject.features[i].geometry.coordinates[0][j][0]);
 				//console.log(latLng);
 				latLngArray.push(latLng);
 			}
+			
+			var polygon = L.polygon(latLngArray, {
+				weight: 1,
+				color: category.polygonColor,
+				opacity: 1,
+				fillColor: category.polygonColor,
+				fillOpacity: 0.2
+			});
+			layerGroup.addLayer(polygon);
+			
 			//console.log("L.polygon(latLngArray).getBounds().getCenter()", L.polygon(latLngArray).getBounds().getCenter());
-			var marker = L.marker(L.polygon(latLngArray).getBounds().getCenter(), { icon: category.icon });
-			layerGroup.addLayer(marker);
+			//var marker = L.marker(L.polygon(latLngArray).getBounds().getCenter(), { icon: category.icon });
+			//layerGroup.addLayer(marker);
 		}
 		else {
 			console.log("Did not create map marker because geometry: ", geoJsonObject.features[i].geometry.type);

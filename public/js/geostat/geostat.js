@@ -42,7 +42,8 @@ var dataTableColumns = [
 	{field: 'producer', title: 'Tuottaja', sortable: true},
 	{field: 'keyword1', title: 'Avainsana 1', sortable: true},
 	{field: 'keyword2', title: 'Avainsana 2', sortable: true},
-	{field: 'note', title: 'Huomiot', sortable: false}
+	{field: 'note', title: 'Huomiot', sortable: false},
+	{field: 'mapSymbol', title: 'Karttamerkinnät', sortable: false, halign: 'center'}
 ];
 
 var categories = [
@@ -58,11 +59,14 @@ var categories = [
 			kadunvarren pysäköintialueet, erilliset\
 			pysäköintialueet, yleiset pysäköintilaitokset, taksiasemat, sekä inva-,\
 			linja-autojen ja moottoripyörien pysäköintialueet.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'car',
-			markerColor: 'blue',
-			prefix: 'fa'
-		})
+		icon: L.icon({
+			iconUrl: '/images/map_data_icon_0033ff.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		polygonColor: '#03f',
+		mapSymbol: "<img src='/images/map_data_icon_0033ff.png' style='width: 10px; height: 10px'> <img src='/images/map_data_poly_legend_0033ff.png' style='width: 20px; height: 20px'>"
+		
 	},
 	{
 		internalName: "bus_stops",
@@ -72,11 +76,12 @@ var categories = [
 		keyword2: "Pysäkit",
 		keyword3: "Joukkoliikenne",
 		note: "",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bus',
-			markerColor: 'blue',
-			prefix: 'fa'
-		})
+		icon: L.icon({
+			iconUrl: '/images/map_data_icon_33ff00.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_33ff00.png' style='width: 10px; height: 10px'>"
 	},
 	{
 		internalName: "bike_parking",
@@ -89,11 +94,12 @@ var categories = [
 			lukumäärää. Kohteet sisältävät tavalliset pyöräpysäköintipaikat,\
 			kaupunkipyöräpaikat, jotka on vain kaupunkipyörien käytössä, sekä\
 			liityntäpysäköintipaikat, jotka on tarkoitettu ensisijaisesti joukkoliikenteen käyttäjille.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bicycle',
-			markerColor: 'blue',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_ff3300.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_ff3300.png' style='width: 10px; height: 10px'>"
 	},
 	{
 		internalName: "dog_parking",
@@ -103,11 +109,13 @@ var categories = [
 		keyword2: "Puistot",
 		keyword3: "Lemmikit",
 		note: "Koirapuistot ovat aidattuja alueita, jotka on tarkoitettu koirien vapaaseen ulkoiluttamiseen.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bug',
-			markerColor: 'red',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_33ffff.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		polygonColor: '#3ff',
+		mapSymbol: "<img src='/images/map_data_poly_legend_33ffff.png' style='width: 20px; height: 20px'>"
 	},
 	{
 		internalName: "boat_docks",
@@ -118,11 +126,12 @@ var categories = [
 		keyword3: "Infraomaisuus",
 		note: "Tilastossa näytetään kohteiden lukumäärä, eikä laiturien tai venepaikkojen\
 			lukumäärää.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bug',
-			markerColor: 'red',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_ff33ff.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_ff33ff.png' style='width: 10px; height: 10px'>"
 	},
 	{
 		internalName: "rowing_boat_docks",
@@ -133,11 +142,13 @@ var categories = [
 		keyword3: "Soutu",
 		note: "Päivittäminen tapahtuu kausittain eikä kaikki kohteet ole sen\
 			vuoksi välttämättä ajantasalla. Muutokset vuosittain ovat kuitenkin suhteellisen pieniä.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bug',
-			markerColor: 'red',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_ffff33.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		polygonColor: '#ff3',
+		mapSymbol: "<img src='/images/map_data_poly_legend_ffff33.png' style='width: 20px; height: 20px'>"
 	},
 	{
 		internalName: "winter_slides",
@@ -147,11 +158,12 @@ var categories = [
 		keyword2: "Perheet",
 		keyword3: "Viheralueet",
 		note: "Talviliukumäet toteutetaan lumitilanteen mukaan.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bug',
-			markerColor: 'red',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_000088.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_000088.png' style='width: 10px; height: 10px'>"
 	},
 	{
 		internalName: "playing_fields",
@@ -163,11 +175,13 @@ var categories = [
 		note: "Kaupunkiympäristön kehittäminen –yksikön hallinnoimat asemakaavoitetuissa puistoissa\
 			tai muilla puistomaisesti rakennetuilla yleisillä alueilla sijaitsevat kentät.\
 			Sisältää myös osan Tilakeskuksen hallinnoimista koulujen pihojen kentistä.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bug',
-			markerColor: 'blue',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_880000.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		polygonColor: '#800',
+		mapSymbol: "<img src='/images/map_data_poly_legend_880000.png' style='width: 20px; height: 20px'>"
 	},
 	{
 		internalName: "skateboarding_areas",
@@ -178,11 +192,12 @@ var categories = [
 		keyword3: "Viheralueet",
 		note: "Tampereen kaupungin hallinnoimat puistoissa, koulupihoilla tai muilla yleisillä\
 			alueilla sijaitsevat rullalautailualueet.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bug',
-			markerColor: 'red',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_008800.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_008800.png' style='width: 10px; height: 10px'>"
 	},
 	{
 		internalName: "playing_grounds",
@@ -198,11 +213,12 @@ var categories = [
 			Aineisto sisältää myös muiden hallintokuntien ylläpitämiä leikkipaikkoja mm. kiinteistöjen\
 			(kuten koulut ja päiväkodit). Aineisto ei ole niiden osalta kattava. Sisältää vain Tampereen\
 			Infran kunnossapitämien koulujen ja päiväkotien leikkipaikat.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'child',
-			markerColor: 'blue',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_0088ff.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_0088ff.png' style='width: 10px; height: 10px'>"
 	},
 	{
 		internalName: "elementary_schools",
@@ -212,11 +228,12 @@ var categories = [
 		keyword2: "Koulut",
 		keyword3: "Perheet",
 		note: "Tampereen kaupungin, valtion ja yksityiset peruskoulut.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'book',
-			markerColor: 'blue',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_8800ff.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_8800ff.png' style='width: 10px; height: 10px'>"
 	},
 	{
 		internalName: "daycare_centers",
@@ -226,11 +243,12 @@ var categories = [
 		keyword2: "Varhaiskasvatus",
 		keyword3: "Perheet",
 		note: "Kaupungin omat, ostopalvelu-, palveluseteli- ja yksityiset päiväkotipisteet.",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bug',
-			markerColor: 'red',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_008888.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_008888.png' style='width: 10px; height: 10px'>"
 	},
 	{
 		internalName: "trashcans",
@@ -240,11 +258,12 @@ var categories = [
 		keyword2: "Puhtaanapito",
 		keyword3: "Viihtyvyys",
 		note: "",
-		icon: L.AwesomeMarkers.icon({
-			icon: 'bug',
-			markerColor: 'red',
-			prefix: 'fa'
-		})
+		icon:  L.icon({
+			iconUrl: '/images/map_data_icon_880088.png',
+			iconSize: [5, 5],
+			iconAnchor : [2, 2]
+		}),
+		mapSymbol: "<img src='/images/map_data_icon_880088.png' style='width: 10px; height: 10px'>"
 	}
 ];
 
@@ -730,7 +749,7 @@ $( document ).ready(function() {
 		data: categories,
 		sortName: "name",
 		onCheck: function(row) {
-			console.log('onCheck', row);
+			//console.log('onCheck', row);
 			for (var i = 0; i < categories.length; i++) {
 				if (categories[i].name == row.name) {
 					selectedCategories.push(categories[i]);
@@ -750,7 +769,7 @@ $( document ).ready(function() {
 			}
 		},
 		onUncheck: function(row) {
-			console.log('onUncheck', row);
+			//console.log('onUncheck', row);
 			for (var i = 0; i < selectedCategories.length; i++) {
 				if (selectedCategories[i].name == row.name) {
 					selectedCategories.splice(i, 1);
@@ -764,7 +783,7 @@ $( document ).ready(function() {
 			geochart.removeCategory(row.name);
 		},
 		onCheckAll: function() {
-			console.log('onCheckAll');
+			//console.log('onCheckAll');
 			
 			for (var i = 0; i < categories.length; i++) {
 				
@@ -793,7 +812,7 @@ $( document ).ready(function() {
 			}
 		},
 		onUncheckAll: function() {
-			console.log('onUncheckAll');
+			//console.log('onUncheckAll');
 			for (var i = 0; i < statAreas.length; i++) {
 				statAreas[i].removeMapLayers(map);
 			}
