@@ -8,6 +8,21 @@ html
 		script(type='text/javascript', src='js/jquery-2.1.1.min.js')
 	body
 		#webgl
+		#info
+			p <b>Liikuta</b> karttaa pitämällä <b>hiiren oikea painike</b> alhaalla ja liikuttamalla hiirtä
+			p <b>Kierrä</b> karttaa pitämällä <b>hiiren vasen painike</b> alhaalla ja liikuttamalla hiirtä
+			p <b>Suurenna ja pienennä</b> karttaa <b>hiiren kiekolla</b>
+		
+		#loading
+			#spinner
+			#loading_text Ladataan karttaa...
+		
+		#attribution Hyödyntää Maanmittauslaitoksen "korkeusmalli 2m"-aineistoa 09/2014 ja
+			br
+			span Maanmittauslaitoksen "maastokartta 1:100 000"-aineistoa (9/2014), 
+			a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501") lisenssi
+		
+		script(type='text/javascript', src='js/spin.min.js')
 		script(type='text/javascript', src='js/three.min.js')
 		script(type='text/javascript', src='js/TrackballControls.js')
 		script(type='text/javascript', src='js/TerrainLoader.js')

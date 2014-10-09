@@ -1,29 +1,24 @@
 
-// var scene = new THREE.Scene();
-// var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-
-// var renderer = new THREE.WebGLRenderer();
-// renderer.setSize(window.innerWidth, window.innerHeight);
-// renderer.setClearColorHex( 0xffffff, 1 )
-// document.body.appendChild(renderer.domElement);
-
-// var geometry = new THREE.BoxGeometry(1,1,1);
-// var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
-// var cube = new THREE.Mesh(geometry, material);
-// scene.add(cube);
-
-// camera.position.z = 5;
-
-// var render = function () {
-	// requestAnimationFrame(render);
-
-	// cube.rotation.x += 0.1;
-	// cube.rotation.y += 0.1;
-
-	// renderer.render(scene, camera);
-// };
-
-// render();
+var opts = {
+  lines: 13, // The number of lines to draw
+  length: 10, // The length of each line
+  width: 5, // The line thickness
+  radius: 15, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 0, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#000', // #rgb or #rrggbb or array of colors
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: '0%', // Top position relative to parent
+  left: '50%' // Left position relative to parent
+};
+var target = document.getElementById('spinner');
+var spinner = new Spinner(opts).spin(target);
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -61,6 +56,8 @@ terrainLoader.load('data/tampere.bin', function(data) {
 	scene.add(plane);
 	
 	scene.add(new THREE.AmbientLight(0xeeeeee));
+	
+	var $loading = $('#loading').hide();
 });
 
 function render() {
