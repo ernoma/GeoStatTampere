@@ -118,17 +118,17 @@ exports.getTreJSONData = function getTreJSONData(req, res) {
 
 		var pt_gk24 = coord_transform.transformPoint(point_orig);
 
-		console.log ("pt_gk24 - lng: " + pt_gk24.x + ", lat: " + pt_gk24.y);
+		//console.log ("pt_gk24 - lng: " + pt_gk24.x + ", lat: " + pt_gk24.y);
 
-		console.log(req.query.sizeFilter);
+		//console.log(req.query.sizeFilter);
 		var sizeFilter = JSON.parse(req.query.sizeFilter);
-		console.log(sizeFilter);
+		//console.log(sizeFilter);
 		
 		if (sizeFilter.radius != undefined) { // circle
 			// http://tampere.navici.com/tampere_wfs_geoserver/opendata/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=opendata:KESKUSTAN_PYSAKOINTI_VIEW&outputFormat=json&srsName=EPSG:4326&Filter=%3CFilter%20xmlns:gml=%22http://www.opengis.net/gml%22%3E%3CDWithin%3E%3CPropertyName%3Eopendata:GEOLOC%3C/PropertyName%3E%3Cgml:Point%3E%3Cgml:coordinates%3E24486813.517,6821119.113%3C/gml:coordinates%3E%3C/gml:Point%3E%3CDistance%3E1000%3C/Distance%3E%3C/DWithin%3E%3C/Filter%3E
 			// Filter=<Filter xmlns:gml="http://www.opengis.net/gml"><DWithin><PropertyName>opendata:GEOLOC</PropertyName><gml:Point><gml:coordinates>24486813.517,6821119.113</gml:coordinates></gml:Point><Distance>1000<Distance></DWithin></Filter>
 			
-			console.log('http://tampere.navici.com/' + path + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName + '&outputFormat=json&srsName=EPSG:4326&Filter=%3CFilter%20xmlns:gml=%22http://www.opengis.net/gml%22%3E%3CDWithin%3E%3CPropertyName%3Eopendata:GEOLOC%3C/PropertyName%3E%3Cgml:Point%3E%3Cgml:coordinates%3E' + pt_gk24.x + ',' + pt_gk24.y + '%3C/gml:coordinates%3E%3C/gml:Point%3E%3CDistance%3E' + sizeFilter.radius + '%3C/Distance%3E%3C/DWithin%3E%3C/Filter%3E');
+			//console.log('http://tampere.navici.com/' + path + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName + '&outputFormat=json&srsName=EPSG:4326&Filter=%3CFilter%20xmlns:gml=%22http://www.opengis.net/gml%22%3E%3CDWithin%3E%3CPropertyName%3Eopendata:GEOLOC%3C/PropertyName%3E%3Cgml:Point%3E%3Cgml:coordinates%3E' + pt_gk24.x + ',' + pt_gk24.y + '%3C/gml:coordinates%3E%3C/gml:Point%3E%3CDistance%3E' + sizeFilter.radius + '%3C/Distance%3E%3C/DWithin%3E%3C/Filter%3E');
 			
 			request('http://tampere.navici.com/' + path + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName + '&outputFormat=json&srsName=EPSG:4326&Filter=%3CFilter%20xmlns:gml=%22http://www.opengis.net/gml%22%3E%3CDWithin%3E%3CPropertyName%3Eopendata:GEOLOC%3C/PropertyName%3E%3Cgml:Point%3E%3Cgml:coordinates%3E' + pt_gk24.x + ',' + pt_gk24.y + '%3C/gml:coordinates%3E%3C/gml:Point%3E%3CDistance%3E' + sizeFilter.radius + '%3C/Distance%3E%3C/DWithin%3E%3C/Filter%3E', function (error, response, body) {
 				if (error) {
