@@ -24,6 +24,9 @@ html(lang='fi')
 					a(href='#data_selections_div', role='tab', data-toggle='tab', class='tab_switch_a') Näytettävät aineistot
 				li
 					a(href='#about', role='tab', data-toggle='tab', class='tab_switch_a') Sovelluksesta
+				li
+					#spinner_container
+						#spinner
 		
 			div(class='tab-content')
 				#home(class='tab-pane active')
@@ -216,6 +219,7 @@ html(lang='fi')
 		//script(type='text/javascript', src='http://code.highcharts.com/modules/exporting.js')
 		script(type='text/javascript', src='js/proj4.js')
 		script(type='text/javascript', src='js/leaflet-search.min.js')
+		script(type='text/javascript', src='js/spin.min.js')
 		script(type='text/javascript', src='js/api_keys.js')
 		script(type='text/javascript', src='js/geostat/tredatatypes.js')
 		script(type='text/javascript', src='js/geostat/category.js')
