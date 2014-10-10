@@ -30,6 +30,14 @@ StatArea.prototype.rename = function(newName) {
 	name = newName;
 }
 
+StatArea.prototype.getInfoText = function() {
+
+	var center = this.path.getBounds().getCenter();
+
+	return "<p><i>Voit raahata alueen toiseen paikkaan tästä.</i></p>" +
+		"<p>Alueen keskipiste:<br>(leveys, pituus) = (" + center.lat.toFixed(6) + ", " + center.lng.toFixed(6) + ")</p>";
+}
+
 StatArea.prototype.createMapLayer = function(map, category, geoJsonObject) {
 	
 	var layerGroup = L.layerGroup();

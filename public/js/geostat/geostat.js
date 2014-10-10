@@ -239,6 +239,8 @@ function onMapClick(e) {
 			marker.on('drag', function(event){
 				var position = event.target.getLatLng();
 				circle.setLatLng(position);
+				var text = statArea.getInfoText();
+				featureInfoControl.update(text);
 			});
 		}
 		else {
@@ -246,8 +248,17 @@ function onMapClick(e) {
 				var position = event.target.getLatLng();
 				var latLngBounds = getlatLngBounds(position, statArea.latRadius, statArea.lngRadius);
 				rectangle.setBounds(latLngBounds);
+				var text = statArea.getInfoText();
+				featureInfoControl.update(text);
 			});
 		}
+		marker.on('mouseover', function(event) {
+			var text = statArea.getInfoText();
+			featureInfoControl.update(text);
+		});
+		marker.on('mouseout', function(event) {
+			featureInfoControl.update();
+		});
 		
 		statAreas.push(statArea);
 	
@@ -845,7 +856,7 @@ $("#geolocate_button").click(geoLocate);
 //map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 
-var opts = {
+var spinnerOpts = {
   lines: 10, // The number of lines to draw
   length: 6, // The length of each line
   width: 3, // The line thickness
@@ -864,7 +875,7 @@ var opts = {
   left: '0' // Left position relative to parent
 };
 var target = document.getElementById('spinner');
-var spinner = new Spinner(opts);
+var spinner = new Spinner(spinnerOpts);
 //spinner.spin(target);
 
 $(document)
