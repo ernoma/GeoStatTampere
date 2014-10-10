@@ -351,12 +351,12 @@ var categories = [
 	},
 	{
 		internalName: "traffic_light_junction",
-		name: "Liikennevalo-ohjatut risteykset ja liittymät",
+		name: "Liikennevaloristeykset",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Liikenne",
 		keyword2: "Liikenteen ohjaus",
 		keyword3: "Kaupunkiliikenne",
-		note: "",
+		note: "Sisältää liikennevalo-ohjatut risteykset ja liittymät",
 		icon:  L.icon({
 			iconUrl: '/images/map_data_icon_ff0000.png',
 			iconSize: [5, 5],

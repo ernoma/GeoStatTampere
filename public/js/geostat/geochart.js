@@ -130,6 +130,8 @@ $(function() {
 		xAxis: {
 			categories: [],
 			labels: {
+				staggerLines: 3
+				//maxStaggerLines: 3
 				//step: 1,
 				//overflow: 'justify'
 				//rotation: -45,
