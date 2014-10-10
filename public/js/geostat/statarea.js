@@ -1,5 +1,5 @@
 
-function StatArea(path, type, marker, selected, name, radius) {
+function StatArea(path, type, marker, selected, name, radius, color) {
 	this.path = path;
 	this.type = type;
 	this.marker = marker;
@@ -12,6 +12,7 @@ function StatArea(path, type, marker, selected, name, radius) {
 		this.latRadius = radius;
 		this.lngRadius = radius;
 	}
+	this.color = color;
 	
 	this.dataLayers = [];
 }

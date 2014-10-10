@@ -204,20 +204,21 @@ function onMapClick(e) {
 		
 		var circle = null;
 		var rectangle = null;
+		var color = statAreaColors[statAreaCount % statAreaColors.length];
 	
 		if (area_circle_tool_selected) {
 			circle = L.circle(e.latlng, INITIAL_AREA_RADIUS, {
-				color: statAreaColors[statAreaCount % statAreaColors.length],
+				color: color,
 				weight: 5,
-				fillColor: statAreaColors[statAreaCount % statAreaColors.length],
+				fillColor: color,
 				fillOpacity: 0.5
 			}).addTo(map);
 		} else {
 			var latLngBounds = getlatLngBounds(e.latlng, INITIAL_AREA_RADIUS, INITIAL_AREA_RADIUS);
 			rectangle = L.rectangle(latLngBounds, {
-				color: statAreaColors[statAreaCount % statAreaColors.length],
+				color: color,
 				weight: 5,
-				fillColor: statAreaColors[statAreaCount % statAreaColors.length],
+				fillColor: color,
 				fillOpacity: 0.5
 			}).addTo(map);
 		}
@@ -231,7 +232,8 @@ function onMapClick(e) {
 			area_circle_tool_selected ? "circle" : "rectangle",
 			marker,
 			true,
-			"Alue " + statAreaCount, INITIAL_AREA_RADIUS);
+			"Alue " + statAreaCount, INITIAL_AREA_RADIUS,
+			color);
 			
 		if (area_circle_tool_selected) {
 			marker.on('drag', function(event){
@@ -613,18 +615,20 @@ $( document ).ready(function() {
 		}
 	});
 	
-	$('#data_selections_table').bootstrapTable('checkAll');
+	//$('#data_selections_table').bootstrapTable('checkAll');
 });
 
 $('#area_edit_button').click(function(e) {
 	for (var i = 0; i < statAreas.length; i++) {
 		if (statAreas[i].selected) {
+			$('#area_edit_name').val(statAreas[i].name);
+			//$('#area_edit_color').val(statAreas[i].color);
+			$('#color_picker_div').colorpicker('setValue', statAreas[i].color);
 			if (statAreas[i].type == "circle") {
 				$('#area_edit_circle_size_div').removeClass('hidden');
 				$('#area_edit_rectangle_size_div').removeClass('show');
 				$('#area_edit_rectangle_size_div').addClass('hidden');
 				$('#area_edit_circle_size_div').addClass('show');
-				$('#area_edit_name').val(statAreas[i].name);
 				$('#area_edit_radius').val(statAreas[i].path.getRadius());
 				break;
 			}
@@ -633,9 +637,9 @@ $('#area_edit_button').click(function(e) {
 				$('#area_edit_rectangle_size_div').removeClass('hidden');
 				$('#area_edit_circle_size_div').addClass('hidden');
 				$('#area_edit_rectangle_size_div').addClass('show');
-				$('#area_edit_name').val(statAreas[i].name);
 				$('#area_edit_width').val(statAreas[i].lngRadius * 2);
 				$('#area_edit_height').val(statAreas[i].latRadius * 2);
+				break;
 			}
 		}
 	}
@@ -651,6 +655,15 @@ $('#area_edit_button').click(function(e) {
 				geochart.renameChartSeries(statAreas[i].name, newName);
 				statAreas[i].rename(newName);
 				statAreas[i].marker.setPopupContent(newName);
+			}
+			var colorValue = $('#area_edit_color').val();
+			if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(colorValue) && colorValue != statAreas[i].color) {
+				geochart.recolorSeries(statAreas[i].name, colorValue);
+				statAreas[i].path.setStyle({
+					color: colorValue,
+					fillColor: colorValue
+				});
+				statAreas[i].color = colorValue;
 			}
 			
 			if (statAreas[i].type == "circle") {
@@ -863,3 +876,7 @@ $(document)
      spinner.stop();
 	 //console.log("all done");
   });
+
+$(function(){
+	$('#color_picker_div').colorpicker();
+});

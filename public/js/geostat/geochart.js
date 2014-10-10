@@ -14,7 +14,7 @@ var geochart = {
 		for (var i = 0; i < series.length; i++) {
 			series[i].remove( false );
 		}
-		chart.redraw(true);
+		chart.redraw();
 	},
 	addChartSeries: function(counts, name) {
 		var chart = $("#chart_container").highcharts();
@@ -73,8 +73,12 @@ var geochart = {
 		//console.log(chart.xAxis.length);
         chart.xAxis[0].setCategories(categories, false);
 		//console.log("setCategories called");
-		
+		// chart.addAxis({
+			// categories: categories
+		// }, true);
+		// chart.xAxis[0].remove(false);
 		//console.log("calling chart.redraw();");
+		
 		chart.redraw();
 		//console.log("called chart.redraw();");
 	},
@@ -93,6 +97,17 @@ var geochart = {
 				}
 			}
 		}
+	},
+	recolorSeries: function(seriesName, color) {
+		var chart = $("#chart_container").highcharts();
+		for (var i = 0; i < chart.series.length; i++) {
+			if (chart.series[i].name == seriesName) {
+				chart.series[i].update({
+					color: color
+				});
+				break;
+			}
+		}
 	}
 }
 
@@ -103,7 +118,8 @@ $(function() {
 			borderWidth: 1,
 			style: {
 				'-webkit-backface-visibility': 'hidden' // due to chrome 37 "Layer squashing issues"
-			}
+			},
+			//marginBottom: 200
         },
         title: {
             text: 'Alueiden tilastot'
@@ -112,9 +128,16 @@ $(function() {
 			noData: 'Et ole valinnut kartasta alueita' // vaihtoehtoisesti näytä teksti "et ole valinnut yhtään verrattavaa kategoriaa"
 		},
 		xAxis: {
-			categories: []
+			categories: [],
+			labels: {
+				//step: 1,
+				//overflow: 'justify'
+				//rotation: -45,
+				//align: 'right'
+			}
 		},
 		yAxis: {
+			min: 0,
             title: {
                 text: 'Lukumäärä'
             }
