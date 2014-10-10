@@ -1,8 +1,40 @@
 
-function StatArea(path, type, marker, selected, name, radius, color) {
-	this.path = path;
+var statAreaColors = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', 
+   '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'];
+   
+var statAreaCount = 0;
+
+var center_icon = L.icon({
+  iconUrl: '/images/center_icon.png',
+  iconSize: [20, 20],
+  iconAnchor: [9, 9]
+});
+
+function StatArea(type, latLng, selected, name, radius, map) {
 	this.type = type;
-	this.marker = marker;
+	
+	var color = statAreaColors[statAreaCount % statAreaColors.length];
+	
+	if (this.type == "circle") {
+		this.path = L.circle(latLng, INITIAL_AREA_RADIUS, {
+			color: color,
+			weight: 5,
+			fillColor: color,
+			fillOpacity: 0.5
+		}).addTo(map);
+	} else {
+		var latLngBounds = getlatLngBounds(latLng, INITIAL_AREA_RADIUS, INITIAL_AREA_RADIUS);
+		this.path = L.rectangle(latLngBounds, {
+			color: color,
+			weight: 5,
+			fillColor: color,
+			fillOpacity: 0.5
+		}).addTo(map);
+	}
+		
+	statAreaCount++;
+	
+	this.marker = this.createCenterMarker(latLng, map, this);
 	this.selected = selected;
 	this.name = name;
 	if (type == "circle") {
@@ -15,6 +47,7 @@ function StatArea(path, type, marker, selected, name, radius, color) {
 	this.color = color;
 	
 	this.dataLayers = [];
+
 }
 
 StatArea.prototype.isLatLngInsidePath = function(latlng) {
@@ -27,15 +60,16 @@ StatArea.prototype.isLatLngInsidePath = function(latlng) {
 }
 
 StatArea.prototype.rename = function(newName) {
-	name = newName;
+	this.name = newName;
 }
 
 StatArea.prototype.getInfoText = function() {
 
 	var center = this.path.getBounds().getCenter();
 
-	return "<p><i>Voit raahata alueen toiseen paikkaan tästä.</i></p>" +
-		"<p>Alueen keskipiste:<br>(leveys, pituus) = (" + center.lat.toFixed(6) + ", " + center.lng.toFixed(6) + ")</p>";
+	return "<p><i>Voit raahata alueen toiseen paikkaan hiirellä.</i></p>" +
+		"<p>Nimi: " + this.name +
+		"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(leveys, pituus) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")</p>";
 }
 
 StatArea.prototype.createMapLayer = function(map, category, geoJsonObject) {
@@ -128,3 +162,164 @@ StatArea.prototype.removeMapLayers = function(map) {
 	
 	this.dataLayers = [];
 }
+
+StatArea.prototype.createCenterMarker = function(latLng, map, statArea) {
+	var marker = L.marker(latLng, { icon: center_icon, draggable:'true' }).addTo(map);
+	//marker.bindPopup("leveys: " + INITIAL_LAT + ", pituus: " + INITIAL_LON);
+	marker.bindPopup("Alue " + statAreaCount);
+
+	if (this.type == 'circle') {
+		marker.on('drag', function(event){
+			var position = event.target.getLatLng();
+			statArea.path.setLatLng(position);
+			var text = statArea.getInfoText();
+			featureInfoControl.update(text);
+		});
+	}
+	else { // rectangle
+		marker.on('drag', function(event){
+			var position = event.target.getLatLng();
+			var latLngBounds = getlatLngBounds(position, statArea.latRadius, statArea.lngRadius);
+			statArea.path.setBounds(latLngBounds);
+			var text = statArea.getInfoText();
+			featureInfoControl.update(text);
+		});
+	}
+	marker.on('mouseover', function(event) {
+		var text = statArea.getInfoText();
+		featureInfoControl.update(text);
+	});
+	marker.on('mouseout', function(event) {
+		featureInfoControl.update();
+	});
+	
+	statAreas.push(statArea);
+
+	marker.on('click', function(event){
+		for(var i = 0; i < statAreas.length; i++) {
+			if (statAreas[i].marker == this) {
+				found = true;
+				statAreas[i].path.setStyle({
+					weight: 5
+				})
+				statAreas[i].selected = true;
+				$("#delete_button").removeAttr("disabled");
+			}
+			else {
+				if (!ctrlKeyPressed && statAreas[i].selected) {
+					statAreas[i].path.setStyle({
+						weight: 2
+					})
+					statAreas[i].selected = false;
+				}
+			}
+		}
+		checkSelectedAreas();
+	});
+
+	marker.on('dragend', function(event){
+		var position = event.target.getLatLng();
+		for(var i = 0; i < statAreas.length; i++) {
+			if (statAreas[i].marker == this) {
+				if (statAreas[i].type == "circle") {
+					statAreas[i].path.setLatLng(position);
+				}
+				else {
+					var latLngBounds = getlatLngBounds(position, statAreas[i].latRadius, statAreas[i].lngRadius);
+					statAreas[i].path.setBounds(latLngBounds);
+				}
+				found = true
+				statAreas[i].path.setStyle({
+					weight: 5
+				})
+				statAreas[i].selected = true;
+				if (statAreas[i].type == "circle") {
+					console.log("updateDataOnArea", position.lat, position.lng);
+					statArea.updateDataOnArea(position.lat, position.lng, { radius: statAreas[i].path.getRadius() });
+				}
+				else {
+					var latLngBounds = statAreas[i].path.getBounds();
+					statArea.updateDataOnArea(position.lat, position.lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
+				}
+				$("#delete_button").removeAttr("disabled");
+			}
+			else {
+				if (!ctrlKeyPressed && statAreas[i].selected) {
+					statAreas[i].path.setStyle({
+						weight: 2
+					})
+					statAreas[i].selected = false;
+				}
+			}
+		}
+		checkSelectedAreas();
+	});
+	
+	return marker;
+}
+
+StatArea.prototype.getDataOnArea = function() {
+
+	var sizeFilter = null;
+	if (this.type == "circle") {
+		sizeFilter = { radius: this.path.getRadius() };
+	}
+	else {
+		var latLngBounds = this.path.getBounds();
+		sizeFilter = { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() };
+	}
+
+	var valueArray = Array.apply(null, new Array(selectedCategories.length)).map(Number.prototype.valueOf,0); // array of zeros
+	
+	var series = geochart.addChartSeries(valueArray, this.name);
+
+	for (var i = 0; i < selectedCategories.length; i++) {
+		this.getDataOnCategory(selectedCategories[i], this.marker.getLatLng().lat, this.marker.getLatLng().lng, sizeFilter);
+	}
+}
+
+StatArea.prototype.updateDataOnArea = function() {
+	
+	this.removeMapLayers(map);
+	
+	var sizeFilter = null;
+	if (this.type == "circle") {
+		sizeFilter = { radius: this.path.getRadius() };
+	}
+	else {
+		var latLngBounds = this.path.getBounds();
+		sizeFilter = { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() };
+	}
+	
+	for (var i = 0; i < selectedCategories.length; i++) {
+		this.getDataOnCategory(selectedCategories[i], this.marker.getLatLng().lat, this.marker.getLatLng().lng, sizeFilter);
+	}
+}
+
+StatArea.prototype.getDataOnCategory = function(category) {
+	
+	var sizeFilter = null;
+	if (this.type == "circle") {
+		sizeFilter = { radius: this.path.getRadius() };
+	}
+	else {
+		var latLngBounds = this.path.getBounds();
+		sizeFilter = { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() };
+	}
+	
+	// var n = Math.floor((Math.random() * 100) + 1);
+	// console.log("Alue: " + this.name + ", kategoria: " + category.name + ", count: " + n);
+	// geochart.updateSeriesCategory(category.name, this.name, n);
+	
+	var statArea = this;
+	
+	$.getJSON("/tredata.json", { dataSetName: category.internalName, sizeFilter: JSON.stringify(sizeFilter), lat: this.marker.getLatLng().lat, lon: this.marker.getLatLng().lng }, function(response) {
+		parsed_response = JSON.parse(response);
+		console.log(category.internalName, "N of features: " + parsed_response.totalFeatures);
+		
+		geochart.updateSeriesCategory(category.name, statArea.name, parsed_response.totalFeatures);
+		
+		statArea.createMapLayer(map, category, parsed_response);
+	});
+}
+
