@@ -35,6 +35,20 @@ function addMetersToLng(latLng, meters) {
 	return latLngInWGS84[0];
 }
 
+function subtractMetersFromLat(latLng, meters) {
+	var latLngInETRS = proj4(wgs84Proj4, etrsgk24Proj4, [latLng.lng, latLng.lat]);
+	var newLatInETRS = latLngInETRS[1] - meters;
+	var latLngInWGS84 = proj4(etrsgk24Proj4, wgs84Proj4, [latLngInETRS[0], newLatInETRS]);
+	return latLngInWGS84[1];
+}
+
+function subtractMetersFromLng(latLng, meters) {
+	var latLngInETRS = proj4(wgs84Proj4, etrsgk24Proj4, [latLng.lng, latLng.lat]);
+	var newLngInETRS = latLngInETRS[0] - meters;
+	var latLngInWGS84 = proj4(etrsgk24Proj4, wgs84Proj4, [newLngInETRS, latLngInETRS[1]]);
+	return latLngInWGS84[0];
+}
+
 //
 // Distance constant from http://gis.stackexchange.com/questions/19760/how-do-i-calculate-the-bounding-box-for-given-a-distance-and-latitude-longitude
 //
@@ -77,7 +91,7 @@ function getlatLngBounds(latLng, latRadiusInMeters, lngRadiusInMeters) {
 //
 // From http://stackoverflow.com/questions/27928/how-do-i-calculate-distance-between-two-latitude-longitude-points
 //
-function getDistanceFromLatLonInMeters(lat1,lon1,lat2,lon2) {
+function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
   var R = 6371*1000; // Radius of the earth in m
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
   var dLon = deg2rad(lon2-lon1); 
