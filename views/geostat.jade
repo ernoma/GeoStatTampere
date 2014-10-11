@@ -8,6 +8,7 @@ html(lang='fi')
 		link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
 		link(rel='stylesheet', href='/stylesheets/bootstrap-table.min.css')
+		link(rel='stylesheet', href='/stylesheets/jquery-ui.min.css')
 		link(rel='stylesheet', href='/stylesheets/leaflet.css')
 		link(rel='stylesheet', href='/stylesheets/geostat.css')
 		link(rel='stylesheet', href='/stylesheets/leaflet-search.min.css')
@@ -30,11 +31,11 @@ html(lang='fi')
 						#spinner
 		
 			div(class='tab-content')
-				#home(class='tab-pane active')
-					div(class="panel panel-default")
-						div(class="panel-body")
+				#home(class='tab-pane active map_pane')
+					div(class="panel panel-default map_panel")
+						div(class="panel-body map_panel_body")
 							
-							div(class='row')
+							#map_row(class='row map_row')
 								#map_wrapper
 									#map_canvas
 				
@@ -50,7 +51,7 @@ html(lang='fi')
 											a(href="#" id='area_rectangle_button')
 												img(id='area_rectangle_button_img' src='images/primary_box_button_rectangle.png' alt='suorakulmio')
 												
-							div(class='row')
+							#chart_row(class='row chart_row')
 								#chart_container
 					
 				#data_selections_div(class='tab-pane')
@@ -222,6 +223,7 @@ html(lang='fi')
 						button(type="button" class="btn btn-primary" id="area_edit_save_button" data-dismiss="modal") Tallenna muutokset
 						
 		script(type='text/javascript', src='js/jquery-2.1.1.min.js')
+		script(type='text/javascript', src='js/jquery-ui.min.js')
 		script(type='text/javascript', src='js/bootstrap.min.js')
 		script(type='text/javascript', src='js/bootstrap-table.min.js')
 		script(type='text/javascript', src='js/leaflet.js')

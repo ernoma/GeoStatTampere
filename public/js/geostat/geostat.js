@@ -188,3 +188,39 @@ $(document)
 	 //console.log("all done");
   });
 
+$('#map_row').resizable({
+	handles: 's', 
+	resize: function(event, ui) {
+		var mapHeight = ui.element.height();
+		var parentHeight = ui.element.parent().height();
+		$('#chart_row').css('height', (parentHeight - mapHeight) + 'px');
+		var chart = $("#chart_container").highcharts();
+		chart.reflow();
+		map.invalidateSize();
+	}
+});
+
+$( window ).resize( function(e) {
+	//$('#map_row').redraw();
+	if (e.target == window) {
+		var mapHeight =  $('#map_row').height();
+		var chartHeight = $('#chart_row').height();
+		var parentHeight = $('#map_row').parent().height();
+		$('#map_row').css('height', (parentHeight / 2) + 'px');
+		$('#chart_row').css('height', (parentHeight / 2) + 'px');
+		var chart = $("#chart_container").highcharts();
+		chart.reflow();
+		map.invalidateSize();
+		
+		// if (mapHeight > chartHeight) {
+			// var division = chartHeight / mapHeight;
+			// $('#map_row').css('height', (parentHeight * (1 - division)) + 'px');
+			// $('#chart_row').css('height', (parentHeight * division) + 'px');
+		// }
+		// else {
+			// var division = mapHeight / chartHeight;
+			// $('#chart_row').css('height', (parentHeight * (1 - division)) + 'px');
+			// $('#map_row').css('height', (parentHeight * division) + 'px');
+		// }
+	}
+});
