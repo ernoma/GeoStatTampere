@@ -47,7 +47,6 @@ function StatArea(type, latLng, selected, name, radius, map) {
 	this.color = color;
 	
 	this.dataLayers = [];
-
 }
 
 StatArea.prototype.isLatLngInsidePath = function(latlng) {
@@ -59,10 +58,66 @@ StatArea.prototype.isLatLngInsidePath = function(latlng) {
 	}
 }
 
-StatArea.prototype.rename = function(newName) {
-	this.name = newName;
+StatArea.prototype.select = function() {
+	this.path.setStyle({
+		weight: 5
+	});
+	this.selected = true;
 }
 
+StatArea.prototype.unselect = function() {			
+	this.path.setStyle({
+		weight: 2
+	});
+	this.selected = false;
+}
+
+StatArea.prototype.rename = function(newName) {
+	this.name = newName;
+	this.marker.setPopupContent(newName);
+}
+
+StatArea.prototype.changeColor = function(colorValue) {
+	this.path.setStyle({
+		color: colorValue,
+		fillColor: colorValue
+	});
+	this.color = colorValue;
+}
+	
+StatArea.prototype.setRadius = function(newRadius) {
+	this.path.setRadius(newRadius);
+}
+	
+StatArea.prototype.setSize = function(newWidth, newHeight) {
+	this.lngRadius = newWidth / 2;
+	this.latRadius = newHeight / 2;
+	var latLngBounds = getlatLngBounds(this.marker.getLatLng(), this.latRadius, this.lngRadius);
+	//console.log("marker.getLatLng(): " + this.marker.getLatLng());
+	//console.log("latLngBounds: " + this.latLngBounds.getSouthWest() + ', ' + this.latLngBounds.getNorthEast());
+	this.path.setBounds(latLngBounds);
+}
+
+StatArea.prototype.getRadius = function() {
+	return this.path.getRadius();
+}
+	
+StatArea.prototype.getWidth = function() {
+	return this.lngRadius * 2;
+}
+
+StatArea.prototype.getHeight = function() {
+	return this.latRadius * 2;
+}
+
+StatArea.prototype.isSameSize = function(newWidth, newHeight) {
+	return newWidth == this.lngRadius * 2 && newHeight == this.latRadius * 2;
+}
+
+StatArea.prototype.isSameRadius = function(newRadius) {
+	return newRadius == this.path.getRadius();
+}
+	
 StatArea.prototype.getInfoText = function() {
 
 	var center = this.path.getBounds().getCenter();
@@ -144,8 +199,14 @@ StatArea.prototype.createMapLayer = function(map, category, geoJsonObject) {
 	layerGroup.addTo(map);
 }
 
+StatArea.prototype.remove = function(map) {
+	map.removeLayer(this.path);
+	map.removeLayer(this.marker);
+	
+	this.removeAllDataLayers(map);
+}
 
-StatArea.prototype.removeMapLayer = function(map, name) {
+StatArea.prototype.removeDataLayer = function(map, name) {
 	for (var i = 0; i < this.dataLayers.length; i++) {
 		if (this.dataLayers[i].name == name) {
 			map.removeLayer(this.dataLayers[i].layer);
@@ -155,7 +216,7 @@ StatArea.prototype.removeMapLayer = function(map, name) {
 	}
 }
 
-StatArea.prototype.removeMapLayers = function(map) {
+StatArea.prototype.removeAllDataLayers = function(map) {
 	for (var i = 0; i < this.dataLayers.length; i++) {
 		map.removeLayer(this.dataLayers[i].layer);
 	}
@@ -280,7 +341,7 @@ StatArea.prototype.getDataOnArea = function() {
 
 StatArea.prototype.updateDataOnArea = function() {
 	
-	this.removeMapLayers(map);
+	this.removeAllDataLayers(map);
 	
 	var sizeFilter = null;
 	if (this.type == "circle") {

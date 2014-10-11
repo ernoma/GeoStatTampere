@@ -6,17 +6,6 @@ var wgs84Proj4 = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs';
 var etrsgk24Proj4 = '+proj=tmerc +lat_0=0 +lon_0=24 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs';
 
 var statAreas = [];
-
-var dataTableColumns = [
-	{field: 'state', checkbox: true},
-	{field: 'name', title: 'Aineisto', sortable: true},
-	{field: 'producer', title: 'Tuottaja', sortable: true},
-	{field: 'keyword1', title: 'Avainsana 1', sortable: true},
-	{field: 'keyword2', title: 'Avainsana 2', sortable: true},
-	{field: 'note', title: 'Huomiot', sortable: false},
-	{field: 'mapSymbol', title: 'Karttamerkinnät', sortable: false, halign: 'center'}
-];
-
 var selectedCategories = [];
 
 var osmLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -89,6 +78,16 @@ $( document ).ready(function() {
 		// cardView = true;
 	// }
 	
+	var dataTableColumns = [
+		{field: 'state', checkbox: true},
+		{field: 'name', title: 'Aineisto', sortable: true},
+		{field: 'producer', title: 'Tuottaja', sortable: true},
+		{field: 'keyword1', title: 'Avainsana 1', sortable: true},
+		{field: 'keyword2', title: 'Avainsana 2', sortable: true},
+		{field: 'note', title: 'Huomiot', sortable: false},
+		{field: 'mapSymbol', title: 'Karttamerkinnät', sortable: false, halign: 'center'}
+	];
+	
 	$('#data_selections_table').bootstrapTable({
 		cardView: cardView,
 		columns: dataTableColumns,
@@ -118,7 +117,7 @@ $( document ).ready(function() {
 			}
 			console.log('selectedCategories', selectedCategories);
 			for (var i = 0; i < statAreas.length; i++) {
-				statAreas[i].removeMapLayer(map, row.name);
+				statAreas[i].removeDataLayer(map, row.name);
 			}
 			geochart.removeCategory(row.name);
 		},
@@ -140,13 +139,7 @@ $( document ).ready(function() {
 					geochart.addCategory(categories[i].name);
 					
 					for (var j = 0; j < statAreas.length; j++) {
-						if (statAreas[j].type == "circle") {
-							statAreas[j].getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[j].marker.getLatLng().lat, statAreas[j].marker.getLatLng().lng, { radius: statAreas[j].path.getRadius() });
-						}
-						else {
-							var latLngBounds = statAreas[j].path.getBounds();
-							statAreas[j].getDataOnCategory(selectedCategories[selectedCategories.length-1], statAreas[j].marker.getLatLng().lat, statAreas[j].marker.getLatLng().lng, { east: latLngBounds.getEast(), south: latLngBounds.getSouth(), west: latLngBounds.getWest(), north: latLngBounds.getNorth() });
-						}
+						statAreas[j].getDataOnCategory(selectedCategories[selectedCategories.length-1]);
 					}
 				}
 			}
@@ -154,7 +147,7 @@ $( document ).ready(function() {
 		onUncheckAll: function() {
 			//console.log('onUncheckAll');
 			for (var i = 0; i < statAreas.length; i++) {
-				statAreas[i].removeMapLayers(map);
+				statAreas[i].removeAllDataLayers(map);
 			}
 			for (var i = 0; i < selectedCategories.length; i++) {
 				geochart.removeCategory(selectedCategories[i].name);
@@ -163,7 +156,7 @@ $( document ).ready(function() {
 		}
 	});
 	
-	$('#data_selections_table').bootstrapTable('checkAll');
+	//$('#data_selections_table').bootstrapTable('checkAll');
 });
 
 var spinnerOpts = {

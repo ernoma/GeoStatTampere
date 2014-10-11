@@ -47,29 +47,16 @@ function onMapClick(e) {
 	for(var i = 0; i < statAreas.length; i++) {
 		if (statAreas[i].isLatLngInsidePath(e.latlng)) {
 			found = true;
-			// TODO
-			
-			statAreas[i].path.setStyle({
-				weight: 5
-			});
-			statAreas[i].selected = true;
-		
+			statAreas[i].select();
 		}
 		else {
 			if (!ctrlKeyPressed && statAreas[i].selected) {
-				statAreas[i].path.setStyle({
-					weight: 2
-				});
-				statAreas[i].selected = false;
+				statAreas[i].unselect();
 			}
 		}
 	}
 	
 	if (!found) {
-		
-		var circle = null;
-		var rectangle = null;
-		
 		var statArea = new StatArea(
 			area_circle_tool_selected ? "circle" : "rectangle",
 			e.latlng,
@@ -125,29 +112,27 @@ $('#home').keyup(function(e){
 
 function deleteSelectedAreas() {
 	
-	var updateStatAreas = [];
+	var updatedStatAreas = [];
 	var removedAreas = [];
 	
 	for(var i = 0; i < statAreas.length; i++) {
 		console.log(statAreas);
 		if (statAreas[i].selected) {
-			statAreas[i].removeMapLayers(map);
-			map.removeLayer(statAreas[i].path);
-			map.removeLayer(statAreas[i].marker);
+			statAreas[i].remove(map);
 			removedAreas.push(statAreas[i]);
 		}
 		else {
-			updateStatAreas.push(statAreas[i]);
+			updatedStatAreas.push(statAreas[i]);
 		}
 	}
 	
 	geochart.removeChartSeries(removedAreas);
 	
-	statAreas = updateStatAreas;
+	statAreas = updatedStatAreas;
 	
 	$("#area_edit_button").attr("disabled", "disabled");
 	$("#delete_button").attr("disabled", "disabled");
-	if(updateStatAreas.length == 0) {
+	if(updatedStatAreas.length == 0) {
 		$("#delete_all_button").attr("disabled", "disabled");
 	}
 }
@@ -155,9 +140,7 @@ function deleteSelectedAreas() {
 function deleteAllAreas() {
 
 	for(var i = 0; i < statAreas.length; i++) {
-		statAreas[i].removeMapLayers(map);
-		map.removeLayer(statAreas[i].path);
-		map.removeLayer(statAreas[i].marker);
+		statAreas[i].remove(map);
 	}
 	
 	geochart.removeChartSeries(statAreas);
@@ -184,7 +167,7 @@ $('#area_edit_button').click(function(e) {
 				$('#area_edit_rectangle_size_div').removeClass('show');
 				$('#area_edit_rectangle_size_div').addClass('hidden');
 				$('#area_edit_circle_size_div').addClass('show');
-				$('#area_edit_radius').val(statAreas[i].path.getRadius());
+				$('#area_edit_radius').val(statAreas[i].getRadius());
 				break;
 			}
 			else {
@@ -192,8 +175,8 @@ $('#area_edit_button').click(function(e) {
 				$('#area_edit_rectangle_size_div').removeClass('hidden');
 				$('#area_edit_circle_size_div').addClass('hidden');
 				$('#area_edit_rectangle_size_div').addClass('show');
-				$('#area_edit_width').val(statAreas[i].lngRadius * 2);
-				$('#area_edit_height').val(statAreas[i].latRadius * 2);
+				$('#area_edit_width').val(statAreas[i].getWidth());
+				$('#area_edit_height').val(statAreas[i].getHeight());
 				break;
 			}
 		}
@@ -209,22 +192,17 @@ $('#area_edit_button').click(function(e) {
 			if (statAreas[i].name != newName) {
 				geochart.renameChartSeries(statAreas[i].name, newName);
 				statAreas[i].rename(newName);
-				statAreas[i].marker.setPopupContent(newName);
 			}
 			var colorValue = $('#area_edit_color').val();
 			if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(colorValue) && colorValue != statAreas[i].color) {
 				geochart.recolorSeries(statAreas[i].name, colorValue);
-				statAreas[i].path.setStyle({
-					color: colorValue,
-					fillColor: colorValue
-				});
-				statAreas[i].color = colorValue;
+				statAreas[i].changeColor(colorValue);
 			}
 			
 			if (statAreas[i].type == "circle") {
 				var newRadius = parseInt($('#area_edit_radius').val());
-				if (!isNaN(newRadius) && newRadius > 0 && newRadius != statAreas[i].path.getRadius()) {
-					statAreas[i].path.setRadius(newRadius);
+				if (!isNaN(newRadius) && newRadius > 0 && !statAreas[i].isSameRadius()) {
+					statAreas[i].setRadius(newRadius);
 					statAreas[i].updateDataOnArea();
 				}
 				else {
@@ -236,13 +214,8 @@ $('#area_edit_button').click(function(e) {
 				var newHeight =  parseInt($('#area_edit_height').val());
 				if (!isNaN(newWidth) && newWidth > 0 &&
 					!isNaN(newHeight) && newHeight > 0 &&
-					(newWidth != statAreas[i].lngRadius * 2 || newHeight != statAreas[i].latRadius * 2)) {
-					statAreas[i].lngRadius = newWidth / 2;
-					statAreas[i].latRadius = newHeight / 2;
-					var latLngBounds = getlatLngBounds(statAreas[i].marker.getLatLng(), statAreas[i].latRadius, statAreas[i].lngRadius);
-					console.log("marker.getLatLng(): " + statAreas[i].marker.getLatLng());
-					console.log("latLngBounds: " + latLngBounds.getSouthWest() + ', ' + latLngBounds.getNorthEast());
-					statAreas[i].path.setBounds(latLngBounds);
+					!statAreas[i].isSameSize(newWidth, newHeight)) {
+					statAreas[i].setSize(newWidth, newHeight);
 					statAreas[i].updateDataOnArea();
 				}
 				else {
