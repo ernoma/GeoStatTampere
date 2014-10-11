@@ -1,4 +1,7 @@
 
+var wgs84Proj4 = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs';
+var etrsgk24Proj4 = '+proj=tmerc +lat_0=0 +lon_0=24 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs';
+
 function is_inside_circle(latlng, circle) {
 
 	var lat1 = latlng.lat;
@@ -16,6 +19,20 @@ function is_inside_circle(latlng, circle) {
 
 function is_inside_rectangle(latlng, rectangle) {
 	return rectangle.getBounds().contains(latlng);
+}
+
+function addMetersToLat(latLng, meters) {
+	var latLngInETRS = proj4(wgs84Proj4, etrsgk24Proj4, [latLng.lng, latLng.lat]);
+	var newLatInETRS = latLngInETRS[1] + meters;
+	var latLngInWGS84 = proj4(etrsgk24Proj4, wgs84Proj4, [latLngInETRS[0], newLatInETRS]);
+	return latLngInWGS84[1];
+}
+
+function addMetersToLng(latLng, meters) {
+	var latLngInETRS = proj4(wgs84Proj4, etrsgk24Proj4, [latLng.lng, latLng.lat]);
+	var newLngInETRS = latLngInETRS[0] + meters;
+	var latLngInWGS84 = proj4(etrsgk24Proj4, wgs84Proj4, [newLngInETRS, latLngInETRS[1]]);
+	return latLngInWGS84[0];
 }
 
 //
