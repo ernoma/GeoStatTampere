@@ -52,10 +52,39 @@ var treBaseLayer = L.tileLayer.wms('http://opendata.navici.com/tampere/ows?servi
 	version: '1.3.0'
 });
 
+var baseMapIdentifiers = [{
+	name: "osm",
+	layer: osmLayer
+	}, {
+	name: "cycle",
+	layer: osmCycleLayer
+	}, {
+	name: "mapbox",
+	layer: mapBoxLayer
+	}, {
+	name: "mapquest",
+	layer: mapQuestLayer
+	}, {
+	name: "stamen",
+	layer: stamenTonerLayer
+	}, {
+	name: "orto",
+	layer: mmlOrtoLayer
+	}, {
+	name: "treguide",
+	layer: treGuideLayer
+	}, {
+	name: "trebase",
+	layer: treBaseLayer
+	}
+];
+
 var map = L.map('map_canvas', {layers: [osmLayer]}).setView([INITIAL_LAT, INITIAL_LON], 13);
 
 map.on('zoomend', function(e) {
 	console.log("zoom: " + map.getZoom());
+	
+	handleHistory("zoom");
 });
 
 $('#home .tab_switch_a a').click(function (e) {
@@ -226,5 +255,114 @@ $( window ).resize( function(e) {
 			// $('#chart_row').css('height', (parentHeight * (1 - division)) + 'px');
 			// $('#map_row').css('height', (parentHeight * division) + 'px');
 		// }
+	}
+});
+
+function handleHistory(type, data) {
+
+	// TODO
+	// - get and set map center
+	// - areas
+	// - selected categories
+	// - handler page load with url params
+
+	//console.log("location", location);
+	
+	var params = [];
+	if (location.search != undefined && location.search != null && location.search != '') {
+		params = location.search.substring(1).split('&');
+	}
+	var newHistoryString = "?";
+	var found = false;
+	var wasEqual = false;
+	for (var i = 0; i < params.length; i++) {
+		switch (type) {
+			case 'zoom':
+				if (params[i].indexOf('zoom=') != -1) {
+					newHistoryString += "zoom=" + map.getZoom();
+					found = true;
+					if (params[i].split('=')[1] == map.getZoom()) {
+						wasEqual = true;
+					}
+				}
+				else {
+					newHistoryString += params[i];
+				}
+				break;
+			case 'basemap':
+				if (params[i].indexOf('basemap=') != -1) {
+					var mapName = "";
+					for (var j = 0; j < baseMapIdentifiers.length; j++) {
+						if (baseMapIdentifiers[j].layer == data) {
+							mapName = baseMapIdentifiers[j].name;
+							break;
+						}
+					}
+					newHistoryString += "basemap=" + mapName;
+					found = true;
+					if (params[i].split('=')[1] == mapName) {
+						wasEqual = true;
+					}
+				}
+				else {
+					newHistoryString += params[i];
+				}
+				break;
+		}
+		if (i < params.length - 1 || (i == params.length - 1 && !found)) {
+			newHistoryString += '&';
+		}
+	}
+	if (!found) {
+		switch (type) {
+			case 'zoom':
+				newHistoryString += "zoom=" + map.getZoom();
+				break;
+			case 'basemap':
+				var mapName = "";
+				for (var j = 0; j < baseMapIdentifiers.length; j++) {
+					if (baseMapIdentifiers[j].layer == data) {
+						mapName = baseMapIdentifiers[j].name;
+						break;
+					}
+				}
+				newHistoryString += "basemap=" + mapName;
+				break;
+		}
+	}
+	if (!wasEqual) {
+		history.pushState(newHistoryString, '', newHistoryString);
+	}
+
+	console.log("history.state", history.state);
+	console.log("location.search", location.search);
+}
+
+$(window).bind('popstate', function(event) {
+	console.log('popstate');
+	console.log("history.state", history.state);
+	console.log("location.search", location.search);
+	
+	var params = [];
+	if (location.search != undefined && location.search != null && location.search != '') {
+		params = location.search.substring(1).split('&');
+	}
+	for (var i = 0; i < params.length; i++) {
+		var keyValPair = params[i].split('=');
+		switch (keyValPair[0]) {
+			case 'zoom':
+				map.setZoom(keyValPair[1]);
+				break;
+			case 'basemap':
+				for (var j = 0; j < baseMapIdentifiers.length; j++) {
+					if (baseMapIdentifiers[j].name == keyValPair[1]) {
+						baseMapIdentifiers[j].layer.addTo(map);
+					}
+					else {
+						map.removeLayer(baseMapIdentifiers[j].layer);
+					}
+				}
+				break;
+		}
 	}
 });

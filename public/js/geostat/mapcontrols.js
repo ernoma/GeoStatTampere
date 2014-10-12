@@ -20,7 +20,10 @@ L.control.layers(baseMaps).addTo(map);
 
 map.on('baselayerchange', function(event) {
 	// console.log('baselayerchange');
-	// console.log(event.layer);
+	//console.log(event.layer);
+	
+	handleHistory('basemap', event.layer);
+	
 	if (event.layer.options.maxZoom < map.getZoom()) {
 		map.setZoom(event.layer.options.maxZoom);
 	}
