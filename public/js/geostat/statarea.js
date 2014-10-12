@@ -19,29 +19,9 @@ var resize_icon = L.icon({
 
 function StatArea(type, latLng, selected, name, radius, map) {
 	this.type = type;
-	
 	var color = statAreaColors[statAreaCount % statAreaColors.length];
-	
-	if (this.type == "circle") {
-		this.path = L.circle(latLng, INITIAL_AREA_RADIUS, {
-			color: color,
-			weight: 5,
-			fillColor: color,
-			fillOpacity: 0.5
-		}).addTo(map);
-	} else {
-		var latLngBounds = getlatLngBounds(latLng, INITIAL_AREA_RADIUS, INITIAL_AREA_RADIUS);
-		this.path = L.rectangle(latLngBounds, {
-			color: color,
-			weight: 5,
-			fillColor: color,
-			fillOpacity: 0.5
-		}).addTo(map);
-	}
-		
-	statAreaCount++;
-	
-	this.marker = this.createCenterMarker(latLng, map);
+	this.color = color;
+	this.dataLayers = [];
 	this.selected = selected;
 	this.name = name;
 	if (type == "circle") {
@@ -51,10 +31,51 @@ function StatArea(type, latLng, selected, name, radius, map) {
 		this.latRadius = radius;
 		this.lngRadius = radius;
 	}
-	this.resizeMarkers = this.createResizeMarkers(map);
-	this.color = color;
+	var statArea = this;
+	if (this.type == "circle") {
+		statArea.path = L.circle(latLng, INITIAL_AREA_RADIUS, {
+			color: color,
+			weight: 5,
+			fillColor: color,
+			fillOpacity: 0.5
+		}).addTo(map);
+		statArea.path.on('mouseover', function(event) {
+			var center = this.getBounds().getCenter();
+			var text = "<p><i>Voit valita alueen klikkaamalla aluetta hiiren painikkeella.</i></p>" +
+				"<p>Nimi: " + statArea.name +
+				"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
+				"<br>Säde: " + this.getRadius() + " m</p>"
+			featureInfoControl.update(text);
+		});
+		statArea.path.on('mouseout', function(event) {
+			featureInfoControl.update();
+		});
+	} else {
+		var latLngBounds = getlatLngBounds(latLng, INITIAL_AREA_RADIUS, INITIAL_AREA_RADIUS);
+		statArea.path = L.rectangle(latLngBounds, {
+			color: color,
+			weight: 5,
+			fillColor: color,
+			fillOpacity: 0.5
+		}).addTo(map);
+		statArea.path.on('mouseover', function(event) {
+			var center = this.getBounds().getCenter();
+			var text = "<p><i>Voit valita alueen klikkaamalla aluetta hiiren painikkeella.</i></p>" +
+				"<p>Nimi: " + statArea.name +
+				"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
+				"<br>Leveys: " + this.lngRadius * 2	+ " m" +
+				"<br>Korkeus: " + this.latRadius * 2	+ " m" + "</p>"
+			featureInfoControl.update(text);
+		});
+		statArea.path.on('mouseout', function(event) {
+			featureInfoControl.update();
+		});
+	}
+		
+	statAreaCount++;
 	
-	this.dataLayers = [];
+	this.marker = this.createCenterMarker(latLng, map);
+	this.resizeMarkers = this.createResizeMarkers(map);
 }
 
 StatArea.prototype.isLatLngInsidePath = function(latlng) {
@@ -130,9 +151,22 @@ StatArea.prototype.getInfoText = function() {
 
 	var center = this.path.getBounds().getCenter();
 
-	return "<p><i>Voit raahata alueen toiseen paikkaan hiirellä.</i></p>" +
+	var text = "";
+	if (this.type == "circle") {
+		text = "<p><i>Voit raahata alueen toiseen paikkaan hiirellä.</i></p>" +
 		"<p>Nimi: " + this.name +
-		"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(leveys, pituus) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")</p>";
+		"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
+		"<br>Säde: " + this.getRadius() + " m</p>"
+	}
+	else {
+		text = "<p><i>Voit raahata alueen toiseen paikkaan hiirellä.</i></p>" +
+		"<p>Nimi: " + this.name +
+		"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
+		"<br>Leveys: " + this.lngRadius * 2	+ " m" +
+		"<br>Korkeus: " + this.latRadius * 2	+ " m" + "</p>"
+	}
+	
+	return text;
 }
 
 StatArea.prototype.createMapLayer = function(map, category, geoJsonObject) {

@@ -11,8 +11,8 @@ function is_inside_circle(latlng, circle) {
 
 	var dist = getDistanceFromLatLonInMeters(lat1, lng1, lat2, lng2);
 	
-	console.log(dist);
-	console.log(circle.getRadius());
+	//console.log(dist);
+	//console.log(circle.getRadius());
 	
 	return dist <= circle.getRadius();
 }
@@ -82,8 +82,8 @@ function getlatLngBounds(latLng, latRadiusInMeters, lngRadiusInMeters) {
 	// console.log("minLng: " + minLng);
 	// console.log("maxLng: " + maxLng);
 	
-	console.log("dist lat: " + getDistanceFromLatLonInMeters(minLat, minLng, maxLat, minLng));
-	console.log("dist lng: " + getDistanceFromLatLonInMeters(minLat, minLng, minLat, maxLng));
+	//console.log("dist lat: " + getDistanceFromLatLonInMeters(minLat, minLng, maxLat, minLng));
+	//console.log("dist lng: " + getDistanceFromLatLonInMeters(minLat, minLng, minLat, maxLng));
 	
 	return L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng));
 }
