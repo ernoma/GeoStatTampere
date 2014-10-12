@@ -18,6 +18,17 @@ var baseMaps = {
 }
 L.control.layers(baseMaps).addTo(map);
 
+map.on('baselayerchange', function(event) {
+	// console.log('baselayerchange');
+	// console.log(event.layer);
+	if (event.layer.options.maxZoom < map.getZoom()) {
+		map.setZoom(event.layer.options.maxZoom);
+	}
+	else if (event.layer.options.minZoom > map.getZoom()) {
+		map.setZoom(event.layer.options.minZoom);
+	}
+});
+
 var featureInfoControl = L.control();
 featureInfoControl.onAdd = function (map) {
 	this._div = L.DomUtil.create('div', 'feature_info'); // create a div with a class "info"
