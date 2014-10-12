@@ -453,8 +453,8 @@ StatArea.prototype.createResizeMarkers = function(map) {
 			statArea.marker.setLatLng(statArea.path.getBounds().getCenter());
 			statArea.latRadius = Math.round(getDistanceFromLatLonInMeters(newSouth, newWest, newNorth, newWest) / 2);
 			statArea.lngRadius = Math.round(getDistanceFromLatLonInMeters(newSouth, newWest, newSouth, newEast) / 2);
-			var text = "Leveys: " + statArea.lngRadius + " m" +
-				"<br>Korkeus: " + statArea.latRadius + " m";
+			var text = "Leveys: " + statArea.lngRadius * 2 + " m" +
+				"<br>Korkeus: " + statArea.latRadius * 2 + " m";
 			featureInfoControl.update(text);
 		});
 		marker.on('dragend', function(event) {
@@ -497,15 +497,15 @@ StatArea.prototype.createResizeMarkers = function(map) {
 			statArea.marker.setLatLng(statArea.path.getBounds().getCenter());
 			statArea.latRadius = Math.round(getDistanceFromLatLonInMeters(newSouth, newWest, newNorth, newWest) / 2);
 			statArea.lngRadius = Math.round(getDistanceFromLatLonInMeters(newSouth, newWest, newSouth, newEast) / 2);
-			var text = "Leveys: " + statArea.lngRadius + " m" +
-				"<br>Korkeus: " + statArea.latRadius + " m";
+			var text = "Leveys: " + statArea.lngRadius * 2 + " m" +
+				"<br>Korkeus: " + statArea.latRadius * 2 + " m";
 			featureInfoControl.update(text);
 			statArea.updateDataOnArea();
 		});
 		marker.on('mouseover', function(event) {
 			var text = "<p><i>Voit raahata suorakulmiota hiirellä suuuremmaksi tai pienemmäksi.</i></p>" +
-				"<p>Leveys: " + statArea.lngRadius + " m" +
-				"<br>Korkeus: " + statArea.latRadius + " m</p>";
+				"<p>Leveys: " + statArea.lngRadius * 2 + " m" +
+				"<br>Korkeus: " + statArea.latRadius * 2 + " m</p>";
 			featureInfoControl.update(text);
 		});
 		marker.on('mouseout', function(event) {
