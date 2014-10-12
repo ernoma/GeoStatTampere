@@ -53,7 +53,7 @@ function onMapClick(e) {
 
 	var found = false;
 	
-	console.log("ctrlKeyPressed: " + ctrlKeyPressed);
+	//console.log("ctrlKeyPressed: " + ctrlKeyPressed);
 	
 	for(var i = 0; i < statAreas.length; i++) {
 		if (statAreas[i].isLatLngInsidePath(e.latlng)) {

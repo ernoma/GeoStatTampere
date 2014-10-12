@@ -125,7 +125,7 @@ $(function() {
             text: 'Alueiden tilastot'
         },
 		lang: {
-			noData: 'Et ole valinnut kartasta alueita' // vaihtoehtoisesti näytä teksti "et ole valinnut yhtään verrattavaa kategoriaa"
+			noData: 'Et ole lisännyt kartalle alueita tai valinnut yhtään näytettävää aineistoa' // vaihtoehtoisesti näytä teksti "et ole valinnut yhtään verrattavaa kategoriaa"
 		},
 		xAxis: {
 			categories: [],
