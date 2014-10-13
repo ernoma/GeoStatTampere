@@ -2,6 +2,9 @@
 var INITIAL_LAT = 61.5;
 var INITIAL_LON = 23.766667;
 
+var DEFAULT_ZOOM = 13;
+var DEFAULT_BASEMAP_NAME = "osm";
+
 var statAreas = [];
 var selectedCategories = [];
 
@@ -136,6 +139,8 @@ $( document ).ready(function() {
 			for (var i = 0; i < statAreas.length; i++) {
 				statAreas[i].getDataOnCategory(selectedCategories[selectedCategories.length-1]);
 			}
+			
+			handleHistory('cat', row.name);
 		},
 		onUncheck: function(row) {
 			//console.log('onUncheck', row);
@@ -150,6 +155,8 @@ $( document ).ready(function() {
 				statAreas[i].removeDataLayer(map, row.name);
 			}
 			geochart.removeCategory(row.name);
+			
+			handleHistory('catremove', row.name);
 		},
 		onCheckAll: function() {
 			//console.log('onCheckAll');
@@ -171,6 +178,8 @@ $( document ).ready(function() {
 					for (var j = 0; j < statAreas.length; j++) {
 						statAreas[j].getDataOnCategory(selectedCategories[selectedCategories.length-1]);
 					}
+					
+					handleHistory('cat', categories[i].name);
 				}
 			}
 		},
@@ -183,6 +192,8 @@ $( document ).ready(function() {
 				geochart.removeCategory(selectedCategories[i].name);
 			}
 			selectedCategories = [];
+			
+			handleHistory('catallremove');
 		}
 	});
 	
@@ -258,111 +269,3 @@ $( window ).resize( function(e) {
 	}
 });
 
-function handleHistory(type, data) {
-
-	// TODO
-	// - get and set map center
-	// - areas
-	// - selected categories
-	// - handler page load with url params
-
-	//console.log("location", location);
-	
-	var params = [];
-	if (location.search != undefined && location.search != null && location.search != '') {
-		params = location.search.substring(1).split('&');
-	}
-	var newHistoryString = "?";
-	var found = false;
-	var wasEqual = false;
-	for (var i = 0; i < params.length; i++) {
-		switch (type) {
-			case 'zoom':
-				if (params[i].indexOf('zoom=') != -1) {
-					newHistoryString += "zoom=" + map.getZoom();
-					found = true;
-					if (params[i].split('=')[1] == map.getZoom()) {
-						wasEqual = true;
-					}
-				}
-				else {
-					newHistoryString += params[i];
-				}
-				break;
-			case 'basemap':
-				if (params[i].indexOf('basemap=') != -1) {
-					var mapName = "";
-					for (var j = 0; j < baseMapIdentifiers.length; j++) {
-						if (baseMapIdentifiers[j].layer == data) {
-							mapName = baseMapIdentifiers[j].name;
-							break;
-						}
-					}
-					newHistoryString += "basemap=" + mapName;
-					found = true;
-					if (params[i].split('=')[1] == mapName) {
-						wasEqual = true;
-					}
-				}
-				else {
-					newHistoryString += params[i];
-				}
-				break;
-		}
-		if (i < params.length - 1 || (i == params.length - 1 && !found)) {
-			newHistoryString += '&';
-		}
-	}
-	if (!found) {
-		switch (type) {
-			case 'zoom':
-				newHistoryString += "zoom=" + map.getZoom();
-				break;
-			case 'basemap':
-				var mapName = "";
-				for (var j = 0; j < baseMapIdentifiers.length; j++) {
-					if (baseMapIdentifiers[j].layer == data) {
-						mapName = baseMapIdentifiers[j].name;
-						break;
-					}
-				}
-				newHistoryString += "basemap=" + mapName;
-				break;
-		}
-	}
-	if (!wasEqual) {
-		history.pushState(newHistoryString, '', newHistoryString);
-	}
-
-	console.log("history.state", history.state);
-	console.log("location.search", location.search);
-}
-
-$(window).bind('popstate', function(event) {
-	console.log('popstate');
-	console.log("history.state", history.state);
-	console.log("location.search", location.search);
-	
-	var params = [];
-	if (location.search != undefined && location.search != null && location.search != '') {
-		params = location.search.substring(1).split('&');
-	}
-	for (var i = 0; i < params.length; i++) {
-		var keyValPair = params[i].split('=');
-		switch (keyValPair[0]) {
-			case 'zoom':
-				map.setZoom(keyValPair[1]);
-				break;
-			case 'basemap':
-				for (var j = 0; j < baseMapIdentifiers.length; j++) {
-					if (baseMapIdentifiers[j].name == keyValPair[1]) {
-						baseMapIdentifiers[j].layer.addTo(map);
-					}
-					else {
-						map.removeLayer(baseMapIdentifiers[j].layer);
-					}
-				}
-				break;
-		}
-	}
-});

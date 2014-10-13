@@ -6,87 +6,87 @@ var request = require('request');
 
 var tampereOpenDataSets = [
 	{
-		internal_name: "car_parking",
+		internal_name: "cp",
 		name: "opendata:KESKUSTAN_PYSAKOINTI_VIEW",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "bike_parking",
+		internal_name: "bp",
 		name: "opendata:PYORAPARKIT_VIEW",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "dog_parking",
+		internal_name: "dp",
 		name: "opendata:WFS_KOIRAPUISTO_MVIEW",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "bus_stops",
+		internal_name: "bs",
 		name: "tampere_ora:BUSSIPYSAKIT",
 		path: "tampere_wfs_geoserver/tampere_ora/ows"
 	},
 	{
-		internal_name: "boat_docks",
+		internal_name: "bd",
 		name: "tampere_iris:WFS_LAITURIPAIKKA",
 		path: "tampere_wfs_geoserver/tampere_iris/ows"
 	},
 	{
-		internal_name: "rowing_boat_docks",
+		internal_name: "rbd",
 		name: "opendata:WFS_SOUTUVENERANTA",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "winter_slides",
+		internal_name: "ws",
 		name: "tampere_iris:WFS_TALVILIUKUPAIKKA",
 		path: "tampere_wfs_geoserver/tampere_iris/ows"
 	},
 	{
-		internal_name: "playing_fields",
+		internal_name: "pf",
 		name: "opendata:WFS_KENTTA_MVIEW",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "skateboarding_areas",
+		internal_name: "sa",
 		name: "opendata:WFS_RULLALAUTAILUALUE_MVIEW",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "playing_grounds",
+		internal_name: "pg",
 		name: "opendata:WFS_LEIKKIPAIKKA_MVIEW",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "elementary_schools",
+		internal_name: "es",
 		name: "opendata:KOULUT",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "daycare_centers",
+		internal_name: "dc",
 		name: "opendata:PAIVAKODIT",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "trashcans",
+		internal_name: "t",
 		name: "opendata:WFS_ROSKIS",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "street_lighting",
+		internal_name: "sl",
 		name: "opendata:WFS_KATUVALO",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "traffic_light_sensors",
+		internal_name: "tls",
 		name: "opendata:WFS_LIIKENNEVALO_ILMAISIN",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	},
 	{
-		internal_name: "bridges",
+		internal_name: "b",
 		name: "tampere_iris:WFS_SILTA",
 		path: "tampere_wfs_geoserver/tampere_iris/ows"
 	},
 	{
-		internal_name: "traffic_light_junction",
+		internal_name: "tlj",
 		name: "opendata:WFS_LIIKENNEVALO_LIITTYMA",
 		path: "tampere_wfs_geoserver/opendata/ows"
 	}

@@ -16,8 +16,10 @@ var resize_icon = L.icon({
   iconAnchor: [4, 4]
 });
 
+var statAreaID = 0;
 
 function StatArea(type, latLng, selected, name, radius, map) {
+	this.id = statAreaID++;
 	this.type = type;
 	var color = statAreaColors[statAreaCount % statAreaColors.length];
 	this.color = color;
@@ -33,7 +35,7 @@ function StatArea(type, latLng, selected, name, radius, map) {
 	}
 	var statArea = this;
 	if (this.type == "circle") {
-		statArea.path = L.circle(latLng, INITIAL_AREA_RADIUS, {
+		statArea.path = L.circle(latLng, radius, {
 			color: color,
 			weight: 5,
 			fillColor: color,
@@ -51,7 +53,7 @@ function StatArea(type, latLng, selected, name, radius, map) {
 			featureInfoControl.update();
 		});
 	} else {
-		var latLngBounds = getlatLngBounds(latLng, INITIAL_AREA_RADIUS, INITIAL_AREA_RADIUS);
+		var latLngBounds = getlatLngBounds(latLng, radius, radius);
 		statArea.path = L.rectangle(latLngBounds, {
 			color: color,
 			weight: 5,
@@ -76,6 +78,68 @@ function StatArea(type, latLng, selected, name, radius, map) {
 	
 	this.marker = this.createCenterMarker(latLng, map);
 	this.resizeMarkers = this.createResizeMarkers(map);
+	
+	handleHistory('area', this);
+}
+
+function createStatAreasFromHistory(historyString) {
+	var statAreaStrings = historyString.split(',');
+	for (var i = 0; i < statAreaStrings.length; i++) {
+		var statArea = createStatAreaFromHistoryString(statAreaStrings[i]);
+		statAreas.push(statArea);
+		statArea.getDataOnArea();
+	}
+}
+
+function createStatAreaFromHistoryString(historyString) {
+	var parts = historyString.split('+');
+	var name = decodeURIComponent(parts[0]);
+	var type = parts[1] == 'c' ? 'circle' : 'rectangle';
+	var decodedLatLng = decodeURIComponent(parts[2]).split(',');
+	var center = L.latLng(parseFloat(decodedLatLng[0]), parseFloat(decodedLatLng[1]));
+	var color = decodeURIComponent(parts[4]);
+	var selected = parts[5] == 't' ? true : false;
+	var statArea;
+	if (type == 'circle') {
+		var radius = parseInt(parts[3]);
+		statArea = new StatArea(type, center, selected, name, radius, map);
+	}
+	else {
+		var radiusParts = decodeURIComponent(parts[3]).split(',');
+		var latRadius = parseInt(radiusParts[0]);
+		var lngRadius = parseInt(radiusParts[1]);
+		statArea = new StatArea(type, center, selected, name, latRadius, map);
+		statArea.lngRadius = lngRadius;
+		statArea.latRadius = latRadius;
+		var latLngBounds = getlatLngBounds(statArea.marker.getLatLng(), statArea.latRadius, statArea.lngRadius);
+		statArea.path.setBounds(latLngBounds);
+	}
+	statArea.id = parseInt(parts[6]);
+	return statArea;
+}
+
+StatArea.prototype.isSameStatArea = function(historyString) {
+	var parts = historyString.split('+');
+	if (this.id == parseInt(parts[6])) {
+		return true;
+	}
+	
+	return false;
+}
+
+StatArea.prototype.getHistoryString = function() {
+	var historyString = encodeURIComponent(this.name) + '+' + (this.type == 'circle' ? 'c' : 'r') + '+' +
+		encodeURIComponent(this.path.getBounds().getCenter().lat + ',' + this.path.getBounds().getCenter().lng) + '+';
+	if (this.type == 'circle') {
+		historyString += this.getRadius();
+	}
+	else {
+		historyString += encodeURIComponent(this.latRadius + ',' + this.lngRadius);
+	}
+	historyString += '+' + encodeURIComponent(this.color);
+	historyString += '+' + (this.selected ? 't' : 'f');
+	historyString += '+' + this.id;
+	return historyString;
 }
 
 StatArea.prototype.isLatLngInsidePath = function(latlng) {
@@ -92,6 +156,8 @@ StatArea.prototype.select = function() {
 		weight: 5
 	});
 	this.selected = true;
+	
+	handleHistory('area', this);
 }
 
 StatArea.prototype.unselect = function() {			
@@ -99,11 +165,15 @@ StatArea.prototype.unselect = function() {
 		weight: 2
 	});
 	this.selected = false;
+	
+	handleHistory('area', this);
 }
 
 StatArea.prototype.rename = function(newName) {
 	this.name = newName;
 	this.marker.setPopupContent(newName);
+	
+	handleHistory('area', this);
 }
 
 StatArea.prototype.changeColor = function(colorValue) {
@@ -112,10 +182,14 @@ StatArea.prototype.changeColor = function(colorValue) {
 		fillColor: colorValue
 	});
 	this.color = colorValue;
+	
+	handleHistory('area', this);
 }
 	
 StatArea.prototype.setRadius = function(newRadius) {
 	this.path.setRadius(newRadius);
+	
+	handleHistory('area', this);
 }
 	
 StatArea.prototype.setSize = function(newWidth, newHeight) {
@@ -125,6 +199,8 @@ StatArea.prototype.setSize = function(newWidth, newHeight) {
 	//console.log("marker.getLatLng(): " + this.marker.getLatLng());
 	//console.log("latLngBounds: " + this.latLngBounds.getSouthWest() + ', ' + this.latLngBounds.getNorthEast());
 	this.path.setBounds(latLngBounds);
+	
+	handleHistory('area', this);
 }
 
 StatArea.prototype.getRadius = function() {
@@ -250,6 +326,8 @@ StatArea.prototype.remove = function(map) {
 	}
 	
 	this.removeAllDataLayers(map);
+	
+	handleHistory('arearemove', this);
 }
 
 StatArea.prototype.removeDataLayer = function(map, name) {
@@ -381,6 +459,8 @@ StatArea.prototype.createCenterMarker = function(latLng, map) {
 				statAreas[i].selected = true;
 				statAreas[i].updateDataOnArea();
 				$("#delete_button").removeAttr("disabled");
+				
+				handleHistory('area', statAreas[i]);
 			}
 			else {
 				if (!ctrlKeyPressed && statAreas[i].selected) {
@@ -428,6 +508,8 @@ StatArea.prototype.createResizeMarkers = function(map) {
 			var text = "Säde: " + newRadius + " m";
 			featureInfoControl.update(text);
 			statArea.updateDataOnArea();
+			
+			handleHistory('area', statArea);
 		});
 		marker.on('mouseover', function(event) {
 			var text = "<p><i>Voit raahata ympyrää hiirellä<br>suuuremmaksi tai pienemmäksi.</i></p>" +
@@ -535,6 +617,8 @@ StatArea.prototype.createResizeMarkers = function(map) {
 				"<br>Korkeus: " + statArea.latRadius * 2 + " m";
 			featureInfoControl.update(text);
 			statArea.updateDataOnArea();
+			
+			handleHistory('area', statArea);
 		});
 		marker.on('mouseover', function(event) {
 			var text = "<p><i>Voit raahata suorakulmiota hiirellä<br>suuuremmaksi tai pienemmäksi.</i></p>" +

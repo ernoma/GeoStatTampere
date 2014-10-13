@@ -185,6 +185,13 @@ html(lang='fi')
 						del koko alueen keski-markkerin kohdalla
 					li
 						del tiedot alueen pathin kohdalla
+				li
+					del jos history.popeventissä locationista ei löydy jotakin parametria, joka oli edellisellä kerralla, niin aseta se oletusasetuksiin
+				li korjaa bugit:
+				ul
+					li Ei voi valita "muokkaa aluetta", jos se ladataan url-locationista
+					li resize marker ei liiku, kun kokoa muuttaa dialogista
+					li resize marker ei liiku ladattaessa historysta
 		
 		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")
 			div(class="modal-dialog modal-sm")
@@ -255,3 +262,5 @@ html(lang='fi')
 		script(type='text/javascript', src='js/geostat/geostat.js')
 		script(type='text/javascript', src='js/geostat/geomath.js')
 		script(type='text/javascript', src='js/geostat/mapcontrols.js')
+		script(type='text/javascript', src='js/geostat/geohistory.js')
+		

@@ -31,6 +31,9 @@ map.on('baselayerchange', function(event) {
 		map.setZoom(event.layer.options.minZoom);
 	}
 });
+map.on('moveend', function(event) {
+	handleHistory('maploc');
+});
 
 var helpControl = L.control();
 helpControl.onAdd = function (map) {
@@ -82,7 +85,7 @@ L.control.scale({
 	imperial: false
 }).addTo(map);
 
-L.popup()
+var startPopup = L.popup()
     .setLatLng([INITIAL_LAT, INITIAL_LON])
     .setContent("Klikkaa karttaa lisätäksesi alueen.")
     .openOn(map);

@@ -1,7 +1,7 @@
 
 var categories = [
 	{
-		internalName: "car_parking",
+		internalName: "cp",
 		name: "Keskustan pysäköintikohteet",
 		producer: "Suunnittelupalvelut / Kaupunkiympäristön kehittäminen",
 		keyword1: "Liikenne",
@@ -49,7 +49,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "bus_stops",
+		internalName: "bs",
 		name: "Bussipysäkit",
 		producer: "Joukkoliikenne",
 		keyword1: "Liikenne",
@@ -67,7 +67,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "bike_parking",
+		internalName: "bp",
 		name: "Pyöräparkit",
 		producer: "Suunnittelupalvelut / Kaupunkiympäristön kehittäminen",
 		keyword1: "Liikenne",
@@ -89,7 +89,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "dog_parking",
+		internalName: "dp",
 		name: "Koirapuistot",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Viheralueet",
@@ -108,7 +108,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "boat_docks",
+		internalName: "bd",
 		name: "Laituripaikat",
 		producer: "Rakennuttaminen ja kunnossapito",
 		keyword1: "Vapaa-aika",
@@ -128,7 +128,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "rowing_boat_docks",
+		internalName: "rbd",
 		name: "Soutuvenerannat",
 		producer: "Kaupunkiympäristön kehittäminen / Tilaajaryhmä",
 		keyword1: "Vapaa-aika",
@@ -149,7 +149,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "winter_slides",
+		internalName: "ws",
 		name: "Talviliukumäet",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Vapaa-aika",
@@ -168,7 +168,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "playing_fields",
+		internalName: "pf",
 		name: "Peli- ja palloilukentät",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Vapaa-aika",
@@ -190,7 +190,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "skateboarding_areas",
+		internalName: "sa",
 		name: "Rullalautailualueet",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Vapaa-aika",
@@ -210,7 +210,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "playing_grounds",
+		internalName: "pg",
 		name: "Leikkipaikat",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Vapaa-aika",
@@ -235,7 +235,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "elementary_schools",
+		internalName: "es",
 		name: "Peruskoulut",
 		producer: "Tilaajaryhmä / Lasten ja nuorten kasvun tukeminen",
 		keyword1: "Opetus",
@@ -254,7 +254,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "daycare_centers",
+		internalName: "dc",
 		name: "Päiväkodit",
 		producer: "Tilaajaryhmä / Lasten ja nuorten kasvun tukeminen",
 		keyword1: "Päivähoito",
@@ -273,7 +273,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "trashcans",
+		internalName: "t",
 		name: "Roskakorit",
 		producer: "Kaupunkiympäristön kehittäminen / Tilaajaryhmä",
 		keyword1: "Siisteys",
@@ -291,7 +291,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "street_lighting",
+		internalName: "sl",
 		name: "Katuvalot",
 		producer: "Kaupunkiympäristön kehittäminen / Tilaajaryhmä",
 		keyword1: "Liikenne",
@@ -310,7 +310,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "traffic_light_sensors",
+		internalName: "tls",
 		name: "Liikennevalojen ilmaisimet",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Liikenne",
@@ -328,7 +328,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "bridges",
+		internalName: "b",
 		name: "Sillat ja alikulkukäytävät",
 		producer: "Rakentaminen ja kunnossapito",
 		keyword1: "Liikenne",
@@ -350,7 +350,7 @@ var categories = [
 		}
 	},
 	{
-		internalName: "traffic_light_junction",
+		internalName: "tlj",
 		name: "Liikennevaloristeykset",
 		producer: "Yleisten alueiden suunnittelu",
 		keyword1: "Liikenne",
@@ -369,4 +369,36 @@ var categories = [
 	}
 ];
 
+function getCategoryInternalName(name) {
+	for (var i = 0; i < categories.length; i++) {
+		if (categories[i].name == name) {
+			return categories[i].internalName;
+		}
+	}
+	return null;
+}
 
+function selectCategoriesFromHistory(categoriesString) {
+	var parts = categoriesString.split(',');
+	
+	for (var i = 0; i < categories.length; i++) {
+		for (var j = 0; j < parts.length; j++) {
+			if (categories[i].internalName == parts[j]) {
+				selectedCategories.push(categories[i]);
+				
+				geochart.addCategory(categories[i].name);
+				
+				for (var k = 0; k < statAreas.length; k++) {
+					statAreas[k].getDataOnCategory(selectedCategories[selectedCategories.length-1]);
+				}
+				
+				$('#data_selections_table').bootstrapTable('updateRow', {
+					index: i,
+					row: {
+						state: true
+					}
+				});
+			}
+		}
+	}
+}
