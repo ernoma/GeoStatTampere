@@ -90,15 +90,15 @@ map.on('zoomend', function(e) {
 $('#home .tab_switch_a a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
-})
+});
 $('#data_selections_div .tab_switch_a a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
-})
+});
 $('#about .tab_switch_a a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
-})
+});
 
 $( document ).ready(function() {
 	

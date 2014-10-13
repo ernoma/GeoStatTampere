@@ -32,6 +32,41 @@ map.on('baselayerchange', function(event) {
 	}
 });
 
+var helpControl = L.control();
+helpControl.onAdd = function (map) {
+	this._div = L.DomUtil.create('div', 'help_info');
+	this._div.innerHTML = '<a href=""><img src="/images/help.png"></a>';
+    return this._div;
+}
+helpControl.addTo(map);
+$('.help_info').click(function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	helpControl.showMe();
+});
+helpControl.hideMe = function () {
+	$('.help_info').empty().append('<a href=""><img src="/images/help.png"></a>');
+	$('.help_info a').on('click', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		helpControl.showMe();
+	});
+}
+helpControl.showMe = function() {
+	var $close_div = $('<div class="help_close"><a id="close_help_a" href=""><img src="/images/help.png"></a></div>');
+	$('.help_info').empty().append($close_div);
+	$('.help_info').append('<div><p><i>Valitse karttapohja yläkulman painikkeella.</i></p><p><i>Lisää alueita klikkaamalla karttaa.</i></p>' + 
+		'<p><i>Valitse alue klikkaamalla sitä.</i><i>Useamman alueen<br>saat valittua ctrl-näppäimen kanssa.</i></p>' +
+		'<p><i>Poistettua valitut alueet saat del-näppäimellä<br>tai kartan yläreunan painikkeella.</i></p>' +
+		'<p><i>Alueilla ja tilastoissa näytettävät aineistot valitaan<br>"Näytettävät aineistot"-välilehdeltä.</i></p>' +
+		'<p><i>Jaa paikkatilastosi yläreunan painikkeilla.</i></p></div>');
+	$('#close_help_a').on('click', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		helpControl.hideMe();
+	});
+}
+
 var featureInfoControl = L.control();
 featureInfoControl.onAdd = function (map) {
 	this._div = L.DomUtil.create('div', 'feature_info'); // create a div with a class "info"

@@ -41,7 +41,7 @@ function StatArea(type, latLng, selected, name, radius, map) {
 		}).addTo(map);
 		statArea.path.on('mouseover', function(event) {
 			var center = this.getBounds().getCenter();
-			var text = "<p><i>Voit valita alueen klikkaamalla aluetta hiiren painikkeella.</i></p>" +
+			var text = 
 				"<p>Nimi: " + statArea.name +
 				"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
 				"<br>Säde: " + this.getRadius() + " m</p>"
@@ -60,7 +60,7 @@ function StatArea(type, latLng, selected, name, radius, map) {
 		}).addTo(map);
 		statArea.path.on('mouseover', function(event) {
 			var center = this.getBounds().getCenter();
-			var text = "<p><i>Voit valita alueen klikkaamalla aluetta hiiren painikkeella.</i></p>" +
+			var text = 
 				"<p>Nimi: " + statArea.name +
 				"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
 				"<br>Leveys: " + this.lngRadius * 2	+ " m" +
@@ -430,7 +430,7 @@ StatArea.prototype.createResizeMarkers = function(map) {
 			statArea.updateDataOnArea();
 		});
 		marker.on('mouseover', function(event) {
-			var text = "<p><i>Voit raahata ympyrän sädettä hiirellä suuuremmaksi tai pienemmäksi.</i></p>" +
+			var text = "<p><i>Voit raahata ympyrää hiirellä<br>suuuremmaksi tai pienemmäksi.</i></p>" +
 				"<p>Säde: " + statArea.getRadius() + " m</p>";
 			featureInfoControl.update(text);
 		});
@@ -537,7 +537,7 @@ StatArea.prototype.createResizeMarkers = function(map) {
 			statArea.updateDataOnArea();
 		});
 		marker.on('mouseover', function(event) {
-			var text = "<p><i>Voit raahata suorakulmiota hiirellä suuuremmaksi tai pienemmäksi.</i></p>" +
+			var text = "<p><i>Voit raahata suorakulmiota hiirellä<br>suuuremmaksi tai pienemmäksi.</i></p>" +
 				"<p>Leveys: " + statArea.lngRadius * 2 + " m" +
 				"<br>Korkeus: " + statArea.latRadius * 2 + " m</p>";
 			featureInfoControl.update(text);
