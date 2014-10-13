@@ -14,6 +14,7 @@ html(lang='fi')
 		link(rel='stylesheet', href='/stylesheets/leaflet-search.min.css')
 		link(rel='stylesheet', href='/stylesheets/bootstrap-colorpicker.min.css')
 		script(type='text/javascript', src='js/google-analytics.js')
+		script(type='text/javascript', src='//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-543c2c74433d972d', async)
 	body(role='document')
 		#content(class='container-fluid theme-showcase', role='main')
 		
@@ -29,7 +30,10 @@ html(lang='fi')
 				li
 					#spinner_container
 						#spinner
-		
+				li
+					#addthis_container
+						div(class="addthis_sharing_toolbox ")
+
 			div(class='tab-content')
 				#home(class='tab-pane active map_pane')
 					div(class="panel panel-default map_panel")
