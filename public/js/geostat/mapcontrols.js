@@ -87,7 +87,7 @@ L.control.scale({
 
 var startPopup = L.popup()
     .setLatLng([INITIAL_LAT, INITIAL_LON])
-    .setContent("Klikkaa karttaa lisätäksesi alueen.")
+    .setContent("Klikkaa karttaa lisätäksesi alueen ja<br>valitse toiselta välilehdeltä näytettävät aineistot.")
     .openOn(map);
 
 function onMapClick(e) {
