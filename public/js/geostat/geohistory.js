@@ -10,9 +10,10 @@ function handleHistory(type, data) {
 	
 	var params = [];
 	if (location.search != undefined && location.search != null && location.search != '') {
-		params = location.search.substring(1).split('&');
+		params = decodeURIComponent(location.search.substring(1)).split('&');
+		console.log("decodeURIComponent(location.search.substring(1))", decodeURIComponent(location.search.substring(1)));
 	}
-	var newHistoryString = "?";
+	var newHistoryString = "";
 	var found = false;
 	var wasEqual = false;
 	for (var i = 0; i < params.length; i++) {
@@ -69,7 +70,7 @@ function handleHistory(type, data) {
 					found = true;
 					newHistoryString += "a=";
 					var areaParam = params[i].split('=')[1];
-					var areaStrings = areaParam.split(',');
+					var areaStrings = areaParam.split(';');
 					var foundArea = false;
 					for (var j = 0; j < areaStrings.length; j++) {
 						// if one of areasStrings has same id as the data.id then if it is not equal change the areaString
@@ -87,11 +88,11 @@ function handleHistory(type, data) {
 							newHistoryString += areaStrings[j];
 						}
 						if (j < areaStrings.length - 1) {
-							newHistoryString += ',';
+							newHistoryString += ';';
 						}
 					}
 					if (!foundArea) {
-						newHistoryString += ',';
+						newHistoryString += ';';
 						newHistoryString += data.getHistoryString();
 					}
 				}
@@ -103,7 +104,7 @@ function handleHistory(type, data) {
 				if (params[i].indexOf('a=') != -1) {
 					found = true;
 					var areaParam = params[i].split('=')[1];
-					var areaStrings = areaParam.split(',');
+					var areaStrings = areaParam.split(';');
 					var isAtStatAreaToRemove = false;
 					if (areaStrings.length == 1) {
 						removedWholeParam = true;
@@ -117,7 +118,7 @@ function handleHistory(type, data) {
 							if (data.isSameStatArea(areaStrings[j])) {
 								isAtStatAreaToRemove = true;
 								if (j == areaStrings.length - 1) {
-									newHistoryString = newHistoryString.substring(0, newHistoryString.length - 1); // remove extra ','
+									newHistoryString = newHistoryString.substring(0, newHistoryString.length - 1); // remove extra ';'
 								}
 							}
 							else {
@@ -126,7 +127,7 @@ function handleHistory(type, data) {
 							}
 							
 							if (j < areaStrings.length - 1 && !isAtStatAreaToRemove) {
-								newHistoryString += ',';
+								newHistoryString += ';';
 							}
 						}
 					}
@@ -248,7 +249,7 @@ function handleHistory(type, data) {
 		}
 	}
 	if (!wasEqual) {
-		history.pushState(newHistoryString, '', newHistoryString);
+		history.pushState(newHistoryString, '', "?" + encodeURIComponent(newHistoryString));
 	}
 
 	console.log("history.state", history.state);
@@ -266,7 +267,8 @@ function returnHistory() {
 	
 	var params = [];
 	if (location.search != undefined && location.search != null && location.search != '') {
-		params = location.search.substring(1).split('&');
+		console.log("decodeURIComponent(location.search.substring(1))", decodeURIComponent(location.search.substring(1)));
+		params = decodeURIComponent(location.search.substring(1)).split('&');
 	}
 	var zoom = DEFAULT_ZOOM;
 	var mapLocation = [INITIAL_LAT, INITIAL_LON];

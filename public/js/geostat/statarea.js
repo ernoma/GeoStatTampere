@@ -83,7 +83,7 @@ function StatArea(type, latLng, selected, name, radius, map) {
 }
 
 function createStatAreasFromHistory(historyString) {
-	var statAreaStrings = historyString.split(',');
+	var statAreaStrings = historyString.split(';');
 	for (var i = 0; i < statAreaStrings.length; i++) {
 		var statArea = createStatAreaFromHistoryString(statAreaStrings[i]);
 		statAreas.push(statArea);
@@ -93,11 +93,11 @@ function createStatAreasFromHistory(historyString) {
 
 function createStatAreaFromHistoryString(historyString) {
 	var parts = historyString.split('+');
-	var name = decodeURIComponent(parts[0]);
+	var name = parts[0];
 	var type = parts[1] == 'c' ? 'circle' : 'rectangle';
-	var decodedLatLng = decodeURIComponent(parts[2]).split(',');
+	var decodedLatLng = parts[2].split(',');
 	var center = L.latLng(parseFloat(decodedLatLng[0]), parseFloat(decodedLatLng[1]));
-	var color = decodeURIComponent(parts[4]);
+	var color = parts[4];
 	var selected = parts[5] == 't' ? true : false;
 	var statArea;
 	if (type == 'circle') {
@@ -105,7 +105,7 @@ function createStatAreaFromHistoryString(historyString) {
 		statArea = new StatArea(type, center, selected, name, radius, map);
 	}
 	else {
-		var radiusParts = decodeURIComponent(parts[3]).split(',');
+		var radiusParts = parts[3].split(',');
 		var latRadius = parseInt(radiusParts[0]);
 		var lngRadius = parseInt(radiusParts[1]);
 		statArea = new StatArea(type, center, selected, name, latRadius, map);
@@ -128,15 +128,15 @@ StatArea.prototype.isSameStatArea = function(historyString) {
 }
 
 StatArea.prototype.getHistoryString = function() {
-	var historyString = encodeURIComponent(this.name) + '+' + (this.type == 'circle' ? 'c' : 'r') + '+' +
-		encodeURIComponent(this.path.getBounds().getCenter().lat + ',' + this.path.getBounds().getCenter().lng) + '+';
+	var historyString = this.name + '+' + (this.type == 'circle' ? 'c' : 'r') + '+' +
+		this.path.getBounds().getCenter().lat + ',' + this.path.getBounds().getCenter().lng + '+';
 	if (this.type == 'circle') {
 		historyString += this.getRadius();
 	}
 	else {
-		historyString += encodeURIComponent(this.latRadius + ',' + this.lngRadius);
+		historyString += this.latRadius + ',' + this.lngRadius;
 	}
-	historyString += '+' + encodeURIComponent(this.color);
+	historyString += '+' + this.color;
 	historyString += '+' + (this.selected ? 't' : 'f');
 	historyString += '+' + this.id;
 	return historyString;
