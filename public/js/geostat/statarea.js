@@ -18,7 +18,7 @@ var resize_icon = L.icon({
 
 var statAreaID = 0;
 
-function StatArea(type, latLng, selected, name, radius, map) {
+function StatArea(type, latLng, selected, name, size, map) {
 	this.id = statAreaID++;
 	this.type = type;
 	var color = statAreaColors[statAreaCount % statAreaColors.length];
@@ -27,17 +27,17 @@ function StatArea(type, latLng, selected, name, radius, map) {
 	this.selected = selected;
 	this.name = name;
 	if (type == "circle") {
-		this.radius = radius;
+		this.radius = size;
 	}
 	else {
-		this.latRadius = radius;
-		this.lngRadius = radius;
+		this.latRadius = size[0];
+		this.lngRadius = size[1];
 	}
 	var statArea = this;
 	if (this.type == "circle") {
-		statArea.path = L.circle(latLng, radius, {
+		statArea.path = L.circle(latLng, this.radius, {
 			color: color,
-			weight: 5,
+			weight: selected ? 5 : 2,
 			fillColor: color,
 			fillOpacity: 0.5
 		}).addTo(map);
@@ -45,7 +45,7 @@ function StatArea(type, latLng, selected, name, radius, map) {
 			var center = this.getBounds().getCenter();
 			var text = 
 				"<p>Nimi: " + statArea.name +
-				"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
+				"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lat, lng) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
 				"<br>Säde: " + this.getRadius() + " m</p>"
 			featureInfoControl.update(text);
 		});
@@ -53,10 +53,10 @@ function StatArea(type, latLng, selected, name, radius, map) {
 			featureInfoControl.update();
 		});
 	} else {
-		var latLngBounds = getlatLngBounds(latLng, radius, radius);
+		var latLngBounds = getlatLngBounds(latLng, this.latRadius, this.lngRadius);
 		statArea.path = L.rectangle(latLngBounds, {
 			color: color,
-			weight: 5,
+			weight: selected ? 5 : 2,
 			fillColor: color,
 			fillOpacity: 0.5
 		}).addTo(map);
@@ -64,9 +64,9 @@ function StatArea(type, latLng, selected, name, radius, map) {
 			var center = this.getBounds().getCenter();
 			var text = 
 				"<p>Nimi: " + statArea.name +
-				"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
-				"<br>Leveys: " + this.lngRadius * 2	+ " m" +
-				"<br>Korkeus: " + this.latRadius * 2	+ " m" + "</p>"
+				"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lat, lng) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
+				"<br>Leveys: " + statArea.lngRadius * 2	+ " m" +
+				"<br>Korkeus: " + statArea.latRadius * 2	+ " m" + "</p>"
 			featureInfoControl.update(text);
 		});
 		statArea.path.on('mouseout', function(event) {
@@ -86,7 +86,6 @@ function createStatAreasFromHistory(historyString) {
 	var statAreaStrings = historyString.split(';');
 	for (var i = 0; i < statAreaStrings.length; i++) {
 		var statArea = createStatAreaFromHistoryString(statAreaStrings[i]);
-		statAreas.push(statArea);
 		statArea.getDataOnArea();
 	}
 }
@@ -108,11 +107,7 @@ function createStatAreaFromHistoryString(historyString) {
 		var radiusParts = parts[3].split(',');
 		var latRadius = parseInt(radiusParts[0]);
 		var lngRadius = parseInt(radiusParts[1]);
-		statArea = new StatArea(type, center, selected, name, latRadius, map);
-		statArea.lngRadius = lngRadius;
-		statArea.latRadius = latRadius;
-		var latLngBounds = getlatLngBounds(statArea.marker.getLatLng(), statArea.latRadius, statArea.lngRadius);
-		statArea.path.setBounds(latLngBounds);
+		statArea = new StatArea(type, center, selected, name, [latRadius, lngRadius], map);
 	}
 	statArea.id = parseInt(parts[6]);
 	return statArea;
@@ -188,7 +183,7 @@ StatArea.prototype.changeColor = function(colorValue) {
 	
 StatArea.prototype.setRadius = function(newRadius) {
 	this.path.setRadius(newRadius);
-	
+	this.updateResizeMarkerPositions();
 	handleHistory('area', this);
 }
 	
@@ -199,7 +194,7 @@ StatArea.prototype.setSize = function(newWidth, newHeight) {
 	//console.log("marker.getLatLng(): " + this.marker.getLatLng());
 	//console.log("latLngBounds: " + this.latLngBounds.getSouthWest() + ', ' + this.latLngBounds.getNorthEast());
 	this.path.setBounds(latLngBounds);
-	
+	this.updateResizeMarkerPositions();
 	handleHistory('area', this);
 }
 
@@ -231,13 +226,13 @@ StatArea.prototype.getInfoText = function() {
 	if (this.type == "circle") {
 		text = "<p><i>Voit raahata alueen toiseen paikkaan hiirellä.</i></p>" +
 		"<p>Nimi: " + this.name +
-		"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
+		"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lat, lng) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
 		"<br>Säde: " + this.getRadius() + " m</p>"
 	}
 	else {
 		text = "<p><i>Voit raahata alueen toiseen paikkaan hiirellä.</i></p>" +
 		"<p>Nimi: " + this.name +
-		"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lng, lat) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
+		"<br>Alueen keskipiste:<br>&nbsp;&nbsp;&nbsp;&nbsp;(lat, lng) = (" + center.lat.toFixed(5) + ", " + center.lng.toFixed(5) + ")" +
 		"<br>Leveys: " + this.lngRadius * 2	+ " m" +
 		"<br>Korkeus: " + this.latRadius * 2	+ " m" + "</p>"
 	}
@@ -460,6 +455,8 @@ StatArea.prototype.createCenterMarker = function(latLng, map) {
 				statAreas[i].updateDataOnArea();
 				$("#delete_button").removeAttr("disabled");
 				
+				statAreas[i].updateResizeMarkerPositions();
+				
 				handleHistory('area', statAreas[i]);
 			}
 			else {
@@ -521,7 +518,6 @@ StatArea.prototype.createResizeMarkers = function(map) {
 		});
 	}
 	else {
-		
 		// bottom, left
 		var lng = subtractMetersFromLng(this.marker.getLatLng(), this.getWidth() / 2);
 		var lat = subtractMetersFromLat(this.marker.getLatLng(), this.getHeight() / 2);
@@ -632,6 +628,20 @@ StatArea.prototype.createResizeMarkers = function(map) {
 	}
 	
 	return resizeMarkers;
+}
+
+StatArea.prototype.updateResizeMarkerPositions = function() {
+	if (this.type == "circle") {
+		var lng = addMetersToLng(this.marker.getLatLng(), this.getRadius());
+		var latLng = L.latLng(this.marker.getLatLng().lat, lng);
+		this.resizeMarkers[0].setLatLng(latLng);
+	}
+	else {
+		var lng = subtractMetersFromLng(this.marker.getLatLng(), this.getWidth() / 2);
+		var lat = subtractMetersFromLat(this.marker.getLatLng(), this.getHeight() / 2);
+		var latLng = L.latLng(lat, lng);
+		this.resizeMarkers[0].setLatLng(latLng);
+	}
 }
 
 StatArea.prototype.getDataOnArea = function() {

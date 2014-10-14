@@ -113,7 +113,7 @@ function onMapClick(e) {
 			area_circle_tool_selected ? "circle" : "rectangle",
 			e.latlng,
 			true,
-			"Alue " + (statAreaCount+1), INITIAL_AREA_RADIUS, map);
+			"Alue " + (statAreaCount+1), area_circle_tool_selected ? INITIAL_AREA_RADIUS : [INITIAL_AREA_RADIUS, INITIAL_AREA_RADIUS], map);
 
 		statArea.getDataOnArea();
 	}

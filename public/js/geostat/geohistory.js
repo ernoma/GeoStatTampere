@@ -1,11 +1,6 @@
 
 function handleHistory(type, data) {
 
-	// TODO
-	// - areas
-	//   * name, location, type, size, color, selected
-	// - selected categories
-
 	//console.log("location", location);
 	
 	var params = [];
@@ -263,12 +258,14 @@ function handleHistory(type, data) {
 // });
 
 function returnHistory() {
-	console.log("location.search", location.search);
-	
+	//console.log("location.search", location.search);
+	//console.log("location", location);
 	var params = [];
 	if (location.search != undefined && location.search != null && location.search != '') {
-		console.log("decodeURIComponent(location.search.substring(1))", decodeURIComponent(location.search.substring(1)));
-		params = decodeURIComponent(location.search.substring(1)).split('&');
+		var historyString = location.search;
+		
+		console.log("decodeURIComponent(historyString.substring(1))", decodeURIComponent(historyString.substring(1)));
+		params = decodeURIComponent(historyString.substring(1)).split('&');
 	}
 	var zoom = DEFAULT_ZOOM;
 	var mapLocation = [INITIAL_LAT, INITIAL_LON];
@@ -304,6 +301,8 @@ function returnHistory() {
 		}
 	}
 	map.setView(mapLocation, zoom);
+	
+	checkSelectedAreas();
 }
 $(function() {
 	if (location.search != undefined && location.search != null && location.search != '') {

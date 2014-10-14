@@ -28,11 +28,11 @@ html(lang='fi')
 				li
 					a(href='#about', role='tab', data-toggle='tab', class='tab_switch_a') Sovelluksesta
 				li
-					#spinner_container
-						#spinner
-				li
 					#addthis_container
 						div(class="addthis_sharing_toolbox ")
+				li
+					#spinner_container
+						#spinner
 
 			div(class='tab-content')
 				#home(class='tab-pane active map_pane')
@@ -191,11 +191,15 @@ html(lang='fi')
 						del tiedot alueen pathin kohdalla
 				li
 					del jos history.popeventissä locationista ei löydy jotakin parametria, joka oli edellisellä kerralla, niin aseta se oletusasetuksiin
-				li korjaa bugit:
+				li
+					del korjaa bugit:
 				ul
-					li Ei voi valita "muokkaa aluetta", jos se ladataan url-locationista
-					li resize marker ei liiku, kun kokoa muuttaa dialogista
-					li resize marker ei liiku ladattaessa historysta
+					li
+						del Ei voi valita "muokkaa aluetta", jos se ladataan url-locationista
+					li
+						del resize marker ei liiku, kun kokoa muuttaa dialogista
+					li
+						del resize marker ei liiku rectanglen tapauksessa ladattaessa historysta ja lev,kork NaN
 		
 		#area_edit_modal(class="modal fade" tabindex="-1" role="dialog" aria-labelledby="area_edit_label" aria-hidden="true")
 			div(class="modal-dialog modal-sm")
