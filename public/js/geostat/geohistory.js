@@ -306,6 +306,7 @@ function returnHistory() {
 }
 $(function() {
 	if (location.search != undefined && location.search != null && location.search != '') {
+		$('#data_selections_table').bootstrapTable('uncheckAll');
 		map.closePopup(startPopup);
 		returnHistory();
 	}
