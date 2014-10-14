@@ -197,7 +197,7 @@ $( document ).ready(function() {
 		}
 	});
 	
-	//$('#data_selections_table').bootstrapTable('checkAll');
+	$('#data_selections_table').bootstrapTable('checkAll');
 });
 
 var spinnerOpts = {
