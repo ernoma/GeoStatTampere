@@ -13,6 +13,6 @@
 	"nib": "1.x",
 	"morgan": "1.x",
 	"request": "2.x",
-	"gdal": "0.x"
+	"gdal": "0.4.1"
   }
 }
