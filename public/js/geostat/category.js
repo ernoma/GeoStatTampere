@@ -356,7 +356,7 @@ var categories = [
 		keyword1: "Liikenne",
 		keyword2: "Liikenteen ohjaus",
 		keyword3: "Kaupunkiliikenne",
-		note: "Sisältää liikennevalo-ohjatut risteykset ja liittymät",
+		note: "Sisältää liikennevalo-ohjatut risteykset ja liittymät.",
 		icon:  L.icon({
 			iconUrl: '/images/map_data_icon_ff0000.png',
 			iconSize: [5, 5],
@@ -364,9 +364,134 @@ var categories = [
 		}),
 		mapSymbol: "<img src='/images/map_data_icon_ff0000.png' style='width: 10px; height: 10px'>",
 		getInfoText: function(feature) {
-			return "Liikennevalo-ohjatut risteykset ja liittymät";
+		        return "Liikennevalo-ohjatut risteykset ja liittymät";
 		}
-	}
+	},
+        {
+                internalName: "hh",
+                name: "Hammashoitolat",
+                producer: "Tilaajaryhmä",
+                keyword1: "Terveydenhuolto",
+                keyword2: "Palveluverkko",
+                keyword3: "Hammashuolto",
+                note: "Aineistossa on tällä hetkellä Tampereen kaupungin hammashoitolat sekä Acutan hammaslääkäripäivystys. Aineiston tietosisältöä on tarkoitus laajentaa ja kehittää yhdessä seudun kuntien kanssa. Tietosisältö tulee siis vielä muuttumaan ja aineistokuvausta tarkennetaan tulevaisuudessa.",
+                icon:  L.icon({
+                        iconUrl: '/images/map_data_icon_square_0033ff.png',
+                        iconSize: [5, 5],
+                        iconAnchor : [2, 2]
+                }),
+                mapSymbol: "<img src='/images/map_data_icon_square_0033ff.png' style='width: 10px; height: 10px'>",
+                getInfoText: function(feature) {
+		        var name = feature.properties.NIMI;
+                        var address = feature.properties.OSOITE + ", " + feature.properties.POSTINUMERO + " " + feature.properties.POSTITOIMIPAIKKA;
+                        var phone = feature.properties.PUHELIN;
+		        return name + "<br>Osoite: " + address + "<br>Puhelin: " + phone;
+                }
+        },
+        {
+                internalName: "tk",
+                name: "Kirjastot",
+                producer: "Tilaajaryhmä",
+                keyword1: "Kulttuuri",
+                keyword2: "Palveluverkko",
+                keyword3: "Kulttuuri",
+                note: "Aineistossa on tällä hetkellä Tampereen kaupungin kirjastot. Aineiston tietosisältöä on tarkoitus laajentaa ja kehittää yhdessä seudun kuntien kanssa. Tietosisältö tulee siis vielä muuttumaan ja aineistokuvausta tarkennetaan tulevaisuudessa.",
+                icon:  L.icon({
+                        iconUrl: '/images/map_data_icon_square_33ff00.png',
+                        iconSize: [5, 5],
+                        iconAnchor : [2, 2]
+                }),
+                mapSymbol: "<img src='/images/map_data_icon_square_33ff00.png' style='width: 10px; height: 10px'>",
+                getInfoText: function(feature) {
+		        var name = feature.properties.NIMI;
+                        var address = feature.properties.OSOITE + ", " + feature.properties.POSTINUMERO + " " + feature.properties.POSTITOIMIPAIKKA;
+                        var phone = feature.properties.PUHELIN;
+                        return name + "<br>Osoite: " + address + "<br>Puhelin: " + phone;
+                }
+        },
+        {
+                internalName: "tn",
+                name: "Neuvolat",
+                producer: "Tilaajaryhmä",
+                keyword1: "Terveydenhuolto",
+                keyword2: "Palveluverkko",
+                keyword3: "Neuvolapalvelut",
+                note: "Aineistossa on tällä hetkellä Tampereen kaupungin neuvolat. Aineiston tietosisältöä on tarkoitus laajentaa ja kehittää yhdessä seudun kuntien kanssa. Tietosisältö tulee siis vielä muuttumaan ja aineistokuvausta tarkennetaan tulevaisuudessa.",
+                icon:  L.icon({
+                        iconUrl: '/images/map_data_icon_square_ff3300.png',
+                        iconSize: [5, 5],
+                        iconAnchor : [2, 2]
+                }),
+                mapSymbol: "<img src='/images/map_data_icon_square_ff3300.png' style='width: 10px; height: 10px'>",
+                getInfoText: function(feature) {
+		        var name = feature.properties.NIMI;
+                        var address = feature.properties.OSOITE + ", " + feature.properties.POSTINUMERO + " " + feature.properties.POSTITOIMIPAIKKA;
+                        return name + "<br>Osoite: " + address;
+                }
+        },
+        {
+                internalName: "tnu",
+                name: "Nuorisotilat",
+                producer: "Tilaajaryhmä",
+                keyword1: "Vapaa-aika",
+                keyword2: "Palveluverkko",
+                keyword3: "Nuoret",
+                note: "Aineistossa on tällä hetkellä Tampereen kaupungin nuorisotilat. Aineiston tietosisältöä on tarkoitus laajentaa ja kehittää yhdessä seudun kuntien kanssa. Tietosisältö tulee siis vielä muuttumaan ja aineistokuvausta tarkennetaan tulevaisuudessa.",
+                icon:  L.icon({
+                        iconUrl: '/images/map_data_icon_square_33ffff.png',
+                        iconSize: [5, 5],
+                        iconAnchor : [2, 2]
+                }),
+                mapSymbol: "<img src='/images/map_data_icon_square_33ffff.png' style='width: 10px; height: 10px'>",
+                getInfoText: function(feature) {
+                        var name = feature.properties.NIMI;
+                        var address = feature.properties.OSOITE + ", " + feature.properties.POSTINUMERO + " " + feature.properties.POSTITOIMIPAIKKA;
+                        var phone = feature.properties.PUHELIN;
+                        return name + "<br>Osoite: " + address + "<br>Puhelin: " + phone;
+                }
+        },
+        {
+                internalName: "ter",
+                name: "Terveysasemat",
+                producer: "Tilaajaryhmä",
+                keyword1: "Terveydenhuolto",
+                keyword2: "Palveluverkko",
+                keyword3: "Terveys",
+                note: "Aineistossa on tällä hetkellä Tampereen kaupungin terveysasemat. Aineiston tietosisältöä on tarkoitus laajentaa ja kehittää yhdessä seudun kuntien kanssa. Tietosisältö tulee siis vielä muuttumaan ja aineistokuvausta tarkennetaan tulevaisuudessa.",
+                icon:  L.icon({
+                        iconUrl: '/images/map_data_icon_square_ff33ff.png',
+                        iconSize: [5, 5],
+                        iconAnchor : [2, 2]
+                }),
+                mapSymbol: "<img src='/images/map_data_icon_square_ff33ff.png' style='width: 10px; height: 10px'>",
+                getInfoText: function(feature) {
+                        var name = feature.properties.NIMI;
+                        var address = feature.properties.OSOITE + ", " + feature.properties.POSTINUMERO + " " + feature.properties.POSTITOIMIPAIKKA;
+                        var phone = feature.properties.PUHELIN;
+                        return name + "<br>Osoite: " + address + "<br>Puhelin: " + phone;
+                }
+        },
+        {
+                internalName: "ui",
+                name: "Uimahallit",
+                producer: "Tilaajaryhmä",
+                keyword1: "Vapaa-aika",
+                keyword2: "Palveluverkko",
+                keyword3: "Terveys",
+                note: "Aineistossa on tällä hetkellä Tampereen kaupungin uimhallit. Aineiston tietosisältöä on tarkoitus laajentaa ja kehittää yhdessä seudun kuntien kanssa. Tietosisältö tulee siis vielä muuttumaan ja aineistokuvausta tarkennetaan tulevaisuudessa.",
+                icon:  L.icon({
+                        iconUrl: '/images/map_data_icon_square_ffff33.png',
+                        iconSize: [5, 5],
+                        iconAnchor : [2, 2]
+                }),
+                mapSymbol: "<img src='/images/map_data_icon_square_ffff33.png' style='width: 10px; height: 10px'>",
+                getInfoText: function(feature) {
+                        var name = feature.properties.NIMI;
+                        var address = feature.properties.OSOITE + ", " + feature.properties.POSTINUMERO + " " + feature.properties.POSTITOIMIPAIKKA;
+                        var phone = feature.properties.PUHELIN;
+                        return name + "<br>Osoite: " + address + "<br>Puhelin: " + phone;
+                }
+        }
 ];
 
 function getCategoryInternalName(name) {

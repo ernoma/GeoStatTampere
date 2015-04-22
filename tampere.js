@@ -8,88 +8,142 @@ var tampereOpenDataSets = [
 	{
 		internal_name: "cp",
 		name: "opendata:KESKUSTAN_PYSAKOINTI_VIEW",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+	        server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "bp",
 		name: "opendata:PYORAPARKIT_VIEW",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "dp",
 		name: "opendata:WFS_KOIRAPUISTO_MVIEW",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "bs",
 		name: "tampere_ora:BUSSIPYSAKIT",
-		path: "tampere_wfs_geoserver/tampere_ora/ows"
+		path: "tampere_wfs_geoserver/tampere_ora/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "bd",
 		name: "tampere_iris:WFS_LAITURIPAIKKA",
-		path: "tampere_wfs_geoserver/tampere_iris/ows"
+		path: "tampere_wfs_geoserver/tampere_iris/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "rbd",
 		name: "opendata:WFS_SOUTUVENERANTA",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "ws",
 		name: "tampere_iris:WFS_TALVILIUKUPAIKKA",
-		path: "tampere_wfs_geoserver/tampere_iris/ows"
+		path: "tampere_wfs_geoserver/tampere_iris/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "pf",
 		name: "opendata:WFS_KENTTA_MVIEW",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "sa",
 		name: "opendata:WFS_RULLALAUTAILUALUE_MVIEW",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "pg",
 		name: "opendata:WFS_LEIKKIPAIKKA_MVIEW",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "es",
 		name: "opendata:KOULUT",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "dc",
 		name: "opendata:PAIVAKODIT",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "t",
 		name: "opendata:WFS_ROSKIS",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "sl",
 		name: "opendata:WFS_KATUVALO",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "tls",
 		name: "opendata:WFS_LIIKENNEVALO_ILMAISIN",
-		path: "tampere_wfs_geoserver/opendata/ows"
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "b",
 		name: "tampere_iris:WFS_SILTA",
-		path: "tampere_wfs_geoserver/tampere_iris/ows"
+		path: "tampere_wfs_geoserver/tampere_iris/ows",
+                server: "http://tampere.navici.com/"
 	},
 	{
 		internal_name: "tlj",
 		name: "opendata:WFS_LIIKENNEVALO_LIITTYMA",
-		path: "tampere_wfs_geoserver/opendata/ows"
-	}
+		path: "tampere_wfs_geoserver/opendata/ows",
+                server: "http://tampere.navici.com/"
+	},
+        {
+                internal_name: "hh",
+                name: "opendata:HAMMASHOITOLAT",
+                path: "tampere/opendata/ows",
+                server: "http://opendata.navici.com/"
+        },
+        {
+                internal_name: "tk",
+                name: "opendata:KIRJASTOT",
+                path: "tampere/opendata/ows",
+                server: "http://opendata.navici.com/"
+        },
+        {
+                internal_name: "tn",
+                name: "opendata:NEUVOLAT",
+                path: "tampere/opendata/ows",
+                server: "http://opendata.navici.com/"
+        },
+        {
+                internal_name: "tnu",
+                name: "opendata:NUORTEN_TILAT",
+                path: "tampere/opendata/ows",
+                server: "http://opendata.navici.com/"
+        },
+        {
+                internal_name: "ter",
+                name: "opendata:TERVEYSASEMAT",
+                path: "tampere/opendata/ows",
+                server: "http://opendata.navici.com/"
+        },
+        {
+                internal_name: "ui",
+                name: "opendata:UIMAHALLIT",
+                path: "tampere/opendata/ows",
+                server: "http://opendata.navici.com/"
+        }
+
 ];
 
 var wgs84 = gdal.SpatialReference.fromEPSG(4326);
@@ -100,11 +154,13 @@ exports.getTreJSONData = function getTreJSONData(req, res) {
 
 	var typeName = undefined;
 	var path = undefined;
+        var server = undefined; 
 	
 	for (var i = 0; i < tampereOpenDataSets.length; i++) {
 		if (req.query.dataSetName == tampereOpenDataSets[i].internal_name) {
 			typeName = tampereOpenDataSets[i].name;
 			path = tampereOpenDataSets[i].path;
+		        server = tampereOpenDataSets[i].server;
 			break;
 		}
 	}
@@ -130,7 +186,7 @@ exports.getTreJSONData = function getTreJSONData(req, res) {
 			
 			//console.log('http://tampere.navici.com/' + path + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName + '&outputFormat=json&srsName=EPSG:4326&Filter=%3CFilter%20xmlns:gml=%22http://www.opengis.net/gml%22%3E%3CDWithin%3E%3CPropertyName%3Eopendata:GEOLOC%3C/PropertyName%3E%3Cgml:Point%3E%3Cgml:coordinates%3E' + pt_gk24.x + ',' + pt_gk24.y + '%3C/gml:coordinates%3E%3C/gml:Point%3E%3CDistance%3E' + sizeFilter.radius + '%3C/Distance%3E%3C/DWithin%3E%3C/Filter%3E');
 			
-			request('http://tampere.navici.com/' + path + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName + '&outputFormat=json&srsName=EPSG:4326&Filter=%3CFilter%20xmlns:gml=%22http://www.opengis.net/gml%22%3E%3CDWithin%3E%3CPropertyName%3Eopendata:GEOLOC%3C/PropertyName%3E%3Cgml:Point%3E%3Cgml:coordinates%3E' + pt_gk24.x + ',' + pt_gk24.y + '%3C/gml:coordinates%3E%3C/gml:Point%3E%3CDistance%3E' + sizeFilter.radius + '%3C/Distance%3E%3C/DWithin%3E%3C/Filter%3E', function (error, response, body) {
+			request(server + path + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName + '&outputFormat=json&srsName=EPSG:4326&Filter=%3CFilter%20xmlns:gml=%22http://www.opengis.net/gml%22%3E%3CDWithin%3E%3CPropertyName%3Eopendata:GEOLOC%3C/PropertyName%3E%3Cgml:Point%3E%3Cgml:coordinates%3E' + pt_gk24.x + ',' + pt_gk24.y + '%3C/gml:coordinates%3E%3C/gml:Point%3E%3CDistance%3E' + sizeFilter.radius + '%3C/Distance%3E%3C/DWithin%3E%3C/Filter%3E', function (error, response, body) {
 				if (error) {
 					return console.log('ERROR: ', error);
 					// TODO better
@@ -156,7 +212,7 @@ exports.getTreJSONData = function getTreJSONData(req, res) {
 			}
 			var pt_gk24_ne = coord_transform.transformPoint(point_orig_ne);
 		
-			request('http://tampere.navici.com/' + path + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName + '&outputFormat=json&srsName=EPSG:4326&bbox=' + pt_gk24_sw.x + ',' + pt_gk24_sw.y + ',' + pt_gk24_ne.x + ',' + pt_gk24_ne.y, function (error, response, body) {
+			request(server + path + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName + '&outputFormat=json&srsName=EPSG:4326&bbox=' + pt_gk24_sw.x + ',' + pt_gk24_sw.y + ',' + pt_gk24_ne.x + ',' + pt_gk24_ne.y, function (error, response, body) {
 				if (error) {
 					return console.log('ERROR: ', error);
 					// TODO better
