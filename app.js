@@ -5,6 +5,7 @@ var nib = require('nib');
 var morgan  = require('morgan');
 var parking = require('./parking.js');
 var tampere = require('./tampere.js');
+var digitraffic = require('./digitraffic.js');
 
 function compile(str, path) {
   return stylus(str)
@@ -63,6 +64,15 @@ app.get('/heat', function (req, res) {
 	res.render('heat',
 		{title: 'Heatmap kokeilu'});
 });
+
+app.get('/digitraffic', function (req, res) {
+        digitraffic.showCategories(req, res);
+});
+
+app.get('/roadweather.json', function (req, res) {
+        digitraffic.roadweather(req, res);
+});
+
 
 app.get('/tredata.json', function (req, res) {
 	tampere.getTreJSONData(req, res);
