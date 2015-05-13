@@ -1,10 +1,26 @@
 
-var request = require('request')
+var request = require('request');
+var xml2js = require('xml2js');
+var fs = require('fs');
 
+var parser = new xml2js.Parser();
+
+//fs.readFile(__dirname + '/data/meta_rws_stations_2014_09_23.csv', function(err, data) {  
+//    parser.parseString(data);
+//});
 
 exports.roadweather = function roadweather(req, res) {
 
-    var SOAP_request = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
+    parser.on('end', function(result) {  
+      console.log(result);
+      res.json(result);
+    });
+
+    fs.readFile(__dirname + '/data/roadWeather_response.xml', function(err, data) {  
+      parser.parseString(data);
+    });
+
+    /*var SOAP_request = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
         'xmlns:sch="http://www.gofore.com/sujuvuus/schemas">' +
         '<soapenv:Header/>' +
         '<soapenv:Body>' +
@@ -28,13 +44,14 @@ exports.roadweather = function roadweather(req, res) {
     }
     else if (!error && response.statusCode == 200) {
       //console.log(body)
-      res.json(body)
+
+      parser.parseString(body);
+
     }
     else {
       // TODO
-    }
-  })
-}
+    }*/
+  }
 
 exports.showCategories = function showCategories(req, res) {
 	
