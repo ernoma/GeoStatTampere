@@ -1,9 +1,12 @@
-
 var request = require('request');
 var xml2js = require('xml2js');
 var fs = require('fs');
 var csv = require('csv');
 var gdal = require('gdal');
+
+var INITIAL_LAT = 61.5;
+var INITIAL_LNG = 23.766667;
+var INITIAL_RADIUS = 60000; // in meters
 
 var static_weather_station_data = undefined;
 var road_weather_data = undefined;
@@ -14,7 +17,7 @@ var coord_transform = new gdal.CoordinateTransformation(KKJ, wgs84);
 
 fs.readFile(__dirname + '/data/meta_rws_stations_2014_09_23.csv', function(err, csv_data) {  
     csv.parse(csv_data, function(err, data) {
-	console.log(data[1][0]);
+	//console.log(data[1][0]);
 	static_weather_station_data = data;
 	static_weather_station_data.splice(0, 1);
     });
@@ -24,8 +27,7 @@ fs.readFile(__dirname + '/data/meta_rws_stations_2014_09_23.csv', function(err, 
 //    parser.parseString(data);
 //});
 
-exports.roadweather = function roadweather(req, res) {
-
+function retrieveWeatherData(center_lat, center_lng, radius, callback) {
     var SOAP_request = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
         'xmlns:sch="http://www.gofore.com/sujuvuus/schemas">' +
         '<soapenv:Header/>' +
@@ -61,10 +63,10 @@ exports.roadweather = function roadweather(req, res) {
     });
 	    
     parser.on('end', function(result) {  
-	console.log(result);
+	//console.log(result);
 	road_weather_data = result['soap:Envelope']['soap:Body'][0].RoadWeatherResponse[0].roadweatherdata[0].roadweather;
-	console.log(road_weather_data.length);
-	console.log(road_weather_data[0]);
+	//console.log(road_weather_data.length);
+	//console.log(road_weather_data[0]);
 
 	cleaned_road_weather_data = [];
 
@@ -82,12 +84,12 @@ exports.roadweather = function roadweather(req, res) {
                         y: parseFloat(static_weather_station_data[j][8])
                     }
                     var pt_wgs84 = coord_transform.transformPoint(point_orig);
-		    var dist = getDistanceFromLatLonInMeters(pt_wgs84.y, pt_wgs84.x, req.query.lat, req.query.lng);
+		    var dist = getDistanceFromLatLonInMeters(pt_wgs84.y, pt_wgs84.x, center_lat, center_lng);
 //		    if (point.orig.x == 6860000
-		    console.log(point_orig);
-		    console.log(pt_wgs84);
-		    console.log(dist);
-		    if (dist <= req.query.radius) {
+		    //console.log(point_orig);
+		    //console.log(pt_wgs84);
+		    //console.log(dist);
+		    if (dist <= radius) {
 			station_data = {
 			    id: road_weather_data[i].stationid[0],
 			    lat: pt_wgs84.y,
@@ -107,7 +109,20 @@ exports.roadweather = function roadweather(req, res) {
 		}
 	    }
 	}
+    	callback(cleaned_road_weather_data);
+    });
+}
 
+
+exports.updateClientData = function updateClientData(io) {
+    retrieveWeatherData(INITIAL_LAT, INITIAL_LNG, INITIAL_RADIUS, function(cleaned_road_weather_data) {
+	data = JSON.stringify(cleaned_road_weather_data);
+	io.emit('weather', data);
+    });
+}
+
+exports.roadweather = function roadweather(req, res) {
+    retrieveWeatherData(req.query.lat, req.query.lng, req.query.radius, function(cleaned_road_weather_data) {
 	res.json(cleaned_road_weather_data);
     });
 }
@@ -115,7 +130,7 @@ exports.roadweather = function roadweather(req, res) {
 exports.showCategories = function showCategories(req, res) {
 	
     res.render('digitraffic',
-	       {title: 'Digitraffic'
+	       {title: 'Tiesää'
 		//categories: JSON.stringify(parkingWFSFeatures)
 	       });
 }

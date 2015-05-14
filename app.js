@@ -14,6 +14,8 @@ function compile(str, path) {
 }
 
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 if (app.get('env') === 'development') {
   app.locals.pretty = true;
@@ -78,8 +80,22 @@ app.get('/tredata.json', function (req, res) {
 	tampere.getTreJSONData(req, res);
 });
 
+io.on('connection', function(socket){
+    console.log('a client connected');
+    socket.on('disconnect', function(){
+	console.log('a client disconnected');
+    });
+});
+
 app.set('port', (process.env.PORT || 3000));
 
-app.listen(app.get('port'), function() {
+http.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
 });
+
+setInterval(updateClientData, 300000);
+//setInterval(updateClientData, 10000);
+
+function updateClientData() {
+    digitraffic.updateClientData(io);
+}

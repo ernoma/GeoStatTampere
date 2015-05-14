@@ -15,6 +15,14 @@ osmLayer.addTo(map);
 
 var popups = [];
 
+var socket = io();
+
+socket.on('weather', function(msg) {
+    data = JSON.parse(msg);
+    console.log(data);
+    updateWeatherData(data);
+});
+
 $(document).on('pageshow','[data-role=page]', function(){
     console.log('PAGECREATE');
 
@@ -22,37 +30,28 @@ $(document).on('pageshow','[data-role=page]', function(){
 
     $.getJSON("/roadweather.json", { radius: INITIAL_RADIUS, lat: INITIAL_LAT, lng: INITIAL_LNG }, function(response) {
 	console.log(response);
-
-	for (var i = 0; i < popups.length; i++) {
-	    map.removeLayer(popups[i]);
-	}
-
-	popups = [];
-
-	for (var i = 0; i < response.length; i++) {
-
-	    var timestamp = moment(response[i].measurement_time.localtime[0]);
-	    var time_string = timestamp.format('HH:mm');
-
-	    var popup = L.popup( {autoPan: false, closeOnClick: false, closeButton: false} ).setLatLng([response[i].lat, response[i].lng])
-		.setContent("Kello " + time_string + "<br>" +
-			    "Ilma: " + response[i].air_temperature + "&deg;C<br>" +
-			    "Tie: " + response[i].road_temperature1 + "&deg;C");
-	    map.addLayer(popup);
-	    popups.push(popup);
-	}
-
-        //parsed_response = JSON.parse(response);
-        //console.log(parsed_response);
-
-        //nextId++;
-
-        //var content = "<div data-role='collapsible' id='set" + nextId + "'><h3>Road weather</h3>";
-
-        
-
-        //content += "</div>";
-
-	//$( "#result_set" ).append( content ).collapsibleset( "refresh" );
+	updateWeatherData(response);
     });
 });
+
+
+function updateWeatherData(data) {
+    for (var i = 0; i < popups.length; i++) {
+	map.removeLayer(popups[i]);
+    }
+    
+    popups = [];
+    
+    for (var i = 0; i < data.length; i++) {
+
+	var timestamp = moment(data[i].measurement_time.localtime[0]);
+	var time_string = timestamp.format('HH:mm');
+	
+	var popup = L.popup( {autoPan: false, closeOnClick: false, closeButton: false} ).setLatLng([data[i].lat, data[i].lng])
+	    .setContent("Kello " + time_string + "<br>" +
+			"Ilma: " + data[i].air_temperature + "&deg;C<br>" +
+			"Tie: " + data[i].road_temperature1 + "&deg;C");
+	map.addLayer(popup);
+	popups.push(popup);
+    }
+}
