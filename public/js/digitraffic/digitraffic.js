@@ -13,7 +13,7 @@ var osmLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
 var map = L.map('map_canvas', { center: [INITIAL_LAT, INITIAL_LNG], zoom: INITIAL_ZOOM });
 osmLayer.addTo(map);
 
-//var popups = [];
+var popups = [];
 
 $(document).on('pageshow','[data-role=page]', function(){
     console.log('PAGECREATE');
@@ -22,6 +22,12 @@ $(document).on('pageshow','[data-role=page]', function(){
 
     $.getJSON("/roadweather.json", { radius: INITIAL_RADIUS, lat: INITIAL_LAT, lng: INITIAL_LNG }, function(response) {
 	console.log(response);
+
+	for (var i = 0; i < popups.length; i++) {
+	    map.removeLayer(popups[i]);
+	}
+
+	popups = [];
 
 	for (var i = 0; i < response.length; i++) {
 
@@ -33,7 +39,7 @@ $(document).on('pageshow','[data-role=page]', function(){
 			    "Ilma: " + response[i].air_temperature + "&deg;C<br>" +
 			    "Tie: " + response[i].road_temperature1 + "&deg;C");
 	    map.addLayer(popup);
-	    //popups.push(popup);
+	    popups.push(popup);
 	}
 
         //parsed_response = JSON.parse(response);
