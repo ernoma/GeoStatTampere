@@ -7,13 +7,14 @@
     "node": "0.12.x"
   },
   "dependencies": {
-    "express": "4.x",
-	"jade": "1.x",
-	"stylus": "0.x",
-	"nib": "1.x",
-	"morgan": "1.x",
-	"request": "2.x",
-	"gdal": "0.4.x",
-  "xml2js": "0.4.x"
+      "express": "4.x",
+      "jade": "1.x",
+      "stylus": "0.x",
+      "nib": "1.x",
+      "morgan": "1.x",
+      "request": "2.x",
+      "gdal": "0.4.x",
+      "xml2js": "0.4.x",
+      "csv": "0.4.x"
   }
 }
