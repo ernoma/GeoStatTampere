@@ -40,6 +40,8 @@ public/stylesheets/3dmap.css
 public/stylesheets/charts.css
 public/stylesheets/geostat.css
 public/stylesheets/style.css
+public/stylesheets/#leaflet-search.src.css#
+public/stylesheets/digitraffic.css
 docs
 *~
-
+*travis.log
