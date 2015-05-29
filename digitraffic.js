@@ -11,13 +11,83 @@ var INITIAL_RADIUS = 60000; // in meters
 var static_weather_station_data = undefined;
 var road_weather_data = undefined;
 
+var static_traffic_station_data = undefined;
+var traffic_station_data = undefined;
+
 var wgs84 = gdal.SpatialReference.fromEPSG(4326);
 var KKJ = gdal.SpatialReference.fromProj4('+proj=tmerc +lat_0=0 +lon_0=27 +k=1 +x_0=3500000 +y_0=0 +ellps=intl +towgs84=-96.062,-82.428,-121.753,4.801,0.345,-1.376,1.496 +units=m +no_defs');
 var coord_transform = new gdal.CoordinateTransformation(KKJ, wgs84);
 
+fs.readFile(__dirname + '/data/meta_traffic_stations_2014_09_23.csv', function(err, csv_data) {
+    csv.parse(csv_data, function(err, data) {
+
+	static_traffic_station_data = data;
+        static_traffic_station_data.splice(0, 1);
+
+	/*traffic_stations = [];
+
+	traffic_stations.push({ id: 'id', x: 'x', y: 'y' });
+
+        for (var i = 1; i < data.length; i++) {
+            var point_orig = {
+                x: parseFloat(data[i][10]),
+                y: parseFloat(data[i][9])
+            }
+            var pt_wgs84 = coord_transform.transformPoint(point_orig);
+
+            var traffic_station = {
+                id: data[i][0],
+                x: pt_wgs84.x,
+                y: pt_wgs84.y
+            }
+            traffic_stations.push(traffic_station);
+        }
+
+        csv.stringify(traffic_stations, function(err, new_data) {
+            fs.writeFile('traffic_stations.csv', new_data, function(err) {
+                if(err) {
+                    return console.log(err);
+                }
+
+                console.log("The traffic stations file was saved!");
+            });
+        });*/
+    });
+});
+
 fs.readFile(__dirname + '/data/meta_rws_stations_2014_09_23.csv', function(err, csv_data) {  
     csv.parse(csv_data, function(err, data) {
-	//console.log(data[1][0]);
+	//console.log(data[1]);
+
+	/*weather_stations = [];
+
+	weather_stations.push({ id: 'id', x: 'x', y: 'y' });
+
+	for (var i = 1; i < data.length; i++) {
+	    var point_orig = {
+		x: parseFloat(data[i][9]),
+		y: parseFloat(data[i][8])
+            }
+            var pt_wgs84 = coord_transform.transformPoint(point_orig);
+
+	    var weather_station = {
+		id: data[i][0],
+		x: pt_wgs84.x,
+		y: pt_wgs84.y
+	    }
+	    weather_stations.push(weather_station);
+	}
+
+	csv.stringify(weather_stations, function(err, new_data) {
+            fs.writeFile('weather_stations.csv', new_data, function(err) {
+		if(err) {
+		    return console.log(err);
+		}
+
+		console.log("The weather stations file was saved!");
+	    });
+	});*/
+
 	static_weather_station_data = data;
 	static_weather_station_data.splice(0, 1);
     });
@@ -113,6 +183,26 @@ function retrieveWeatherData(center_lat, center_lng, radius, callback) {
     });
 }
 
+function retrieveTrafficStationData(center_lat, center_lng, radius, callback) {
+    
+    var traffic_station_locations = [];
+
+    for (var i = 0; i < static_traffic_station_data.length; i++) {
+	var point_orig = {
+            x: parseFloat(static_traffic_station_data[i][10]),
+            y: parseFloat(static_traffic_station_data[i][9])
+	}
+	var pt_wgs84 = coord_transform.transformPoint(point_orig);
+
+	traffic_station_locations.push({
+	    id: static_traffic_station_data[i][0],
+	    lat: pt_wgs84.y,
+	    lng: pt_wgs84.x
+	});
+    }
+
+    callback(traffic_station_locations);
+}
 
 exports.updateClientData = function updateClientData(io) {
     retrieveWeatherData(INITIAL_LAT, INITIAL_LNG, INITIAL_RADIUS, function(cleaned_road_weather_data) {
@@ -123,7 +213,15 @@ exports.updateClientData = function updateClientData(io) {
 
 exports.roadweather = function roadweather(req, res) {
     retrieveWeatherData(req.query.lat, req.query.lng, req.query.radius, function(cleaned_road_weather_data) {
-	res.json(cleaned_road_weather_data);
+
+	retrieveTrafficStationData(req.query.lat, req.query.lng, req.query.radius, function (traffic_station_locations) {
+	    
+	    data = { traffic_station_locations: traffic_station_locations,
+		     road_weather_data: cleaned_road_weather_data
+		   }
+	    
+	    res.json(data);
+	});
     });
 }
 

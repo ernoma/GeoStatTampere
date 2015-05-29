@@ -30,7 +30,13 @@ $(document).on('pageshow','[data-role=page]', function(){
 
     $.getJSON("/roadweather.json", { radius: INITIAL_RADIUS, lat: INITIAL_LAT, lng: INITIAL_LNG }, function(response) {
 	console.log(response);
-	updateWeatherData(response);
+	
+	for (var i = 0; i < response.traffic_station_locations.length; i++) {
+	    var marker = L.marker([response.traffic_station_locations[i].lat, response.traffic_station_locations[i].lng]);
+	    marker.addTo(map);
+	}
+
+	updateWeatherData(response.road_weather_data);
     });
 });
 

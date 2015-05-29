@@ -2,28 +2,81 @@ doctype html
 html
 	head
 		meta(name='viewport', content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
-		title #{title}
+		title Digitraffic
+		link(rel='stylesheet', href='/jquery-ui-1.11.4.custom/jquery-ui.min.css')
+		link(rel='stylesheet', href='/jQRangeSlider-5.7.1/css/iThing.css')
+		link(rel='stylesheet', href='/font-awesome-4.3.0/css/font-awesome.min.css')
 		link(rel='stylesheet', href='/stylesheets/3dmap.css')
-		script(type='text/javascript', src='js/google-analytics.js')
-		script(type='text/javascript', src='js/jquery-2.1.1.min.js')
 	body
+		#legend
 		#webgl
-		#info
-			p <b>Liikuta</b> karttaa pitämällä <b>hiiren oikea painike</b> alhaalla ja liikuttamalla hiirtä
-			p <b>Kierrä</b> karttaa pitämällä <b>hiiren vasen painike</b> alhaalla ja liikuttamalla hiirtä
-			p <b>Suurenna ja pienennä</b> karttaa <b>hiiren kiekolla</b>
-		
+		//#info
+		//	p <b>Liikuta</b> karttaa pitämällä <b>hiiren oikea painike</b> alhaalla ja liikuttamalla hiirtä
+		//	p <b>Kierrä</b> karttaa pitämällä <b>hiiren vasen painike</b> alhaalla ja liikuttamalla hiirtä
+		//	p <b>Suurenna ja pienennä</b> karttaa <b>hiiren kiekolla</b>		
 		#loading
 			#spinner
 			#loading_text Ladataan karttaa...
+
+		#time_view
 		
-		#attribution Hyödyntää Maanmittauslaitoksen "korkeusmalli 2m"-aineistoa 09/2014 ja
-			br
-			span Maanmittauslaitoksen "maastokartta 1:100 000"-aineistoa (9/2014), 
-			a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501") lisenssi
-		
+			#time_scale_selection
+
+				h2 Visualization timescale:
+
+				#time_scale_tabs
+					ul
+						li
+							a(href='#hours_tab') Hours
+						li
+							a(href='#days_tab') Days
+					#hours_tab
+						p Select date to animate:
+							input(type='text' id='datepicker')
+
+						p Select hours to animate:
+						#hours_slider
+
+						#hours_buttons(class='animate_buttons')
+							p Animate:
+							button(id='#play_hours_button')
+								span(class='fa fa-play fa-lg')
+							button(id='#pause_hours_button')
+								span(class='fa fa-pause fa-lg')
+							button(id='#stop_hours_button')
+								span(class='fa fa-stop fa-lg')
+
+					#days_tab
+						p Select days to animate:
+						#date_slider
+						
+						#days_buttons(class='animate_buttons')
+							p Animate:
+							button(id='#play_days_button')
+								span(class='fa fa-play fa-lg')
+							button(id='#pause_days_button')
+								span(class='fa fa-pause fa-lg')
+							button(id='#stop_days_button')
+								span(class='fa fa-stop fa-lg')
+			
+			h2 Accumulated data:
+
+			#chart
+
+		//#attribution Hyödyntää Maanmittauslaitoksen "korkeusmalli 2m"-aineistoa 09/2014 ja
+		//	br
+		//	span Maanmittauslaitoksen "maastokartta 1:100 000"-aineistoa (9/2014), 
+		//	a(href="http://www.maanmittauslaitos.fi/avoindata_lisenssi_versio1_20120501") lisenssi
+
+		//script(type='text/javascript', src='js/google-analytics.js')
+		script(type='text/javascript', src='js/jquery-2.1.1.min.js')
+		script(type='text/javascript', src='jquery-ui-1.11.4.custom/jquery-ui.min.js')		
 		script(type='text/javascript', src='js/spin.min.js')
 		script(type='text/javascript', src='js/three.min.js')
 		script(type='text/javascript', src='js/TrackballControls.js')
 		script(type='text/javascript', src='js/TerrainLoader.js')
+		script(type='text/javascript', src='TweenJS-0.6.1/lib/tweenjs-0.6.1.min.js')
+		//script(type='text/javascript', src='js/tween.min.js')
+		script(type='text/javascript', src='js/d3.min.js' charset='utf-8')
+		script(type='text/javascript', src='jQRangeSlider-5.7.1/jQAllRangeSliders-min.js')
 		script(type='text/javascript', src='js/3dmap.js')
